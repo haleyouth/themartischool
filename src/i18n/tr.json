@@ -522,7 +522,21 @@
     "enrollInClass": "Bir sınıfa ekle",
     "unenroll": "Sınıftan çıkar",
     "noAttendance": "Henüz devam kaydı yok",
-    "noReports": "Henüz karne yazılmamış"
+    "noReports": "Henüz karne yazılmamış",
+    "addStudent": "Öğrenci ekle",
+    "addStudentBody": "Hesabı hemen oluşturur ve öğrenci numarası verir. Siteden başvuru yapmamış aileler için kullanın.",
+    "createAccount": "Hesap oluştur",
+    "created": "Öğrenci hesabı oluşturuldu",
+    "editStudent": "Öğrenciyi düzenle",
+    "archive": "Arşivle",
+    "archiveTitle": "Bu öğrenciyi arşivle",
+    "archiveBody": "Sınıflarından çıkarılır ve artık giriş yapamaz.",
+    "archiveNote": "Devam ve karne bilgileri okul kaydı olduğu için saklanır. Öğrenciyi daha sonra geri alabilirsiniz.",
+    "archived": "Öğrenci arşivlendi",
+    "restore": "Geri al",
+    "restoreTitle": "Bu öğrenciyi geri al",
+    "restoreBody": "Tekrar giriş yapabilir ve sınıflara kaydedilebilir.",
+    "restored": "Öğrenci geri alındı"
   },
   "classes": {
     "title": "Sınıflar",

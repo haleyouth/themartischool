@@ -356,13 +356,22 @@ export default function AppLayout() {
             </h1>
           </div>
 
-          <LiveClock className="hidden xl:block" />
-
-          <div className="hidden sm:block">
-            <LanguageSwitcher />
+          {/*
+            The clock is information, the rest are controls, so a divider and
+            wider gap separate the two groups instead of one flat run of items.
+          */}
+          <div className="hidden items-center gap-5 xl:flex">
+            <LiveClock />
+            <span className="h-8 w-px bg-ink-200" aria-hidden />
           </div>
-          <NotificationBell />
-          <AccountMenu />
+
+          <div className="flex items-center gap-2.5">
+            <div className="hidden sm:block">
+              <LanguageSwitcher />
+            </div>
+            <NotificationBell />
+            <AccountMenu />
+          </div>
         </header>
 
         <main className="flex-1 p-4 sm:p-6 lg:p-8">

@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { HeroSection } from '@/components/sections/HeroSection'
 import { ProgramsSection } from '@/components/sections/ProgramsSection'
 import { RegisterSection } from '@/components/sections/RegisterSection'
+import { HEADER_HEIGHT } from '@/lib/useScrollSpy'
 
 /**
  * The public site is one short scrolling page: a quick introduction to the
@@ -16,7 +17,7 @@ export default function LandingPage() {
     const element = document.getElementById(hash)
     if (!element) return
     window.requestAnimationFrame(() => {
-      const top = element.getBoundingClientRect().top + window.scrollY - 76
+      const top = element.getBoundingClientRect().top + window.scrollY - HEADER_HEIGHT
       window.scrollTo({ top, behavior: 'instant' as ScrollBehavior })
     })
   }, [])

@@ -522,7 +522,21 @@
     "enrollInClass": "Add to a class",
     "unenroll": "Remove from class",
     "noAttendance": "No attendance recorded yet",
-    "noReports": "No reports written yet"
+    "noReports": "No reports written yet",
+    "addStudent": "Add a student",
+    "addStudentBody": "Creates the account straight away and issues a student ID. Use this when a family has not applied through the website.",
+    "createAccount": "Create account",
+    "created": "Student account created",
+    "editStudent": "Edit student",
+    "archive": "Archive",
+    "archiveTitle": "Archive this student",
+    "archiveBody": "They are removed from their classes and can no longer sign in.",
+    "archiveNote": "Attendance and reports are kept, because they are the school record. You can restore the student later.",
+    "archived": "Student archived",
+    "restore": "Restore",
+    "restoreTitle": "Restore this student",
+    "restoreBody": "They can sign in again and be enrolled in classes.",
+    "restored": "Student restored"
   },
   "classes": {
     "title": "Classes",

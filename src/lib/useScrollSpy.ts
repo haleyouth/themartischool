@@ -1,5 +1,11 @@
 import { useEffect, useState } from 'react'
 
+/**
+ * Height of the fixed public header. Anchor scrolling subtracts this so a
+ * section lands below the bar rather than behind it.
+ */
+export const HEADER_HEIGHT = 88
+
 /** Anchor ids for the one-page public site. */
 export const SECTION_IDS = {
   home: 'home',

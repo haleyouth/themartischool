@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/Button'
 import { useAuth } from '@/contexts/AuthContext'
 import { useT } from '@/i18n'
 import { cn } from '@/lib/utils'
-import { SECTION_IDS, useScrollSpy } from '@/lib/useScrollSpy'
+import { HEADER_HEIGHT, SECTION_IDS, useScrollSpy } from '@/lib/useScrollSpy'
 
 const LINKS = [
   { id: SECTION_IDS.home, key: 'nav.home' },
@@ -16,8 +16,7 @@ const LINKS = [
   { id: SECTION_IDS.register, key: 'nav.register' },
 ]
 
-/** Height of the fixed header, so anchor scrolling lands below it. */
-const HEADER_OFFSET = 76
+
 
 export function Navbar() {
   const t = useT()
@@ -27,7 +26,7 @@ export function Navbar() {
   const { scrollY } = useScroll()
   const activeId = useScrollSpy(
     LINKS.map((link) => link.id),
-    HEADER_OFFSET + 40,
+    HEADER_HEIGHT + 40,
   )
 
   useMotionValueEvent(scrollY, 'change', (latest) => setScrolled(latest > 20))
@@ -44,7 +43,7 @@ export function Navbar() {
     const element = document.getElementById(id)
     if (!element) return
 
-    const top = element.getBoundingClientRect().top + window.scrollY - HEADER_OFFSET
+    const top = element.getBoundingClientRect().top + window.scrollY - HEADER_HEIGHT
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     window.scrollTo({ top, behavior: prefersReduced ? 'auto' : 'smooth' })
     window.history.replaceState(null, '', id === SECTION_IDS.home ? '/' : `#${id}`)
@@ -65,14 +64,17 @@ export function Navbar() {
             : 'bg-transparent',
         )}
       >
-        <nav className="container-marti flex h-[76px] items-center justify-between gap-4">
+        {/* Taller bar so a larger wordmark has room to sit centred. */}
+        <nav className="container-marti flex h-[88px] items-center justify-between gap-4">
           <button
             type="button"
             onClick={() => goToSection(SECTION_IDS.home)}
             aria-label={t('brand.name')}
-            className="shrink-0"
+            // flex + items-center keeps the wordmark on the bar's centre line
+            // rather than sitting on the text baseline.
+            className="flex shrink-0 items-center"
           >
-            <Logo size="md" linkTo={null} />
+            <Logo size="lg" linkTo={null} />
           </button>
 
           <div className="hidden items-center gap-1 lg:flex">
@@ -155,7 +157,7 @@ export function Navbar() {
               transition={{ type: 'spring', stiffness: 320, damping: 34 }}
               className="absolute right-0 top-0 flex h-full w-[min(20rem,85vw)] flex-col bg-cream shadow-2xl"
             >
-              <div className="flex h-[76px] items-center justify-between px-5">
+              <div className="flex h-[88px] items-center justify-between px-5">
                 <Logo size="sm" linkTo={null} />
                 <button
                   type="button"

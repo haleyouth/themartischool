@@ -3,7 +3,7 @@ import { Logo } from '@/components/Logo'
 import { Facebook, Instagram, Twitter } from '@/components/ui/BrandIcons'
 import { useT } from '@/i18n'
 import { SCHOOL_INFO } from '@/lib/content'
-import { SECTION_IDS } from '@/lib/useScrollSpy'
+import { HEADER_HEIGHT, SECTION_IDS } from '@/lib/useScrollSpy'
 
 const QUICK_LINKS = [
   { id: SECTION_IDS.about, key: 'nav.about' },
@@ -24,7 +24,7 @@ function scrollToSection(id: string) {
     window.location.href = `/#${id}`
     return
   }
-  const top = element.getBoundingClientRect().top + window.scrollY - 76
+  const top = element.getBoundingClientRect().top + window.scrollY - HEADER_HEIGHT
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
   window.scrollTo({ top, behavior: reduced ? 'auto' : 'smooth' })
 }

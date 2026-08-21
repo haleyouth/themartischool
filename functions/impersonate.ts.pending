@@ -1,0 +1,117 @@
+import { onCall, HttpsError } from 'firebase-functions/v2/https'
+import { getFirestore, FieldValue } from 'firebase-admin/firestore'
+import { getAuth } from 'firebase-admin/auth'
+import { requireAdmin, writeAudit } from './shared'
+
+/**
+ * Signs an admin in as another user.
+ *
+ * The school asked for real impersonation so a principal can see exactly what
+ * a teacher or student sees. Two safeguards make that defensible:
+ *
+ *  1. The minted token carries `impersonatedBy`, so every rule and callable
+ *     can still tell that this session is not really that person. Actions are
+ *     therefore attributable, and the audit log does not silently credit work
+ *     to a student who was never at the keyboard.
+ *  2. Starting and ending a session are both written to the audit log.
+ *
+ * A director is never impersonable, and nobody may impersonate themselves.
+ */
+export const impersonateUser = onCall<{ targetUid: string }>(async (request) => {
+  const caller = requireAdmin(request)
+  const { targetUid } = request.data ?? {}
+  const db = getFirestore()
+
+  if (!targetUid) throw new HttpsError('invalid-argument', 'A target user is required.')
+  if (targetUid === caller.uid) {
+    throw new HttpsError('invalid-argument', 'You are already signed in as yourself.')
+  }
+
+  // An already borrowed session must not be used to borrow another, or the
+  // chain of who is really acting becomes impossible to follow.
+  if (request.auth?.token?.impersonatedBy) {
+    throw new HttpsError('permission-denied', 'End the current session first.')
+  }
+
+  const snap = await db.doc(`users/${targetUid}`).get()
+  if (!snap.exists) throw new HttpsError('not-found', 'User not found.')
+  const target = snap.data()!
+
+  if (target.role === 'director') {
+    throw new HttpsError('permission-denied', 'A director cannot be impersonated.')
+  }
+  if (target.status !== 'active') {
+    throw new HttpsError('failed-precondition', 'That account is not active.')
+  }
+
+  // Rebuild the target's claims, then mark the session as borrowed.
+  const targetClaims: Record<string, unknown> = {
+    role: target.role,
+    active: true,
+    v: target.claimsVersion ?? 1,
+    impersonatedBy: caller.uid,
+  }
+  if (target.studentId) targetClaims.studentId = target.studentId
+  if (target.schoolYear) targetClaims.schoolYear = target.schoolYear
+
+  if (target.role === 'teacher') {
+    const classes = await db
+      .collection('classes')
+      .where('teacherIds', 'array-contains', targetUid)
+      .get()
+    targetClaims.classIds = classes.docs.map((d) => d.id)
+  }
+
+  const token = await getAuth().createCustomToken(targetUid, targetClaims)
+
+  await writeAudit({
+    actorUid: caller.uid,
+    actorRole: caller.role,
+    action: 'user.impersonate.start',
+    targetType: 'user',
+    targetId: targetUid,
+    after: { role: target.role, displayName: target.displayName },
+  })
+
+  await db.doc(`users/${targetUid}`).update({
+    lastImpersonatedBy: caller.uid,
+    lastImpersonatedAt: FieldValue.serverTimestamp(),
+  })
+
+  return {
+    token,
+    displayName: (target.displayName as string) ?? '',
+    role: target.role as string,
+  }
+})
+
+/** Returns the admin to their own account and closes the audit entry. */
+export const endImpersonation = onCall(async (request) => {
+  const impersonatedBy = request.auth?.token?.impersonatedBy as string | undefined
+  if (!request.auth || !impersonatedBy) {
+    throw new HttpsError('failed-precondition', 'This is not a borrowed session.')
+  }
+
+  const db = getFirestore()
+  const adminSnap = await db.doc(`users/${impersonatedBy}`).get()
+  if (!adminSnap.exists) throw new HttpsError('not-found', 'Original account not found.')
+  const admin = adminSnap.data()!
+
+  const adminClaims: Record<string, unknown> = {
+    role: admin.role,
+    active: admin.status === 'active',
+    v: admin.claimsVersion ?? 1,
+  }
+
+  const token = await getAuth().createCustomToken(impersonatedBy, adminClaims)
+
+  await writeAudit({
+    actorUid: impersonatedBy,
+    actorRole: admin.role,
+    action: 'user.impersonate.end',
+    targetType: 'user',
+    targetId: request.auth.uid,
+  })
+
+  return { token }
+})

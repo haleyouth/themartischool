@@ -14,7 +14,7 @@ import { Button } from '@/components/ui/Button'
 import { useI18n } from '@/i18n'
 import { HOW_STEPS, SCHOOL_STATS, WHY_FEATURES } from '@/lib/content'
 import { currentSchoolYear, formatSchoolYear } from '@/lib/schoolYear'
-import { SECTION_IDS } from '@/lib/useScrollSpy'
+import { HEADER_HEIGHT, SECTION_IDS } from '@/lib/useScrollSpy'
 import { cn } from '@/lib/utils'
 
 const ACCENT_BG = {
@@ -28,7 +28,7 @@ const ACCENT_BG = {
 function scrollTo(id: string) {
   const element = document.getElementById(id)
   if (!element) return
-  const top = element.getBoundingClientRect().top + window.scrollY - 76
+  const top = element.getBoundingClientRect().top + window.scrollY - HEADER_HEIGHT
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
   window.scrollTo({ top, behavior: reduced ? 'auto' : 'smooth' })
 }
@@ -46,7 +46,7 @@ export function HeroSection() {
       {/* ── Hero ──────────────────────────────────────────────── */}
       <section
         id={SECTION_IDS.home}
-        className="relative overflow-hidden bg-cream pb-16 pt-28 sm:pt-36 lg:min-h-[42rem]"
+        className="relative overflow-hidden bg-cream pb-16 pt-32 sm:pt-40 lg:min-h-[42rem]"
       >
         {/*
           The artwork occupies the right side at full strength, with nothing
