@@ -2,7 +2,7 @@
   "brand": {
     "name": "Martı Okulu",
     "short": "MARTI",
-    "full": "Maryland Türk-Amerikan Topluluğu",
+    "full": "Maryland Turkish-American Inhabitants",
     "tagline": "Her cumartesi Türkçe, kültür ve arkadaşlık."
   },
   "nav": {
@@ -114,7 +114,7 @@
     "title": "Okul hakkında",
     "subtitle": "Türk-Amerikan aileleri tarafından, Türk-Amerikan çocukları için kurulmuş bir hafta sonu okulu.",
     "storyTitle": "Hikâyemiz",
-    "storyP1": "Martı Okulu, 2003'ten beri aileleri bir araya getiren Maryland Türk-Amerikan Topluluğu'nun hafta sonu okuludur.",
+    "storyP1": "Martı Okulu, 2003'ten beri aileleri bir araya getiren Maryland Turkish-American Inhabitants'ın hafta sonu okuludur.",
     "storyP2": "İyi okulların çoğu gibi bir endişeyle başladı. Veliler, çocuklarının Maryland'de kusursuz bir İngilizceyle büyürken dedelerinin Türkçesini yavaşça yitirdiğini görüyordu.",
     "storyP3": "Bugün seviyeye göre ayrılmış sınıflarda Türkçe, kültür, tarih ve halk sanatları okutuyoruz. Hâlâ her cumartesi ve hâlâ bir mirasın sessizce kaybolmasına razı olmayan ailelerin emeğiyle.",
     "missionTitle": "Amacımız",
@@ -345,7 +345,12 @@
     "validDate": "Lütfen geçerli bir tarih girin",
     "validAge": "Öğrenciler 3 ile 18 yaş arasında olmalı",
     "validTerms": "Devam etmek için koşulları kabul edin",
-    "feesNotice": "Yeriniz kesinleştikten sonra okul idaresi ücretleri sizinle paylaşacak. Bugün hiçbir ödeme alınmaz."
+    "feesNotice": "Yeriniz kesinleştikten sonra okul idaresi ücretleri sizinle paylaşacak. Bugün hiçbir ödeme alınmaz.",
+    "dobDay": "Gün",
+    "dobMonth": "Ay",
+    "dobYear": "Yıl",
+    "dobHint": "Çocuğunuzun doğduğu gün, ay ve yılı seçin.",
+    "dobAge": "{age} yaşında"
   },
   "auth": {
     "loginTitle": "Tekrar hoş geldiniz",
@@ -391,7 +396,11 @@
     "passwordMismatch": "İkisi aynı değil",
     "passwordTooShort": "En az 8 karakter kullanın",
     "passwordUpdated": "Parolanız güncellendi",
-    "updatePassword": "Parolayı güncelle"
+    "updatePassword": "Parolayı güncelle",
+    "loginSubtitleUnified": "Öğrenci numaranız ya da personel e-postanızla girin.",
+    "identifierLabel": "Öğrenci numarası veya e-posta",
+    "identifierHint": "Öğrenciler size gönderdiğimiz numarayı, personel ise e-posta adresini kullanır.",
+    "identifierPlaceholder": "MRT-2026-0001"
   },
   "dash": {
     "overview": "Genel bakış",
@@ -715,7 +724,7 @@
     "noLogs": "Henüz kayıt yok"
   },
   "footer": {
-    "about": "Maryland Türk-Amerikan Topluluğu'nun hafta sonu okulu. Yeni kuşağa Türkçeyi ve kültürü öğretiyoruz.",
+    "about": "Maryland Turkish-American Inhabitants'ın hafta sonu okulu. Yeni kuşağa Türkçeyi ve kültürü öğretiyoruz.",
     "quickLinks": "Hızlı bağlantılar",
     "programsLinks": "Sınıflar",
     "contactTitle": "Bizi bulun",

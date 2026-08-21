@@ -30,9 +30,9 @@ import { cn, formatDate, fullName, percent } from '@/lib/utils'
 import type { AttendanceStatus } from '@/types/models'
 
 const STATUS_STYLES: Record<AttendanceStatus, string> = {
-  present: 'bg-mint-600 text-white',
-  absent: 'bg-coral-600 text-white',
-  late: 'bg-sunshine-500 text-white',
+  present: 'bg-teal-600 text-white',
+  absent: 'bg-magenta-600 text-white',
+  late: 'bg-amber-500 text-white',
   excused: 'bg-marti-600 text-white',
 }
 
@@ -202,7 +202,7 @@ function TeacherAttendance() {
   return (
     <>
       <div className="mb-6">
-        <h1 className="font-display text-2xl font-bold text-ink-950">{t('attendance.title')}</h1>
+        <h1 className="font-display text-2xl font-bold text-ink">{t('attendance.title')}</h1>
         <p className="mt-1.5 text-sm text-ink-600">{t('attendance.subtitle')}</p>
       </div>
 
@@ -226,7 +226,7 @@ function TeacherAttendance() {
               type="date"
               value={sessionDate}
               onChange={(e) => setSessionDate(e.target.value)}
-              className="h-11 w-full rounded-xl border border-ink-200 bg-white px-3.5 text-sm text-ink-900 transition-all focus:border-marti-500 focus:outline-none focus:ring-4 focus:ring-marti-500/10"
+              className="h-11 w-full rounded-xl border border-ink-200 bg-white px-3.5 text-sm text-ink transition-all focus:border-marti-500 focus:outline-none focus:ring-4 focus:ring-marti-500/10"
             />
           </div>
           <Button
@@ -241,7 +241,7 @@ function TeacherAttendance() {
       </Card>
 
       {!dateIsSaturday && (
-        <div className="mb-5 flex gap-2.5 rounded-xl bg-sunshine-50 p-4 text-sm text-sunshine-800">
+        <div className="mb-5 flex gap-2.5 rounded-xl bg-amber-50 p-4 text-sm text-amber-800">
           <TriangleAlert className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
           {t('attendance.notSaturday')}
         </div>
@@ -290,14 +290,14 @@ function TeacherAttendance() {
               title={t('students.noStudents')}
             />
           ) : (
-            <ul className="divide-y divide-cream-200">
+            <ul className="divide-y divide-ink-100">
               {roster.map((student, index) => (
                 <motion.li
                   key={student.studentId}
                   initial={{ opacity: 0, y: 6 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: Math.min(index * 0.02, 0.25) }}
-                  className="flex flex-col gap-3 px-5 py-3.5 transition-colors hover:bg-cream-100 sm:flex-row sm:items-center sm:justify-between"
+                  className="flex flex-col gap-3 px-5 py-3.5 transition-colors hover:bg-cream-200 sm:flex-row sm:items-center sm:justify-between"
                 >
                   <div className="flex min-w-0 items-center gap-3">
                     <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-marti-50 text-xs font-bold text-marti-700">
@@ -305,7 +305,7 @@ function TeacherAttendance() {
                       {student.lastName.charAt(0)}
                     </span>
                     <div className="min-w-0">
-                      <p className="truncate text-sm font-semibold text-ink-900">
+                      <p className="truncate text-sm font-semibold text-ink">
                         {fullName(student.firstName, student.lastName, student.preferredName)}
                       </p>
                       <p className="font-mono text-xs text-ink-500">{student.studentId}</p>
@@ -342,7 +342,7 @@ function TeacherAttendance() {
         </CardBody>
 
         {roster.length > 0 && (
-          <div className="border-t border-cream-200 p-5">
+          <div className="border-t border-ink-200 p-5">
             <Textarea
               label={t('attendance.classNotes')}
               hint={t('attendance.classNotesHint')}
@@ -396,7 +396,7 @@ function StudentAttendance() {
   return (
     <>
       <div className="mb-6">
-        <h1 className="font-display text-2xl font-bold text-ink-950">
+        <h1 className="font-display text-2xl font-bold text-ink">
           {t('attendance.historyTitle')}
         </h1>
         <p className="mt-1.5 text-sm text-ink-600">{t('dash.myAttendance')}</p>
@@ -428,11 +428,11 @@ function StudentAttendance() {
               title={t('students.noAttendance')}
             />
           ) : (
-            <ul className="divide-y divide-cream-200">
+            <ul className="divide-y divide-ink-100">
               {history.map((entry) => (
                 <li key={entry.id} className="flex items-center gap-3 px-5 py-3.5">
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-semibold text-ink-900">
+                    <p className="truncate text-sm font-semibold text-ink">
                       {entry.className}
                     </p>
                     <p className="text-xs text-ink-500">

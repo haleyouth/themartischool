@@ -19,9 +19,9 @@ import { cn } from '@/lib/utils'
 
 const ACCENT_BG = {
   marti: 'bg-marti-100 text-marti-700',
-  sunshine: 'bg-sunshine-100 text-sunshine-700',
-  mint: 'bg-mint-100 text-mint-700',
-  coral: 'bg-coral-100 text-coral-700',
+  sunshine: 'bg-amber-100 text-amber-700',
+  mint: 'bg-teal-100 text-teal-700',
+  coral: 'bg-magenta-100 text-magenta-700',
   grape: 'bg-grape-100 text-grape-700',
 }
 
@@ -46,7 +46,7 @@ export function HeroSection() {
       {/* ── Hero ──────────────────────────────────────────────── */}
       <section
         id={SECTION_IDS.home}
-        className="relative overflow-hidden bg-cream-100 pb-16 pt-28 sm:pt-36"
+        className="relative overflow-hidden bg-cream-200 pb-16 pt-28 sm:pt-36"
       >
         <div className="bg-dots absolute inset-0 opacity-60" aria-hidden />
 
@@ -55,13 +55,13 @@ export function HeroSection() {
           aria-hidden
           animate={reduced ? undefined : { y: [0, -22, 0], scale: [1, 1.05, 1] }}
           transition={{ duration: 13, repeat: Infinity, ease: 'easeInOut' }}
-          className="pointer-events-none absolute -right-24 top-4 h-80 w-80 rounded-full bg-sunshine-200/50 blur-3xl"
+          className="pointer-events-none absolute -right-24 top-4 h-80 w-80 rounded-full bg-amber-200/50 blur-3xl"
         />
         <motion.div
           aria-hidden
           animate={reduced ? undefined : { y: [0, 20, 0], scale: [1, 1.07, 1] }}
           transition={{ duration: 17, repeat: Infinity, ease: 'easeInOut', delay: 1.4 }}
-          className="pointer-events-none absolute -left-32 top-48 h-96 w-96 rounded-full bg-mint-200/45 blur-3xl"
+          className="pointer-events-none absolute -left-32 top-48 h-96 w-96 rounded-full bg-teal-200/45 blur-3xl"
         />
 
         <div className="container-marti relative">
@@ -77,7 +77,7 @@ export function HeroSection() {
                 </SectionEyebrow>
               </motion.div>
 
-              <h1 className="mt-6 text-balance font-display text-[2.5rem] font-extrabold leading-[1.05] tracking-tight text-ink-950 sm:text-6xl">
+              <h1 className="mt-6 text-balance font-display text-[2.5rem] font-extrabold leading-[1.05] tracking-tight text-ink sm:text-6xl">
                 <WordReveal text={t('home.heroTitle')} delay={0.12} />{' '}
                 <span className="relative inline-block">
                   <WordReveal
@@ -89,7 +89,7 @@ export function HeroSection() {
                     aria-hidden
                     viewBox="0 0 320 14"
                     preserveAspectRatio="none"
-                    className="absolute -bottom-2 left-0 h-3 w-full text-sunshine-400"
+                    className="absolute -bottom-2 left-0 h-3 w-full text-amber-400"
                   >
                     <motion.path
                       d="M3,9 Q80,2 160,8 T317,5"
@@ -142,7 +142,7 @@ export function HeroSection() {
               >
                 {[t('home.why1Title'), t('home.why2Title'), t('home.why5Title')].map((item) => (
                   <span key={item} className="flex items-center gap-2">
-                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-mint-200 text-mint-700">
+                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-teal-200 text-teal-700">
                       <Check className="h-3 w-3" strokeWidth={3.5} aria-hidden />
                     </span>
                     {item}
@@ -158,13 +158,13 @@ export function HeroSection() {
               transition={{ duration: 0.75, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
               className="relative mx-auto w-full max-w-md lg:max-w-none"
             >
-              <div className="relative rounded-5xl border-4 border-white bg-white/85 p-6 shadow-[0_28px_56px_-18px_rgb(27_121_192/0.35)] backdrop-blur-xl">
+              <div className="relative rounded-5xl border-2 border-ink bg-white/85 p-6 shadow-[0_28px_56px_-18px_rgb(27_121_192/0.35)] backdrop-blur-xl">
                 <div className="flex items-center gap-3">
                   <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-marti-600 text-2xl">
                     🗓️
                   </span>
                   <div>
-                    <p className="font-display text-lg font-extrabold text-ink-950">
+                    <p className="font-display text-lg font-extrabold text-ink">
                       {t('calendar.timeTitle')}
                     </p>
                     <p className="text-sm text-ink-500">09:30 to 13:00</p>
@@ -178,7 +178,7 @@ export function HeroSection() {
                       initial={{ opacity: 0, x: 20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.45, delay: 0.6 + index * 0.09 }}
-                      className="flex items-center gap-3 rounded-2xl bg-cream-100 px-4 py-3"
+                      className="flex items-center gap-3 rounded-2xl bg-cream-200 px-4 py-3"
                     >
                       <span className="text-xl" aria-hidden>
                         {slot.emoji}
@@ -198,11 +198,11 @@ export function HeroSection() {
                 aria-hidden
                 animate={reduced ? undefined : { y: [0, -10, 0], rotate: [-3, 3, -3] }}
                 transition={{ duration: 5.5, repeat: Infinity, ease: 'easeInOut' }}
-                className="absolute -bottom-6 -left-5 hidden items-center gap-2.5 rounded-3xl border-4 border-white bg-sunshine-400 px-4 py-3 shadow-card sm:flex"
+                className="absolute -bottom-6 -left-5 hidden items-center gap-2.5 rounded-3xl border-2 border-ink bg-amber-400 px-4 py-3 shadow-card sm:flex"
               >
                 <span className="text-2xl">🎉</span>
                 <div>
-                  <p className="font-display text-lg font-extrabold leading-none text-ink-950">
+                  <p className="font-display text-lg font-extrabold leading-none text-ink">
                     <CountUp value={168} />
                   </p>
                   <p className="text-[11px] font-bold text-ink-800">{t('home.statStudents')}</p>
@@ -214,12 +214,12 @@ export function HeroSection() {
       </section>
 
       {/* ── Stats ─────────────────────────────────────────────── */}
-      <section className="bg-cream-50 py-10">
+      <section className="bg-cream py-10">
         <div className="container-marti">
           <StaggerGroup className="grid grid-cols-2 gap-4 lg:grid-cols-4">
             {SCHOOL_STATS.map((stat) => (
               <StaggerItem key={stat.labelKey} variants={scaleIn}>
-                <div className="rounded-4xl bg-white p-5 text-center shadow-soft ring-2 ring-cream-200 transition-transform duration-300 hover:-translate-y-1">
+                <div className="rounded-4xl bg-white p-5 text-center shadow-soft ring-2 ring-ink-200 transition-transform duration-300 hover:-translate-y-1">
                   <span className="text-3xl" aria-hidden>
                     {stat.emoji}
                   </span>
@@ -257,7 +257,7 @@ export function HeroSection() {
                   >
                     {feature.emoji}
                   </span>
-                  <h3 className="mt-5 font-display text-lg font-extrabold text-ink-950">
+                  <h3 className="mt-5 font-display text-lg font-extrabold text-ink">
                     {t(feature.titleKey)}
                   </h3>
                   <p className="mt-2 text-[15px] leading-relaxed text-ink-600">
@@ -284,13 +284,13 @@ export function HeroSection() {
               />
               {HOW_STEPS.map((step, index) => (
                 <StaggerItem key={step.titleKey} className="relative text-center">
-                  <div className="relative z-10 mx-auto flex h-16 w-16 items-center justify-center rounded-3xl border-4 border-white bg-cream-50 text-3xl shadow-soft transition-transform duration-300 hover:scale-110">
+                  <div className="relative z-10 mx-auto flex h-16 w-16 items-center justify-center rounded-3xl border-2 border-ink bg-cream text-3xl shadow-soft transition-transform duration-300 hover:scale-110">
                     <span aria-hidden>{step.emoji}</span>
                     <span className="absolute -right-2 -top-2 flex h-7 w-7 items-center justify-center rounded-full bg-marti-600 font-display text-xs font-extrabold text-white ring-4 ring-cream-100">
                       {index + 1}
                     </span>
                   </div>
-                  <h3 className="mt-5 font-display text-base font-extrabold text-ink-950">
+                  <h3 className="mt-5 font-display text-base font-extrabold text-ink">
                     {t(step.titleKey)}
                   </h3>
                   <p className="mt-2 text-sm leading-relaxed text-ink-600">{t(step.bodyKey)}</p>
@@ -313,7 +313,7 @@ export function HeroSection() {
         </div>
       </Section>
 
-      <WaveDivider from="fill-cream-50" />
+      <WaveDivider from="fill-cream" />
     </>
   )
 }

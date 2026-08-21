@@ -62,7 +62,7 @@ export function Navbar() {
         className={cn(
           'fixed inset-x-0 top-0 z-50 transition-all duration-300',
           scrolled
-            ? 'bg-cream-50/90 shadow-soft backdrop-blur-xl'
+            ? 'bg-cream/90 shadow-soft backdrop-blur-xl'
             : 'bg-transparent',
         )}
       >
@@ -154,7 +154,7 @@ export function Navbar() {
             className="fixed inset-0 z-40 lg:hidden"
           >
             <div
-              className="absolute inset-0 bg-ink-950/40 backdrop-blur-sm"
+              className="absolute inset-0 bg-ink/40 backdrop-blur-sm"
               onClick={() => setMenuOpen(false)}
             />
             <motion.div
@@ -162,7 +162,7 @@ export function Navbar() {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', stiffness: 320, damping: 34 }}
-              className="absolute right-0 top-0 flex h-full w-[min(20rem,85vw)] flex-col bg-cream-50 shadow-2xl"
+              className="absolute right-0 top-0 flex h-full w-[min(20rem,85vw)] flex-col bg-cream shadow-2xl"
             >
               <div className="flex h-[76px] items-center justify-between px-5">
                 <Logo size="sm" linkTo={null} />
@@ -196,7 +196,7 @@ export function Navbar() {
                         className={cn(
                           'block w-full rounded-2xl px-5 py-3.5 text-left text-base font-bold transition-colors',
                           activeId === link.id
-                            ? 'bg-marti-600 text-white shadow-pop-sm'
+                            ? 'bg-marti-600 text-white shadow-pop'
                             : 'bg-white text-ink-700 shadow-soft',
                         )}
                       >

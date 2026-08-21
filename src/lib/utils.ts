@@ -88,11 +88,11 @@ export function fullName(first: string, last: string, preferred?: string | null)
 export function avatarColor(seed: string): string {
   const palette = [
     'bg-marti-100 text-marti-700',
-    'bg-sunshine-100 text-sunshine-700',
-    'bg-coral-100 text-coral-700',
-    'bg-mint-100 text-mint-700',
+    'bg-amber-100 text-amber-700',
+    'bg-magenta-100 text-magenta-700',
+    'bg-teal-100 text-teal-700',
     'bg-grape-100 text-grape-700',
-    'bg-sunshine-100 text-sunshine-700',
+    'bg-amber-100 text-amber-700',
   ]
   let hash = 0
   for (let i = 0; i < seed.length; i++) hash = (hash * 31 + seed.charCodeAt(i)) >>> 0

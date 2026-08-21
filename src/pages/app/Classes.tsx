@@ -15,7 +15,7 @@ export default function Classes() {
   return (
     <>
       <div className="mb-6">
-        <h1 className="font-display text-2xl font-bold text-ink-950">{t('classes.title')}</h1>
+        <h1 className="font-display text-2xl font-bold text-ink">{t('classes.title')}</h1>
         <p className="mt-1.5 text-sm text-ink-600">
           {t('classes.subtitle', { year: formatSchoolYear(currentSchoolYear()) })}
         </p>
@@ -53,7 +53,7 @@ export default function Classes() {
                       </Badge>
                     </div>
 
-                    <h2 className="mt-4 font-display text-lg font-bold text-ink-900">
+                    <h2 className="mt-4 font-display text-lg font-bold text-ink">
                       {cls.name}
                     </h2>
                     <p className="mt-1 text-xs font-semibold uppercase tracking-wide text-marti-600">
@@ -91,12 +91,12 @@ export default function Classes() {
                           animate={{ width: `${fill}%` }}
                           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
                           className={`h-full rounded-full ${
-                            full ? 'bg-coral-500' : fill > 80 ? 'bg-sunshine-500' : 'bg-marti-600'
+                            full ? 'bg-magenta-500' : fill > 80 ? 'bg-amber-500' : 'bg-marti-600'
                           }`}
                         />
                       </div>
                       {full && (
-                        <p className="mt-1.5 text-xs font-medium text-coral-600">
+                        <p className="mt-1.5 text-xs font-medium text-magenta-600">
                           {t('classes.full')}
                         </p>
                       )}

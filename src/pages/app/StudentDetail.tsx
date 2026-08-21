@@ -85,7 +85,7 @@ export default function StudentDetail() {
         <CardBody className="flex flex-wrap items-center gap-5">
           <Avatar name={name} size="xl" />
           <div className="min-w-0 flex-1">
-            <h1 className="font-display text-2xl font-bold text-ink-950">{name}</h1>
+            <h1 className="font-display text-2xl font-bold text-ink">{name}</h1>
             <div className="mt-2 flex flex-wrap items-center gap-2">
               <code className="rounded-md bg-ink-100 px-2 py-0.5 font-mono text-xs font-semibold text-ink-700">
                 {student.studentId}
@@ -194,11 +194,11 @@ export default function StudentDetail() {
                 title={t('students.noAttendance')}
               />
             ) : (
-              <ul className="divide-y divide-cream-200">
+              <ul className="divide-y divide-ink-100">
                 {attendance.map((entry) => (
                   <li key={entry.id} className="flex items-center gap-3 px-5 py-3.5">
                     <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-medium text-ink-900">
+                      <p className="truncate text-sm font-medium text-ink">
                         {entry.className}
                       </p>
                       <p className="text-xs text-ink-500">
@@ -226,11 +226,11 @@ export default function StudentDetail() {
                 title={t('students.noReports')}
               />
             ) : (
-              <ul className="divide-y divide-cream-200">
+              <ul className="divide-y divide-ink-100">
                 {reports.map((report) => (
                   <li key={report.id} className="flex items-center gap-3 px-5 py-3.5">
                     <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-medium text-ink-900">
+                      <p className="truncate text-sm font-medium text-ink">
                         {report.className}
                       </p>
                       <p className="text-xs text-ink-500">
@@ -282,7 +282,7 @@ export default function StudentDetail() {
               <p className="text-xs font-semibold uppercase tracking-wider text-ink-500">
                 {t('students.newPasswordIssued')}
               </p>
-              <code className="mt-0.5 block truncate font-mono text-base font-bold text-ink-900">
+              <code className="mt-0.5 block truncate font-mono text-base font-bold text-ink">
                 {newPassword}
               </code>
             </div>

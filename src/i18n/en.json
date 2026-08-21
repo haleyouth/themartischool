@@ -2,7 +2,7 @@
   "brand": {
     "name": "The Marti School",
     "short": "MARTI",
-    "full": "Maryland Turkish-American Community",
+    "full": "Maryland Turkish-American Inhabitants",
     "tagline": "Turkish language, culture and friendship, every Saturday."
   },
   "nav": {
@@ -114,7 +114,7 @@
     "title": "About the school",
     "subtitle": "A Saturday school run by Turkish-American families, for Turkish-American children.",
     "storyTitle": "Our story",
-    "storyP1": "The Marti School is the weekend school of the Maryland Turkish-American Community, which has been bringing families together since 2003.",
+    "storyP1": "The Marti School is the weekend school of the Maryland Turkish-American Inhabitants, which has been bringing families together since 2003.",
     "storyP2": "It started the way good schools usually do, with parents worrying about something. Their children were growing up in Maryland speaking perfect English and slowly losing the Turkish their grandparents spoke.",
     "storyP3": "Today we teach Turkish language, culture, history and folk arts in classes grouped by ability. Still every Saturday, still run by families who refuse to let a heritage quietly disappear.",
     "missionTitle": "Our mission",
@@ -345,7 +345,12 @@
     "validDate": "Please enter a valid date",
     "validAge": "Students need to be between 3 and 18",
     "validTerms": "Please accept the terms to continue",
-    "feesNotice": "The school office will confirm fees with you after your place is offered. Nothing is charged today."
+    "feesNotice": "The school office will confirm fees with you after your place is offered. Nothing is charged today.",
+    "dobDay": "Day",
+    "dobMonth": "Month",
+    "dobYear": "Year",
+    "dobHint": "Pick the day, month and year your child was born.",
+    "dobAge": "{age} years old"
   },
   "auth": {
     "loginTitle": "Welcome back",
@@ -391,7 +396,11 @@
     "passwordMismatch": "Those two do not match",
     "passwordTooShort": "Use at least 8 characters",
     "passwordUpdated": "Your password has been updated",
-    "updatePassword": "Update password"
+    "updatePassword": "Update password",
+    "loginSubtitleUnified": "Sign in with your student ID or staff email.",
+    "identifierLabel": "Student ID or email",
+    "identifierHint": "Students use the ID we sent you. Staff use your email address.",
+    "identifierPlaceholder": "MRT-2026-0001"
   },
   "dash": {
     "overview": "Overview",
@@ -715,7 +724,7 @@
     "noLogs": "Nothing logged yet"
   },
   "footer": {
-    "about": "The weekend school of the Maryland Turkish-American Community, teaching Turkish language and culture to the next generation.",
+    "about": "The weekend school of the Maryland Turkish-American Inhabitants, teaching Turkish language and culture to the next generation.",
     "quickLinks": "Quick links",
     "programsLinks": "Classes",
     "contactTitle": "Find us",

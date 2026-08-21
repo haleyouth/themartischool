@@ -21,7 +21,7 @@ export function Accordion({
   const [open, setOpen] = useState<number | null>(defaultOpen)
 
   return (
-    <div className={cn('divide-y divide-cream-200 overflow-hidden rounded-2xl border border-cream-200 bg-white', className)}>
+    <div className={cn('divide-y divide-ink-100 overflow-hidden rounded-2xl border-2 border-ink bg-white', className)}>
       {items.map((item, index) => {
         const isOpen = open === index
         return (
@@ -35,7 +35,7 @@ export function Accordion({
               <span
                 className={cn(
                   'font-display text-[15px] font-semibold transition-colors',
-                  isOpen ? 'text-marti-700' : 'text-ink-900',
+                  isOpen ? 'text-marti-700' : 'text-ink',
                 )}
               >
                 {item.question}

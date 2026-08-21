@@ -30,7 +30,7 @@ export default function Students() {
     <>
       <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className="font-display text-2xl font-bold text-ink-950">{t('students.title')}</h1>
+          <h1 className="font-display text-2xl font-bold text-ink">{t('students.title')}</h1>
           <p className="mt-1.5 text-sm text-ink-600">{t('students.subtitle')}</p>
         </div>
         <Input
@@ -59,7 +59,7 @@ export default function Students() {
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-cream-200 text-left text-xs uppercase tracking-wider text-ink-500">
+                  <tr className="border-b border-ink-200 text-left text-xs uppercase tracking-wider text-ink-500">
                     <th className="px-5 py-3 font-semibold">{t('common.name')}</th>
                     <th className="px-5 py-3 font-semibold">{t('students.studentId')}</th>
                     <th className="px-5 py-3 font-semibold">{t('students.gradeLevel')}</th>
@@ -67,7 +67,7 @@ export default function Students() {
                     <th className="px-5 py-3 font-semibold">{t('common.status')}</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-cream-200">
+                <tbody className="divide-y divide-ink-100">
                   {visible.map((student, index) => {
                     const summary = student.attendanceSummary
                     const rate = summary?.totalSessions
@@ -80,7 +80,7 @@ export default function Students() {
                         initial={{ opacity: 0, y: 6 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: Math.min(index * 0.02, 0.25) }}
-                        className="transition-colors hover:bg-cream-100"
+                        className="transition-colors hover:bg-cream-200"
                       >
                         <td className="px-5 py-3.5">
                           <Link
@@ -91,7 +91,7 @@ export default function Students() {
                               name={fullName(student.firstName, student.lastName)}
                               size="sm"
                             />
-                            <span className="font-semibold text-ink-900 transition-colors group-hover:text-marti-700">
+                            <span className="font-semibold text-ink transition-colors group-hover:text-marti-700">
                               {fullName(
                                 student.firstName,
                                 student.lastName,
@@ -113,10 +113,10 @@ export default function Students() {
                                 <div
                                   className={`h-full rounded-full ${
                                     rate >= 90
-                                      ? 'bg-mint-500'
+                                      ? 'bg-teal-500'
                                       : rate >= 75
-                                        ? 'bg-sunshine-500'
-                                        : 'bg-coral-500'
+                                        ? 'bg-amber-500'
+                                        : 'bg-magenta-500'
                                   }`}
                                   style={{ width: `${rate}%` }}
                                 />

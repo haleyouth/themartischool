@@ -184,7 +184,7 @@ export default function Staff() {
     <>
       <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className="font-display text-2xl font-extrabold text-ink-950">{t('staff.title')}</h1>
+          <h1 className="font-display text-2xl font-extrabold text-ink">{t('staff.title')}</h1>
           <p className="mt-1.5 text-sm text-ink-600">{t('staff.subtitle')}</p>
         </div>
         {isDirector && (
@@ -261,7 +261,7 @@ export default function Staff() {
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b-2 border-cream-200 text-left text-xs uppercase tracking-wide text-ink-500">
+                  <tr className="border-b-2 border-ink-200 text-left text-xs uppercase tracking-wide text-ink-500">
                     <th className="px-5 py-3 font-extrabold">{t('common.name')}</th>
                     <th className="px-5 py-3 font-extrabold">{t('common.email')}</th>
                     <th className="px-5 py-3 font-extrabold">{t('staff.role')}</th>
@@ -269,7 +269,7 @@ export default function Staff() {
                     <th className="px-5 py-3 text-right font-extrabold">{t('common.actions')}</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-cream-200">
+                <tbody className="divide-y divide-ink-100">
                   {visible.map((user, index) => {
                     const isSelf = user.uid === auth.user?.uid
                     // A principal must not be able to act on a director.
@@ -282,7 +282,7 @@ export default function Staff() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: Math.min(index * 0.02, 0.25) }}
                         className={cn(
-                          'transition-colors hover:bg-cream-100/70',
+                          'transition-colors hover:bg-cream-200/70',
                           user.status === 'suspended' && 'opacity-60',
                         )}
                       >
@@ -290,7 +290,7 @@ export default function Staff() {
                           <div className="flex items-center gap-3">
                             <Avatar name={user.displayName ?? ''} src={user.photoURL} size="sm" />
                             <div className="min-w-0">
-                              <p className="truncate font-bold text-ink-900">
+                              <p className="truncate font-bold text-ink">
                                 {user.displayName}
                                 {isSelf && (
                                   <span className="ml-2 text-xs font-semibold text-ink-400">
@@ -360,9 +360,9 @@ export default function Staff() {
                               onClick={() => setTogglingStatus(user)}
                             >
                               {user.status === 'active' ? (
-                                <ShieldOff className="h-4 w-4 text-coral-600" />
+                                <ShieldOff className="h-4 w-4 text-magenta-600" />
                               ) : (
-                                <ShieldCheck className="h-4 w-4 text-mint-600" />
+                                <ShieldCheck className="h-4 w-4 text-teal-600" />
                               )}
                             </Button>
                           </div>
@@ -410,7 +410,7 @@ export default function Staff() {
               value={createdCredentials.tempPassword}
               onCopy={() => copy(createdCredentials.tempPassword)}
             />
-            <p className="rounded-2xl bg-sunshine-50 p-4 text-xs leading-relaxed text-sunshine-700">
+            <p className="rounded-2xl bg-amber-50 p-4 text-xs leading-relaxed text-amber-700">
               {t('reg.passwordWarning')}
             </p>
           </div>
@@ -461,10 +461,10 @@ export default function Staff() {
       >
         {changingRole && (
           <div className="space-y-4">
-            <div className="flex items-center gap-3 rounded-2xl bg-cream-100 p-4">
+            <div className="flex items-center gap-3 rounded-2xl bg-cream-200 p-4">
               <Avatar name={changingRole.displayName ?? ''} size="sm" />
               <div className="min-w-0">
-                <p className="truncate text-sm font-bold text-ink-900">
+                <p className="truncate text-sm font-bold text-ink">
                   {changingRole.displayName}
                 </p>
                 <p className="truncate text-xs text-ink-500">{changingRole.email}</p>
@@ -508,10 +508,10 @@ export default function Staff() {
         }
       >
         {togglingStatus && (
-          <div className="flex items-center gap-3 rounded-2xl bg-cream-100 p-4">
+          <div className="flex items-center gap-3 rounded-2xl bg-cream-200 p-4">
             <Avatar name={togglingStatus.displayName ?? ''} size="sm" />
             <div className="min-w-0">
-              <p className="truncate text-sm font-bold text-ink-900">
+              <p className="truncate text-sm font-bold text-ink">
                 {togglingStatus.displayName}
               </p>
               <p className="truncate text-xs text-ink-500">
@@ -550,16 +550,16 @@ export default function Staff() {
               value={newPassword}
               onCopy={() => copy(newPassword)}
             />
-            <p className="rounded-2xl bg-sunshine-50 p-4 text-xs leading-relaxed text-sunshine-700">
+            <p className="rounded-2xl bg-amber-50 p-4 text-xs leading-relaxed text-amber-700">
               {t('reg.passwordWarning')}
             </p>
           </div>
         ) : (
           resetting && (
-            <div className="flex items-center gap-3 rounded-2xl bg-cream-100 p-4">
+            <div className="flex items-center gap-3 rounded-2xl bg-cream-200 p-4">
               <Avatar name={resetting.displayName ?? ''} size="sm" />
               <div className="min-w-0">
-                <p className="truncate text-sm font-bold text-ink-900">{resetting.displayName}</p>
+                <p className="truncate text-sm font-bold text-ink">{resetting.displayName}</p>
                 <p className="truncate font-mono text-xs text-ink-500">{resetting.studentId}</p>
               </div>
             </div>
@@ -580,13 +580,13 @@ function CredentialRow({
   onCopy: () => void
 }) {
   return (
-    <div className="flex items-center gap-3 rounded-2xl border-2 border-cream-200 bg-white p-4">
+    <div className="flex items-center gap-3 rounded-2xl border-2 border-ink bg-white p-4">
       <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-marti-50 text-marti-600">
         <KeyRound className="h-4 w-4" />
       </span>
       <div className="min-w-0 flex-1">
         <p className="text-xs font-extrabold uppercase tracking-wide text-ink-500">{label}</p>
-        <code className="mt-0.5 block truncate font-mono text-base font-bold text-ink-900">
+        <code className="mt-0.5 block truncate font-mono text-base font-bold text-ink">
           {value}
         </code>
       </div>

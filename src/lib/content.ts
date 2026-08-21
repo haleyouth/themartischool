@@ -179,7 +179,7 @@ export const SATURDAY_SCHEDULE = [
 
 /** Real organisation details, from themarti.org. */
 export const SCHOOL_INFO = {
-  orgName: 'Maryland Turkish-American Community',
+  orgName: 'Maryland Turkish-American Inhabitants',
   email: 'info@themarti.org',
   phone: '(410) 660-0501',
   addressLines: ['9115 Guilford Rd, Suite 200', 'Columbia, MD 21046'],

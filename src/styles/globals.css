@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;500;600;700;800&family=Caveat:wght@600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Outfit:wght@400;500;600;700;800&family=Shadows+Into+Light&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -16,15 +16,14 @@
   }
 
   body {
-    @apply bg-cream-50 font-sans text-ink-700 antialiased;
+    @apply bg-cream font-sans text-ink antialiased;
     text-rendering: optimizeLegibility;
   }
 
   h1, h2, h3, h4 {
-    @apply font-display font-bold tracking-tight text-ink-950;
+    @apply font-display font-extrabold tracking-tight text-ink;
   }
 
-  /* Respect users who ask the OS to reduce motion. */
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
       animation-duration: 0.01ms !important;
@@ -35,11 +34,11 @@
   }
 
   ::selection {
-    @apply bg-sunshine-200 text-ink-950;
+    @apply bg-amber-200 text-ink;
   }
 
   :focus-visible {
-    @apply outline-none ring-4 ring-marti-500/40 ring-offset-2 ring-offset-cream-50;
+    @apply outline-none ring-4 ring-marti-500/40 ring-offset-2 ring-offset-cream;
   }
 }
 
@@ -49,17 +48,11 @@
   }
 
   .text-gradient {
-    @apply bg-gradient-to-r from-marti-600 via-marti-500 to-mint-500 bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-marti-600 via-marti-500 to-teal-500 bg-clip-text text-transparent;
   }
 
-  /* Playful dotted texture used behind the hero and CTA bands. */
   .bg-dots {
-    background-image: radial-gradient(circle, rgb(27 121 192 / 0.12) 2px, transparent 2px);
-    background-size: 26px 26px;
-  }
-
-  .bg-dots-warm {
-    background-image: radial-gradient(circle, rgb(245 158 11 / 0.16) 2px, transparent 2px);
+    background-image: radial-gradient(circle, rgb(45 27 77 / 0.10) 2px, transparent 2px);
     background-size: 26px 26px;
   }
 
@@ -74,15 +67,41 @@
   }
 
   /*
-   * Chunky offset shadow that presses down on click. This is the single detail
-   * that makes buttons read as playful rather than corporate.
+   * The signature interaction. An element sits above a hard ink shadow.
+   * Hover only lifts it slightly, so it reads as reachable. The press
+   * happens on click: it slides into the shadow and the shadow collapses.
    */
-  .btn-pop {
-    @apply translate-y-0 transition-all duration-150;
+  .press {
+    @apply translate-x-0 translate-y-0 shadow-pop transition-all duration-150 ease-out;
   }
 
-  .btn-pop:active {
-    @apply translate-y-1 shadow-none;
+  .press:hover {
+    @apply -translate-x-px -translate-y-px shadow-pop-md;
+  }
+
+  .press:active {
+    @apply translate-x-[4px] translate-y-[4px] shadow-pop-flat;
+  }
+
+  .press-md {
+    @apply translate-x-0 translate-y-0 shadow-pop-md transition-all duration-150 ease-out;
+  }
+
+  .press-md:hover {
+    @apply -translate-x-px -translate-y-px shadow-pop-lg;
+  }
+
+  .press-md:active {
+    @apply translate-x-[6px] translate-y-[6px] shadow-pop-flat;
+  }
+
+  /* Cards lift on hover rather than pressing, so they read as non-clickable. */
+  .card-pop {
+    @apply border-2 border-ink bg-white shadow-pop transition-all duration-200 ease-out;
+  }
+
+  .card-pop-hover:hover {
+    @apply -translate-x-[2px] -translate-y-[2px] shadow-pop-md;
   }
 }
 

@@ -123,11 +123,11 @@ export function AccountMenu() {
         onClick={() => setOpen((prev) => !prev)}
         aria-label={t('a11y.userMenu')}
         aria-expanded={open}
-        className="flex items-center gap-2 rounded-2xl bg-white py-1.5 pl-1.5 pr-2.5 shadow-soft ring-2 ring-cream-200 transition-all hover:ring-marti-200"
+        className="flex items-center gap-2 rounded-2xl bg-white py-1.5 pl-1.5 pr-2.5 shadow-soft ring-2 ring-ink-200 transition-all hover:ring-marti-200"
       >
         <Avatar name={displayName} src={auth.profile?.photoURL} size="sm" />
         <span className="hidden min-w-0 text-left sm:block">
-          <span className="block max-w-[9rem] truncate text-xs font-bold text-ink-900">
+          <span className="block max-w-[9rem] truncate text-xs font-bold text-ink">
             {displayName}
           </span>
           <span className="block text-[11px] font-semibold text-ink-500">
@@ -144,12 +144,12 @@ export function AccountMenu() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -8, scale: 0.97 }}
             transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
-            className="absolute right-0 top-full z-50 mt-2 w-[min(20rem,calc(100vw-2rem))] overflow-hidden rounded-3xl border-2 border-cream-200 bg-white shadow-card"
+            className="absolute right-0 top-full z-50 mt-2 w-[min(20rem,calc(100vw-2rem))] overflow-hidden rounded-3xl border-2 border-ink bg-white shadow-card"
           >
-            <div className="flex items-center gap-3 bg-cream-100 p-4">
+            <div className="flex items-center gap-3 bg-cream-200 p-4">
               <Avatar name={displayName} src={auth.profile?.photoURL} size="md" />
               <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-extrabold text-ink-950">{displayName}</p>
+                <p className="truncate text-sm font-extrabold text-ink">{displayName}</p>
                 <p className="truncate text-xs text-ink-500">
                   {auth.profile?.email ?? auth.profile?.studentId ?? ''}
                 </p>
@@ -162,7 +162,7 @@ export function AccountMenu() {
 
             {/* Demo account switcher, only shown when signed in as a demo user. */}
             {currentDemoKey && (
-              <div className="border-t-2 border-cream-200 p-2">
+              <div className="border-t-2 border-ink-200 p-2">
                 <p className="px-2.5 py-1.5 text-[11px] font-extrabold uppercase tracking-wide text-ink-400">
                   {t('auth.demoTitle')}
                 </p>
@@ -179,13 +179,13 @@ export function AccountMenu() {
                           disabled={switching !== null}
                           className={cn(
                             'flex w-full items-center gap-2.5 rounded-2xl px-2.5 py-2 text-left transition-colors disabled:opacity-60',
-                            isCurrent ? 'bg-marti-50' : 'hover:bg-cream-100',
+                            isCurrent ? 'bg-marti-50' : 'hover:bg-cream-200',
                           )}
                         >
                           <span
                             className={cn(
                               'flex h-8 w-8 shrink-0 items-center justify-center rounded-xl',
-                              isCurrent ? 'bg-marti-600 text-white' : 'bg-cream-100 text-ink-500',
+                              isCurrent ? 'bg-marti-600 text-white' : 'bg-cream-200 text-ink-500',
                             )}
                           >
                             <Icon className="h-4 w-4" />
@@ -207,14 +207,14 @@ export function AccountMenu() {
               </div>
             )}
 
-            <div className="border-t-2 border-cream-200 p-2">
+            <div className="border-t-2 border-ink-200 p-2">
               <button
                 type="button"
                 onClick={() => {
                   setOpen(false)
                   navigate('/app/settings')
                 }}
-                className="flex w-full items-center gap-2.5 rounded-2xl px-2.5 py-2.5 text-sm font-bold text-ink-700 transition-colors hover:bg-cream-100"
+                className="flex w-full items-center gap-2.5 rounded-2xl px-2.5 py-2.5 text-sm font-bold text-ink-700 transition-colors hover:bg-cream-200"
               >
                 <SettingsIcon className="h-4 w-4 text-ink-400" />
                 {t('dash.settings')}
@@ -225,7 +225,7 @@ export function AccountMenu() {
                   setOpen(false)
                   navigate('/app/settings')
                 }}
-                className="flex w-full items-center gap-2.5 rounded-2xl px-2.5 py-2.5 text-sm font-bold text-ink-700 transition-colors hover:bg-cream-100"
+                className="flex w-full items-center gap-2.5 rounded-2xl px-2.5 py-2.5 text-sm font-bold text-ink-700 transition-colors hover:bg-cream-200"
               >
                 <UserRound className="h-4 w-4 text-ink-400" />
                 {t('dash.profile')}
@@ -233,7 +233,7 @@ export function AccountMenu() {
               <button
                 type="button"
                 onClick={handleSignOut}
-                className="flex w-full items-center gap-2.5 rounded-2xl px-2.5 py-2.5 text-sm font-bold text-coral-600 transition-colors hover:bg-coral-50"
+                className="flex w-full items-center gap-2.5 rounded-2xl px-2.5 py-2.5 text-sm font-bold text-magenta-600 transition-colors hover:bg-magenta-50"
               >
                 <LogOut className="h-4 w-4" />
                 {t('auth.signOut')}

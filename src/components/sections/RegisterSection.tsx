@@ -18,6 +18,7 @@ import { useMemo, useState } from 'react'
 import { Reveal } from '@/components/motion'
 import { Section, SectionHeading } from '@/components/public/Sections'
 import { Button } from '@/components/ui/Button'
+import { DateOfBirthField } from '@/components/ui/DateOfBirthField'
 import { Checkbox, Input, Select, Textarea } from '@/components/ui/Input'
 import { useToast } from '@/components/ui/Toast'
 import { useI18n } from '@/i18n'
@@ -267,25 +268,25 @@ export function RegisterSection({ selectedPlan }: { selectedPlan?: string }) {
             initial={{ opacity: 0, scale: 0.96 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-            className="mx-auto max-w-2xl overflow-hidden rounded-5xl border-4 border-white bg-white shadow-card ring-2 ring-mint-200"
+            className="mx-auto max-w-2xl overflow-hidden rounded-5xl border-2 border-ink bg-white shadow-card ring-2 ring-teal-200"
           >
-            <div className="bg-mint-50 px-8 py-12 text-center">
+            <div className="bg-teal-50 px-8 py-12 text-center">
               <motion.span
                 initial={{ scale: 0, rotate: -20 }}
                 animate={{ scale: 1, rotate: 0 }}
                 transition={{ type: 'spring', stiffness: 240, damping: 16, delay: 0.15 }}
-                className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-mint-500 text-white"
+                className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-teal-500 text-white"
               >
                 <CheckCircle2 className="h-8 w-8" aria-hidden />
               </motion.span>
-              <h2 className="mt-6 font-display text-2xl font-bold text-ink-950">
+              <h2 className="mt-6 font-display text-2xl font-bold text-ink">
                 {t('register.successTitle')}
               </h2>
               <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-ink-600">
                 {t('register.successBody', { email: submitted.email })}
               </p>
 
-              <div className="mx-auto mt-6 inline-flex items-center gap-3 rounded-2xl bg-white px-5 py-3 shadow-soft ring-2 ring-cream-200">
+              <div className="mx-auto mt-6 inline-flex items-center gap-3 rounded-2xl bg-white px-5 py-3 shadow-soft ring-2 ring-ink-200">
                 <span className="text-xs font-semibold uppercase tracking-wider text-ink-500">
                   {t('register.successReference')}
                 </span>
@@ -348,9 +349,9 @@ export function RegisterSection({ selectedPlan }: { selectedPlan?: string }) {
         />
 
         <Reveal className="mx-auto mt-12 max-w-3xl">
-          <div className="overflow-hidden rounded-5xl border-4 border-white bg-white shadow-card">
+          <div className="overflow-hidden rounded-5xl border-2 border-ink bg-white shadow-card">
             {/* Stepper */}
-            <div className="border-b-2 border-cream-200 bg-cream-100 px-6 py-5">
+            <div className="border-b-2 border-ink-200 bg-cream-200 px-6 py-5">
               <ol className="flex items-center justify-between gap-1">
                 {STEPS.map((item, index) => {
                   const Icon = item.icon
@@ -364,10 +365,10 @@ export function RegisterSection({ selectedPlan }: { selectedPlan?: string }) {
                           className={cn(
                             'flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-xs font-bold transition-colors duration-300',
                             done
-                              ? 'bg-mint-500 text-white'
+                              ? 'bg-teal-500 text-white'
                               : active
-                                ? 'bg-marti-600 text-white shadow-glow'
-                                : 'bg-white text-ink-400 ring-1 ring-cream-200',
+                                ? 'bg-marti-600 text-white shadow-pop'
+                                : 'bg-white text-ink-400 ring-1 ring-ink-200',
                           )}
                         >
                           {done ? (
@@ -391,7 +392,7 @@ export function RegisterSection({ selectedPlan }: { selectedPlan?: string }) {
                             initial={false}
                             animate={{ scaleX: done ? 1 : 0 }}
                             transition={{ duration: 0.35 }}
-                            className="h-full origin-left bg-mint-500"
+                            className="h-full origin-left bg-teal-500"
                           />
                         </div>
                       )}
@@ -444,12 +445,10 @@ export function RegisterSection({ selectedPlan }: { selectedPlan?: string }) {
                         maxLength={60}
                       />
                       <div className="grid gap-5 sm:grid-cols-2">
-                        <Input
+                        <DateOfBirthField
                           label={t('register.dateOfBirth')}
-                          type="date"
-                          required
                           value={data.dateOfBirth}
-                          onChange={(e) => set('dateOfBirth', e.target.value)}
+                          onChange={(next) => set('dateOfBirth', next)}
                           error={errors.dateOfBirth}
                         />
                         <Select
@@ -505,7 +504,7 @@ export function RegisterSection({ selectedPlan }: { selectedPlan?: string }) {
                         />
                       </div>
 
-                      <div className="rounded-3xl bg-cream-100 p-5">
+                      <div className="rounded-3xl bg-cream-200 p-5">
                         <p className="text-sm font-semibold text-ink-800">
                           {t('register.secondGuardianTitle')}
                           <span className="ml-2 text-xs font-normal text-ink-500">
@@ -527,7 +526,7 @@ export function RegisterSection({ selectedPlan }: { selectedPlan?: string }) {
                         </div>
                       </div>
 
-                      <div className="rounded-3xl border-2 border-cream-200 p-5">
+                      <div className="rounded-3xl border-2 border-ink p-5">
                         <p className="text-sm font-semibold text-ink-800">
                           {t('register.addressTitle')}
                           <span className="ml-2 text-xs font-normal text-ink-500">
@@ -564,7 +563,7 @@ export function RegisterSection({ selectedPlan }: { selectedPlan?: string }) {
                         </div>
                       </div>
 
-                      <div className="rounded-3xl border-2 border-coral-200 bg-coral-50 p-5">
+                      <div className="rounded-3xl border-2 border-magenta-200 bg-magenta-50 p-5">
                         <p className="text-sm font-semibold text-ink-800">
                           {t('register.emergencyTitle')}
                         </p>
@@ -646,7 +645,7 @@ export function RegisterSection({ selectedPlan }: { selectedPlan?: string }) {
                         onChange={(e) => set('priorSchooling', e.target.value)}
                       />
 
-                      <div className="rounded-3xl border-2 border-cream-200 p-5">
+                      <div className="rounded-3xl border-2 border-ink p-5">
                         <p className="text-sm font-semibold text-ink-800">
                           {t('register.medicalTitle')}
                         </p>
@@ -689,7 +688,7 @@ export function RegisterSection({ selectedPlan }: { selectedPlan?: string }) {
                               className={cn(
                                 'flex w-full items-center gap-4 rounded-3xl border-2 p-5 text-left transition-all duration-200',
                                 active
-                                  ? 'border-marti-500 bg-marti-50 shadow-glow'
+                                  ? 'border-marti-500 bg-marti-50 shadow-pop'
                                   : 'border-ink-200 bg-white hover:border-marti-300 hover:bg-marti-50/30',
                               )}
                             >
@@ -711,11 +710,11 @@ export function RegisterSection({ selectedPlan }: { selectedPlan?: string }) {
                               </span>
                               <span className="min-w-0 flex-1">
                                 <span className="flex items-center gap-2">
-                                  <span className="font-display text-base font-bold text-ink-900">
+                                  <span className="font-display text-base font-bold text-ink">
                                     {plan.name}
                                   </span>
                                   {plan.featured && (
-                                    <span className="rounded-full bg-sunshine-100 px-2 py-0.5 text-[10px] font-bold uppercase text-sunshine-700">
+                                    <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold uppercase text-amber-700">
                                       {t('tuition.mostPopular')}
                                     </span>
                                   )}
@@ -726,7 +725,7 @@ export function RegisterSection({ selectedPlan }: { selectedPlan?: string }) {
                           )
                         })}
                       </div>
-                      <p className="rounded-xl bg-sunshine-50 px-4 py-3 text-xs leading-relaxed text-sunshine-700">
+                      <p className="rounded-xl bg-amber-50 px-4 py-3 text-xs leading-relaxed text-amber-700">
                         {t('register.feesNotice')}
                       </p>
                       <Select
@@ -811,7 +810,7 @@ export function RegisterSection({ selectedPlan }: { selectedPlan?: string }) {
                         ]}
                       />
 
-                      <div className="space-y-3 rounded-3xl bg-cream-100 p-5">
+                      <div className="space-y-3 rounded-3xl bg-cream-200 p-5">
                         <p className="text-sm font-semibold text-ink-800">
                           {t('register.consentTitle')}
                         </p>
@@ -829,16 +828,16 @@ export function RegisterSection({ selectedPlan }: { selectedPlan?: string }) {
                       </div>
 
                       {failed && (
-                        <div className="flex gap-3 rounded-xl border border-coral-200 bg-coral-50 p-4">
+                        <div className="flex gap-3 rounded-xl border border-magenta-200 bg-magenta-50 p-4">
                           <CircleAlert
-                            className="mt-0.5 h-4.5 w-4.5 shrink-0 text-coral-600"
+                            className="mt-0.5 h-4.5 w-4.5 shrink-0 text-magenta-600"
                             aria-hidden
                           />
                           <div>
-                            <p className="text-sm font-semibold text-coral-900">
+                            <p className="text-sm font-semibold text-magenta-900">
                               {t('register.errorTitle')}
                             </p>
-                            <p className="mt-1 text-xs leading-relaxed text-coral-700">
+                            <p className="mt-1 text-xs leading-relaxed text-magenta-700">
                               {t('register.errorBody')}
                             </p>
                           </div>
@@ -851,7 +850,7 @@ export function RegisterSection({ selectedPlan }: { selectedPlan?: string }) {
             </div>
 
             {/* Footer navigation */}
-            <div className="flex items-center justify-between gap-3 border-t-2 border-cream-200 bg-cream-100 px-6 py-5 sm:px-8">
+            <div className="flex items-center justify-between gap-3 border-t-2 border-ink-200 bg-cream-200 px-6 py-5 sm:px-8">
               <Button
                 variant="ghost"
                 onClick={goBack}
@@ -889,7 +888,7 @@ export function RegisterSection({ selectedPlan }: { selectedPlan?: string }) {
 function StepHeader({ title, subtitle }: { title: string; subtitle: string }) {
   return (
     <div className="mb-2">
-      <h3 className="font-display text-xl font-bold text-ink-950">{title}</h3>
+      <h3 className="font-display text-xl font-bold text-ink">{title}</h3>
       <p className="mt-1.5 text-sm leading-relaxed text-ink-600">{subtitle}</p>
     </div>
   )
@@ -907,9 +906,9 @@ function ReviewBlock({
   editLabel: string
 }) {
   return (
-    <div className="rounded-3xl border-2 border-cream-200 p-5">
+    <div className="rounded-3xl border-2 border-ink p-5">
       <div className="flex items-center justify-between">
-        <h4 className="text-sm font-bold text-ink-900">{title}</h4>
+        <h4 className="text-sm font-bold text-ink">{title}</h4>
         <button
           type="button"
           onClick={onEdit}

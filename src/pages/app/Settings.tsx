@@ -107,7 +107,7 @@ export default function Settings() {
   return (
     <>
       <div className="mb-6">
-        <h1 className="font-display text-2xl font-bold text-ink-950">{t('settings.title')}</h1>
+        <h1 className="font-display text-2xl font-bold text-ink">{t('settings.title')}</h1>
         <p className="mt-1.5 text-sm text-ink-600">{t('settings.subtitle')}</p>
       </div>
 
@@ -129,7 +129,7 @@ export default function Settings() {
                 size="lg"
               />
               <div className="min-w-0">
-                <p className="truncate text-sm font-semibold text-ink-900">
+                <p className="truncate text-sm font-semibold text-ink">
                   {auth.profile?.email ?? auth.profile?.studentId ?? '-'}
                 </p>
                 <p className="text-xs text-ink-500">
@@ -183,7 +183,7 @@ export default function Settings() {
               {PREF_KEYS.map((pref) => (
                 <label
                   key={pref.key}
-                  className="flex cursor-pointer items-center justify-between gap-4 rounded-xl px-2 py-2.5 transition-colors hover:bg-cream-100"
+                  className="flex cursor-pointer items-center justify-between gap-4 rounded-xl px-2 py-2.5 transition-colors hover:bg-cream-200"
                 >
                   <span className="text-sm text-ink-700">{t(pref.labelKey)}</span>
                   <button

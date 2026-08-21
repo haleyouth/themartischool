@@ -54,7 +54,7 @@ export function SectionHeading({
       <h2
         className={cn(
           'mt-5 text-balance font-display text-3xl font-extrabold leading-[1.15] sm:text-[2.6rem]',
-          tone === 'light' ? 'text-ink-950' : 'text-white',
+          tone === 'light' ? 'text-ink' : 'text-white',
         )}
       >
         {title}
@@ -85,8 +85,8 @@ export function Section({
   tone?: 'cream' | 'white' | 'dark'
 }) {
   const tones = {
-    cream: 'bg-cream-100',
-    white: 'bg-cream-50',
+    cream: 'bg-cream-200',
+    white: 'bg-cream',
     dark: 'bg-marti-800',
   }
 
@@ -102,7 +102,7 @@ export function Section({
  * than a stack of rectangles.
  */
 export function WaveDivider({
-  from = 'fill-cream-100',
+  from = 'fill-cream-200',
   flip = false,
   className,
 }: {

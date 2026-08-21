@@ -32,18 +32,18 @@ const ToastContext = createContext<ToastContextValue | null>(null)
 const kinds: Record<ToastKind, { icon: typeof Info; className: string; iconClass: string }> = {
   success: {
     icon: CheckCircle2,
-    className: 'border-mint-200 bg-mint-50',
-    iconClass: 'text-mint-600',
+    className: 'border-teal-200 bg-teal-50',
+    iconClass: 'text-teal-600',
   },
   error: {
     icon: XCircle,
-    className: 'border-coral-200 bg-coral-50',
-    iconClass: 'text-coral-600',
+    className: 'border-magenta-200 bg-magenta-50',
+    iconClass: 'text-magenta-600',
   },
   warning: {
     icon: AlertCircle,
-    className: 'border-sunshine-200 bg-sunshine-50',
-    iconClass: 'text-sunshine-600',
+    className: 'border-amber-200 bg-amber-50',
+    iconClass: 'text-amber-600',
   },
   info: { icon: Info, className: 'border-marti-200 bg-marti-50', iconClass: 'text-marti-600' },
 }
@@ -105,7 +105,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
                 >
                   <Icon className={cn('mt-0.5 h-5 w-5 shrink-0', iconClass)} aria-hidden />
                   <div className="min-w-0 flex-1">
-                    <p className="text-sm font-semibold text-ink-900">{item.message}</p>
+                    <p className="text-sm font-semibold text-ink">{item.message}</p>
                     {item.description && (
                       <p className="mt-0.5 text-xs leading-relaxed text-ink-600">
                         {item.description}

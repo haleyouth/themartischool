@@ -138,7 +138,7 @@ export default function AppLayout() {
         <button
           type="button"
           onClick={() => setSidebarOpen(false)}
-          className="rounded-xl p-2 text-ink-400 hover:bg-cream-100 lg:hidden"
+          className="rounded-xl p-2 text-ink-400 hover:bg-cream-200 lg:hidden"
           aria-label={t('nav.close')}
         >
           <X className="h-5 w-5" />
@@ -170,7 +170,7 @@ export default function AppLayout() {
                             'group relative flex items-center gap-3 rounded-2xl px-3.5 py-2.5 text-sm font-bold transition-all duration-200',
                             isActive
                               ? 'text-white'
-                              : 'text-ink-600 hover:bg-cream-100 hover:text-ink-900',
+                              : 'text-ink-600 hover:bg-cream-200 hover:text-ink',
                           )
                         }
                       >
@@ -179,7 +179,7 @@ export default function AppLayout() {
                             {isActive && (
                               <motion.span
                                 layoutId="sidebar-active"
-                                className="absolute inset-0 rounded-2xl bg-marti-600 shadow-pop-sm"
+                                className="absolute inset-0 rounded-2xl bg-marti-600 shadow-pop"
                                 transition={{ type: 'spring', stiffness: 380, damping: 32 }}
                               />
                             )}
@@ -205,8 +205,8 @@ export default function AppLayout() {
   )
 
   return (
-    <div className="flex min-h-screen bg-cream-100">
-      <aside className="hidden w-64 shrink-0 flex-col border-r-2 border-cream-200 bg-cream-50 lg:flex lg:fixed lg:inset-y-0">
+    <div className="flex min-h-screen bg-cream-200">
+      <aside className="hidden w-64 shrink-0 flex-col border-r-2 border-ink-200 bg-cream lg:flex lg:fixed lg:inset-y-0">
         {sidebarContent}
       </aside>
 
@@ -219,7 +219,7 @@ export default function AppLayout() {
             className="fixed inset-0 z-50 lg:hidden"
           >
             <div
-              className="absolute inset-0 bg-ink-950/40 backdrop-blur-sm"
+              className="absolute inset-0 bg-ink/40 backdrop-blur-sm"
               onClick={() => setSidebarOpen(false)}
             />
             <motion.aside
@@ -227,7 +227,7 @@ export default function AppLayout() {
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}
               transition={{ type: 'spring', stiffness: 320, damping: 34 }}
-              className="absolute inset-y-0 left-0 flex w-[min(17rem,85vw)] flex-col bg-cream-50 shadow-2xl"
+              className="absolute inset-y-0 left-0 flex w-[min(17rem,85vw)] flex-col bg-cream shadow-2xl"
             >
               {sidebarContent}
             </motion.aside>
@@ -236,18 +236,18 @@ export default function AppLayout() {
       </AnimatePresence>
 
       <div className="flex min-w-0 flex-1 flex-col lg:pl-64">
-        <header className="sticky top-0 z-30 flex h-[76px] shrink-0 items-center gap-3 border-b-2 border-cream-200 bg-cream-50/90 px-4 backdrop-blur-xl sm:px-6">
+        <header className="sticky top-0 z-30 flex h-[76px] shrink-0 items-center gap-3 border-b-2 border-ink-200 bg-cream/90 px-4 backdrop-blur-xl sm:px-6">
           <button
             type="button"
             onClick={() => setSidebarOpen(true)}
-            className="rounded-xl p-2 text-ink-600 transition-colors hover:bg-cream-100 lg:hidden"
+            className="rounded-xl p-2 text-ink-600 transition-colors hover:bg-cream-200 lg:hidden"
             aria-label={t('a11y.toggleMenu')}
           >
             <Menu className="h-5 w-5" />
           </button>
 
           <div className="min-w-0 flex-1">
-            <h1 className="truncate font-display text-lg font-extrabold text-ink-950">
+            <h1 className="truncate font-display text-lg font-extrabold text-ink">
               {t(currentTitle)}
             </h1>
           </div>

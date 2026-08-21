@@ -70,7 +70,7 @@ export function Modal({
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
             onClick={closeOnBackdrop ? onClose : undefined}
-            className="absolute inset-0 bg-ink-950/50 backdrop-blur-sm"
+            className="absolute inset-0 bg-ink/50 backdrop-blur-sm"
           />
 
           <motion.div
@@ -88,10 +88,10 @@ export function Modal({
             )}
           >
             {(title || description) && (
-              <div className="flex items-start justify-between gap-4 border-b border-cream-200 p-5 sm:p-6">
+              <div className="flex items-start justify-between gap-4 border-b border-ink-200 p-5 sm:p-6">
                 <div className="min-w-0">
                   {title && (
-                    <h2 className="font-display text-lg font-bold text-ink-950">{title}</h2>
+                    <h2 className="font-display text-lg font-bold text-ink">{title}</h2>
                   )}
                   {description && (
                     <p className="mt-1.5 text-sm leading-relaxed text-ink-600">{description}</p>
@@ -111,7 +111,7 @@ export function Modal({
             <div className="scrollbar-thin flex-1 overflow-y-auto p-5 sm:p-6">{children}</div>
 
             {footer && (
-              <div className="flex flex-wrap items-center justify-end gap-3 border-t border-cream-200 bg-cream-100/60 p-5 sm:p-6">
+              <div className="flex flex-wrap items-center justify-end gap-3 border-t border-ink-200 bg-cream-200/60 p-5 sm:p-6">
                 {footer}
               </div>
             )}

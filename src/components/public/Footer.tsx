@@ -41,7 +41,7 @@ export function Footer() {
         aria-hidden
       />
       <div
-        className="pointer-events-none absolute -bottom-32 -right-20 h-72 w-72 rounded-full bg-mint-500/20 blur-3xl"
+        className="pointer-events-none absolute -bottom-32 -right-20 h-72 w-72 rounded-full bg-teal-500/20 blur-3xl"
         aria-hidden
       />
 
@@ -116,7 +116,7 @@ export function Footer() {
             </h3>
             <ul className="mt-4 space-y-3.5 text-sm">
               <li className="flex gap-3">
-                <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-mint-300" aria-hidden />
+                <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-teal-300" aria-hidden />
                 <span className="text-marti-200">
                   {SCHOOL_INFO.addressLines.map((line) => (
                     <span key={line} className="block">
@@ -126,7 +126,7 @@ export function Footer() {
                 </span>
               </li>
               <li className="flex gap-3">
-                <Mail className="mt-0.5 h-4 w-4 shrink-0 text-mint-300" aria-hidden />
+                <Mail className="mt-0.5 h-4 w-4 shrink-0 text-teal-300" aria-hidden />
                 <a
                   href={`mailto:${SCHOOL_INFO.email}`}
                   className="text-marti-200 transition-colors hover:text-white"
@@ -135,7 +135,7 @@ export function Footer() {
                 </a>
               </li>
               <li className="flex gap-3">
-                <Phone className="mt-0.5 h-4 w-4 shrink-0 text-mint-300" aria-hidden />
+                <Phone className="mt-0.5 h-4 w-4 shrink-0 text-teal-300" aria-hidden />
                 <a
                   href={`tel:${SCHOOL_INFO.phone.replace(/[^0-9+]/g, '')}`}
                   className="text-marti-200 transition-colors hover:text-white"
@@ -144,7 +144,7 @@ export function Footer() {
                 </a>
               </li>
               <li className="flex gap-3">
-                <span className="mt-0.5 w-4 shrink-0 text-center text-mint-300" aria-hidden>
+                <span className="mt-0.5 w-4 shrink-0 text-center text-teal-300" aria-hidden>
                   🕘
                 </span>
                 <span className="text-marti-200">{t('contact.hoursValue')}</span>

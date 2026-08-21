@@ -48,7 +48,7 @@ export function Logo({
           <span
             className={cn(
               'block font-display text-sm font-bold leading-tight',
-              tone === 'white' ? 'text-white' : 'text-ink-900',
+              tone === 'white' ? 'text-white' : 'text-ink',
             )}
           >
             {t('brand.name')}

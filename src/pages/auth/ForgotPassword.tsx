@@ -72,7 +72,7 @@ export default function ForgotPassword() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="w-full max-w-md rounded-3xl border border-cream-200 bg-white p-7 shadow-card sm:p-8"
+          className="w-full max-w-md rounded-3xl border-2 border-ink bg-white p-7 shadow-card sm:p-8"
         >
           <Logo size="md" />
 
@@ -82,11 +82,11 @@ export default function ForgotPassword() {
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ type: 'spring', stiffness: 240, damping: 16 }}
-                className="flex h-14 w-14 items-center justify-center rounded-full bg-mint-600 text-white"
+                className="flex h-14 w-14 items-center justify-center rounded-full bg-teal-600 text-white"
               >
                 <CheckCircle2 className="h-7 w-7" />
               </motion.span>
-              <h1 className="mt-5 font-display text-xl font-bold text-ink-950">
+              <h1 className="mt-5 font-display text-xl font-bold text-ink">
                 {t('auth.resetSentTitle')}
               </h1>
               <p className="mt-2 text-sm leading-relaxed text-ink-600">
@@ -98,7 +98,7 @@ export default function ForgotPassword() {
             </div>
           ) : (
             <>
-              <h1 className="mt-7 font-display text-2xl font-bold text-ink-950">
+              <h1 className="mt-7 font-display text-2xl font-bold text-ink">
                 {t('auth.forgotTitle')}
               </h1>
               <p className="mt-2 text-sm leading-relaxed text-ink-600">

@@ -11,12 +11,12 @@ import { cn } from '@/lib/utils'
 const ACCENTS = {
   marti: { chip: 'bg-marti-100 text-marti-700', ring: 'hover:border-marti-300', bar: 'bg-marti-400' },
   sunshine: {
-    chip: 'bg-sunshine-100 text-sunshine-700',
-    ring: 'hover:border-sunshine-300',
-    bar: 'bg-sunshine-400',
+    chip: 'bg-amber-100 text-amber-700',
+    ring: 'hover:border-amber-300',
+    bar: 'bg-amber-400',
   },
-  mint: { chip: 'bg-mint-100 text-mint-700', ring: 'hover:border-mint-300', bar: 'bg-mint-400' },
-  coral: { chip: 'bg-coral-100 text-coral-700', ring: 'hover:border-coral-300', bar: 'bg-coral-400' },
+  mint: { chip: 'bg-teal-100 text-teal-700', ring: 'hover:border-teal-300', bar: 'bg-teal-400' },
+  coral: { chip: 'bg-magenta-100 text-magenta-700', ring: 'hover:border-magenta-300', bar: 'bg-magenta-400' },
   grape: { chip: 'bg-grape-100 text-grape-700', ring: 'hover:border-grape-300', bar: 'bg-grape-400' },
 }
 
@@ -68,13 +68,13 @@ export function ProgramsSection() {
                   aria-pressed={active}
                   className={cn(
                     'relative rounded-full px-5 py-2.5 text-sm font-bold transition-colors duration-200',
-                    active ? 'text-white' : 'bg-white text-ink-600 ring-2 ring-cream-200 hover:text-marti-700',
+                    active ? 'text-white' : 'bg-white text-ink-600 ring-2 ring-ink-200 hover:text-marti-700',
                   )}
                 >
                   {active && (
                     <motion.span
                       layoutId="program-filter"
-                      className="absolute inset-0 rounded-full bg-marti-600 shadow-pop-sm"
+                      className="absolute inset-0 rounded-full bg-marti-600 shadow-pop"
                       transition={{ type: 'spring', stiffness: 380, damping: 32 }}
                     />
                   )}
@@ -122,7 +122,7 @@ export function ProgramsSection() {
                       </span>
                     </div>
 
-                    <h3 className="mt-5 font-display text-xl font-extrabold text-ink-950">
+                    <h3 className="mt-5 font-display text-xl font-extrabold text-ink">
                       {t(program.nameKey)}
                     </h3>
                     <p className="mt-1 text-sm font-bold text-marti-600">{t(program.ageKey)}</p>
@@ -130,7 +130,7 @@ export function ProgramsSection() {
                       {t(program.descKey)}
                     </p>
 
-                    <div className="mt-5 flex items-center gap-4 border-t-2 border-dashed border-cream-200 pt-4 text-xs font-bold text-ink-500">
+                    <div className="mt-5 flex items-center gap-4 border-t-2 border-dashed border-ink-200 pt-4 text-xs font-bold text-ink-500">
                       <span className="inline-flex items-center gap-1.5">
                         <Clock className="h-4 w-4 text-ink-400" aria-hidden />
                         {program.duration} {t('common.hours')}
@@ -148,7 +148,7 @@ export function ProgramsSection() {
         </div>
       </Section>
 
-      <WaveDivider from="fill-cream-100" />
+      <WaveDivider from="fill-cream-200" />
     </>
   )
 }

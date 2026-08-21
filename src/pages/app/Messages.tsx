@@ -134,7 +134,7 @@ export default function Messages() {
   return (
     <>
       <div className="mb-6">
-        <h1 className="font-display text-2xl font-bold text-ink-950">{t('messages.title')}</h1>
+        <h1 className="font-display text-2xl font-bold text-ink">{t('messages.title')}</h1>
         <p className="mt-1.5 text-sm text-ink-600">{t('messages.subtitle')}</p>
       </div>
 
@@ -142,11 +142,11 @@ export default function Messages() {
         {/* Thread list */}
         <div
           className={cn(
-            'flex flex-col border-cream-200 lg:border-r',
+            'flex flex-col border-ink-200 lg:border-r',
             activeId && 'hidden lg:flex',
           )}
         >
-          <div className="border-b border-cream-200 p-3">
+          <div className="border-b border-ink-200 p-3">
             <Input
               placeholder={t('messages.searchConversations')}
               value={search}
@@ -168,21 +168,21 @@ export default function Messages() {
                 description={t('messages.noConversationsBody')}
               />
             ) : (
-              <ul className="divide-y divide-cream-200">
+              <ul className="divide-y divide-ink-100">
                 {visible.map((conv) => (
                   <li key={conv.id}>
                     <button
                       type="button"
                       onClick={() => setActiveId(conv.id)}
                       className={cn(
-                        'flex w-full gap-3 px-4 py-3.5 text-left transition-colors hover:bg-cream-100',
+                        'flex w-full gap-3 px-4 py-3.5 text-left transition-colors hover:bg-cream-200',
                         activeId === conv.id && 'bg-marti-50',
                       )}
                     >
                       <Avatar name={conversationTitle(conv, uid)} size="sm" />
                       <span className="min-w-0 flex-1">
                         <span className="flex items-center justify-between gap-2">
-                          <span className="truncate text-sm font-semibold text-ink-900">
+                          <span className="truncate text-sm font-semibold text-ink">
                             {conversationTitle(conv, uid)}
                           </span>
                           {(conv.unreadCounts?.[uid] ?? 0) > 0 && (
@@ -219,7 +219,7 @@ export default function Messages() {
             </div>
           ) : (
             <>
-              <div className="flex items-center gap-3 border-b border-cream-200 px-5 py-3.5">
+              <div className="flex items-center gap-3 border-b border-ink-200 px-5 py-3.5">
                 <button
                   type="button"
                   onClick={() => setActiveId(null)}
@@ -229,7 +229,7 @@ export default function Messages() {
                 </button>
                 <Avatar name={conversationTitle(active, uid)} size="sm" />
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-bold text-ink-900">
+                  <p className="truncate text-sm font-bold text-ink">
                     {conversationTitle(active, uid)}
                   </p>
                   <p className="text-xs text-ink-500">
@@ -244,7 +244,7 @@ export default function Messages() {
                 )}
               </div>
 
-              <div className="scrollbar-thin flex-1 space-y-3 overflow-y-auto bg-cream-100/40 p-5">
+              <div className="scrollbar-thin flex-1 space-y-3 overflow-y-auto bg-cream-200/40 p-5">
                 {loadingMessages ? (
                   <div className="flex justify-center py-10">
                     <Spinner />
@@ -273,7 +273,7 @@ export default function Messages() {
                                 'rounded-2xl px-4 py-2.5 text-sm leading-relaxed',
                                 mine
                                   ? 'rounded-br-md bg-marti-600 text-white'
-                                  : 'rounded-bl-md border border-cream-200 bg-white text-ink-800',
+                                  : 'rounded-bl-md border-2 border-ink bg-white text-ink-800',
                               )}
                             >
                               {message.deletedAt ? (
@@ -300,7 +300,7 @@ export default function Messages() {
               </div>
 
               {active.isLocked ? (
-                <p className="border-t border-cream-200 px-5 py-4 text-center text-xs text-ink-500">
+                <p className="border-t border-ink-200 px-5 py-4 text-center text-xs text-ink-500">
                   {t('messages.locked')}
                 </p>
               ) : (
@@ -309,7 +309,7 @@ export default function Messages() {
                     event.preventDefault()
                     void send()
                   }}
-                  className="flex items-end gap-2.5 border-t border-cream-200 p-4"
+                  className="flex items-end gap-2.5 border-t border-ink-200 p-4"
                 >
                   <textarea
                     value={draft}

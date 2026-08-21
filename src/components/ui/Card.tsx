@@ -9,7 +9,7 @@ export function Card({
   return (
     <div
       className={cn(
-        'rounded-4xl border-2 border-cream-200 bg-white shadow-soft',
+        'rounded-4xl border-2 border-ink bg-white shadow-soft',
         hover && 'transition-all duration-300 hover:-translate-y-1 hover:shadow-card',
         className,
       )}
@@ -33,13 +33,13 @@ export function CardHeader({
   return (
     <div
       className={cn(
-        'flex items-start justify-between gap-4 border-b-2 border-cream-200 p-5',
+        'flex items-start justify-between gap-4 border-b-2 border-ink-200 p-5',
         className,
       )}
       {...props}
     >
       <div className="min-w-0">
-        {title && <h3 className="font-display text-base font-extrabold text-ink-950">{title}</h3>}
+        {title && <h3 className="font-display text-base font-extrabold text-ink">{title}</h3>}
         {subtitle && <p className="mt-1 text-sm text-ink-500">{subtitle}</p>}
       </div>
       {action && <div className="shrink-0">{action}</div>}
@@ -55,7 +55,7 @@ export function CardFooter({ className, ...props }: HTMLAttributes<HTMLDivElemen
   return (
     <div
       className={cn(
-        'flex items-center gap-3 border-t-2 border-cream-200 bg-cream-100 p-5',
+        'flex items-center gap-3 border-t-2 border-ink-200 bg-cream-200 p-5',
         className,
       )}
       {...props}
@@ -65,12 +65,12 @@ export function CardFooter({ className, ...props }: HTMLAttributes<HTMLDivElemen
 
 const STAT_ACCENTS = {
   marti: 'bg-marti-100 text-marti-700',
-  gold: 'bg-sunshine-100 text-sunshine-700',
-  sunshine: 'bg-sunshine-100 text-sunshine-700',
-  coral: 'bg-coral-100 text-coral-700',
-  crimson: 'bg-coral-100 text-coral-700',
-  mint: 'bg-mint-100 text-mint-700',
-  emerald: 'bg-mint-100 text-mint-700',
+  gold: 'bg-amber-100 text-amber-700',
+  sunshine: 'bg-amber-100 text-amber-700',
+  coral: 'bg-magenta-100 text-magenta-700',
+  crimson: 'bg-magenta-100 text-magenta-700',
+  mint: 'bg-teal-100 text-teal-700',
+  emerald: 'bg-teal-100 text-teal-700',
   grape: 'bg-grape-100 text-grape-700',
 } as const
 
@@ -93,19 +93,19 @@ export function StatCard({
   return (
     <div
       className={cn(
-        'group relative overflow-hidden rounded-4xl border-2 border-cream-200 bg-white p-5 shadow-soft transition-all duration-300 hover:-translate-y-1 hover:shadow-card',
+        'group relative overflow-hidden rounded-4xl border-2 border-ink bg-white p-5 shadow-soft transition-all duration-300 hover:-translate-y-1 hover:shadow-card',
         className,
       )}
     >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <p className="truncate text-sm font-bold text-ink-500">{label}</p>
-          <p className="mt-2 font-display text-3xl font-extrabold text-ink-950">{value}</p>
+          <p className="mt-2 font-display text-3xl font-extrabold text-ink">{value}</p>
           {trend && (
             <p
               className={cn(
                 'mt-1.5 text-xs font-bold',
-                trend.positive ? 'text-mint-600' : 'text-coral-600',
+                trend.positive ? 'text-teal-600' : 'text-magenta-600',
               )}
             >
               {trend.value}

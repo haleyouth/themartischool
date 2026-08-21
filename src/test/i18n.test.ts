@@ -20,6 +20,8 @@ const ALLOWED_IDENTICAL = new Set([
   'brand.short', // MARTI is a proper noun
   'contact.emailValue', // an address
   'auth.studentIdPlaceholder', // an ID format
+  'auth.identifierPlaceholder', // an ID format
+  'brand.full', // the organisation's official English name, kept as-is
   'settings.languageEn', // language names are shown in their own language
   'settings.languageTr',
 ])

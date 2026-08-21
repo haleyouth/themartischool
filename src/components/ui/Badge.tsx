@@ -15,15 +15,15 @@ type Tone =
   | 'violet'
 
 const tones: Record<Tone, string> = {
-  neutral: 'bg-cream-100 text-ink-700 ring-cream-200',
+  neutral: 'bg-cream-200 text-ink-700 ring-ink-200',
   marti: 'bg-marti-50 text-marti-700 ring-marti-200',
-  success: 'bg-mint-50 text-mint-700 ring-mint-200',
-  mint: 'bg-mint-50 text-mint-700 ring-mint-200',
-  warning: 'bg-sunshine-50 text-sunshine-700 ring-sunshine-200',
-  gold: 'bg-sunshine-50 text-sunshine-700 ring-sunshine-200',
-  sunshine: 'bg-sunshine-50 text-sunshine-700 ring-sunshine-200',
-  danger: 'bg-coral-50 text-coral-700 ring-coral-200',
-  coral: 'bg-coral-50 text-coral-700 ring-coral-200',
+  success: 'bg-teal-50 text-teal-700 ring-teal-200',
+  mint: 'bg-teal-50 text-teal-700 ring-teal-200',
+  warning: 'bg-amber-50 text-amber-700 ring-amber-200',
+  gold: 'bg-amber-50 text-amber-700 ring-amber-200',
+  sunshine: 'bg-amber-50 text-amber-700 ring-amber-200',
+  danger: 'bg-magenta-50 text-magenta-700 ring-magenta-200',
+  coral: 'bg-magenta-50 text-magenta-700 ring-magenta-200',
   grape: 'bg-grape-50 text-grape-700 ring-grape-200',
   violet: 'bg-grape-50 text-grape-700 ring-grape-200',
 }

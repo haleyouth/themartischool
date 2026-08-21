@@ -39,7 +39,7 @@ function DashboardHeader({ name }: { name: string }) {
   const { t } = useI18n()
   return (
     <div className="mb-7">
-      <h1 className="font-display text-2xl font-bold text-ink-950 sm:text-3xl">
+      <h1 className="font-display text-2xl font-bold text-ink sm:text-3xl">
         {t('dash.welcome', { name })}
       </h1>
       <p className="mt-1.5 text-sm text-ink-600">{t('dash.welcomeSub')}</p>
@@ -138,18 +138,18 @@ function AdminDashboard() {
                 description={t('reg.noRegistrationsBody')}
               />
             ) : (
-              <ul className="divide-y divide-cream-200">
+              <ul className="divide-y divide-ink-100">
                 {pending.slice(0, 6).map((item) => (
                   <li key={item.id}>
                     <Link
                       to="/app/registrations"
-                      className="flex items-center gap-3 px-5 py-3.5 transition-colors hover:bg-cream-100"
+                      className="flex items-center gap-3 px-5 py-3.5 transition-colors hover:bg-cream-200"
                     >
-                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-sunshine-100 text-sunshine-700">
+                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-amber-100 text-amber-700">
                         <UserPlus className="h-4 w-4" />
                       </span>
                       <span className="min-w-0 flex-1">
-                        <span className="block truncate text-sm font-semibold text-ink-900">
+                        <span className="block truncate text-sm font-semibold text-ink">
                           {fullName(item.firstName, item.lastName)}
                         </span>
                         <span className="block truncate text-xs text-ink-500">
@@ -182,7 +182,7 @@ function AdminDashboard() {
                 <Link
                   key={action.to}
                   to={action.to}
-                  className="group flex items-center gap-3 rounded-xl border border-cream-200 px-4 py-3 transition-all duration-200 hover:-translate-y-0.5 hover:border-marti-200 hover:bg-marti-50/50"
+                  className="group flex items-center gap-3 rounded-xl border-2 border-ink px-4 py-3 transition-all duration-200 hover:-translate-y-0.5 hover:border-marti-200 hover:bg-marti-50/50"
                 >
                   <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-marti-50 text-marti-600 transition-colors group-hover:bg-marti-600 group-hover:text-white">
                     <Icon className="h-4 w-4" />
@@ -225,17 +225,17 @@ function AdminDashboard() {
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-cream-200 text-left text-xs uppercase tracking-wider text-ink-500">
+                  <tr className="border-b border-ink-200 text-left text-xs uppercase tracking-wider text-ink-500">
                     <th className="px-5 py-3 font-semibold">{t('classes.className')}</th>
                     <th className="px-5 py-3 font-semibold">{t('classes.time')}</th>
                     <th className="px-5 py-3 font-semibold">{t('classes.enrolled')}</th>
                     <th className="px-5 py-3 font-semibold">{t('common.status')}</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-cream-200">
+                <tbody className="divide-y divide-ink-100">
                   {classes.slice(0, 6).map((cls) => (
-                    <tr key={cls.id} className="transition-colors hover:bg-cream-100">
-                      <td className="px-5 py-3.5 font-medium text-ink-900">{cls.name}</td>
+                    <tr key={cls.id} className="transition-colors hover:bg-cream-200">
+                      <td className="px-5 py-3.5 font-medium text-ink">{cls.name}</td>
                       <td className="px-5 py-3.5 text-ink-600">
                         {cls.startTime}-{cls.endTime}
                       </td>
@@ -338,18 +338,18 @@ function TeacherDashboard() {
                 title={t('classes.noClasses')}
               />
             ) : (
-              <ul className="divide-y divide-cream-200">
+              <ul className="divide-y divide-ink-100">
                 {classes.map((cls) => (
                   <li key={cls.id}>
                     <Link
                       to="/app/attendance"
-                      className="flex items-center gap-3 px-5 py-4 transition-colors hover:bg-cream-100"
+                      className="flex items-center gap-3 px-5 py-4 transition-colors hover:bg-cream-200"
                     >
                       <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-marti-50 text-marti-600">
                         <BookOpen className="h-5 w-5" />
                       </span>
                       <span className="min-w-0 flex-1">
-                        <span className="block truncate text-sm font-semibold text-ink-900">
+                        <span className="block truncate text-sm font-semibold text-ink">
                           {cls.name}
                         </span>
                         <span className="block text-xs text-ink-500">
@@ -381,7 +381,7 @@ function TeacherDashboard() {
                 <Link
                   key={action.to}
                   to={action.to}
-                  className="group flex items-center gap-3 rounded-xl border border-cream-200 px-4 py-3 transition-all duration-200 hover:-translate-y-0.5 hover:border-marti-200 hover:bg-marti-50/50"
+                  className="group flex items-center gap-3 rounded-xl border-2 border-ink px-4 py-3 transition-all duration-200 hover:-translate-y-0.5 hover:border-marti-200 hover:bg-marti-50/50"
                 >
                   <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-marti-50 text-marti-600 transition-colors group-hover:bg-marti-600 group-hover:text-white">
                     <Icon className="h-4 w-4" />
@@ -476,11 +476,11 @@ function StudentDashboard() {
                 title={t('students.noAttendance')}
               />
             ) : (
-              <ul className="divide-y divide-cream-200">
+              <ul className="divide-y divide-ink-100">
                 {attendance.slice(0, 6).map((entry) => (
                   <li key={entry.id} className="flex items-center gap-3 px-5 py-3.5">
                     <span className="min-w-0 flex-1">
-                      <span className="block truncate text-sm font-medium text-ink-900">
+                      <span className="block truncate text-sm font-medium text-ink">
                         {entry.className}
                       </span>
                       <span className="block text-xs text-ink-500">
@@ -518,15 +518,15 @@ function StudentDashboard() {
                 description={t('reports.noPublishedReportsBody')}
               />
             ) : (
-              <ul className="divide-y divide-cream-200">
+              <ul className="divide-y divide-ink-100">
                 {reports.slice(0, 6).map((report) => (
                   <li key={report.id}>
                     <Link
                       to="/app/reports"
-                      className="flex items-center gap-3 px-5 py-3.5 transition-colors hover:bg-cream-100"
+                      className="flex items-center gap-3 px-5 py-3.5 transition-colors hover:bg-cream-200"
                     >
                       <span className="min-w-0 flex-1">
-                        <span className="block truncate text-sm font-medium text-ink-900">
+                        <span className="block truncate text-sm font-medium text-ink">
                           {report.className}
                         </span>
                         <span className="block text-xs text-ink-500">

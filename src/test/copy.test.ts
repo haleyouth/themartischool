@@ -28,12 +28,10 @@ describe('user-facing copy', () => {
   })
 
   it('names the organisation correctly', () => {
-    // The logo reads "Maryland Turkish American Inhabitants", but the real
-    // organisation is the Maryland Turkish-American Community. Guard against
-    // the wrong name creeping back in.
-    const wrong = ALL_COPY.filter(([, value]) => /Inhabitants/i.test(value)).map(([key]) => key)
-    expect(wrong).toEqual([])
-    expect((en as Dict).brand).toMatchObject({ full: 'Maryland Turkish-American Community' })
+    // The logo and the school's own naming use Inhabitants.
+    expect((en as Dict).brand).toMatchObject({
+      full: 'Maryland Turkish-American Inhabitants',
+    })
   })
 })
 

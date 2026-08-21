@@ -35,7 +35,7 @@ export default function AuditLog() {
   return (
     <>
       <div className="mb-6">
-        <h1 className="font-display text-2xl font-bold text-ink-950">{t('audit.title')}</h1>
+        <h1 className="font-display text-2xl font-bold text-ink">{t('audit.title')}</h1>
         <p className="mt-1.5 text-sm text-ink-600">{t('audit.subtitle')}</p>
       </div>
 
@@ -55,21 +55,21 @@ export default function AuditLog() {
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-cream-200 text-left text-xs uppercase tracking-wider text-ink-500">
+                  <tr className="border-b border-ink-200 text-left text-xs uppercase tracking-wider text-ink-500">
                     <th className="px-5 py-3 font-semibold">{t('audit.when')}</th>
                     <th className="px-5 py-3 font-semibold">{t('audit.actor')}</th>
                     <th className="px-5 py-3 font-semibold">{t('audit.action')}</th>
                     <th className="px-5 py-3 font-semibold">{t('audit.target')}</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-cream-200">
+                <tbody className="divide-y divide-ink-100">
                   {logs.map((log, index) => (
                     <motion.tr
                       key={log.id}
                       initial={{ opacity: 0, y: 6 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: Math.min(index * 0.02, 0.3) }}
-                      className="transition-colors hover:bg-cream-100"
+                      className="transition-colors hover:bg-cream-200"
                     >
                       <td className="whitespace-nowrap px-5 py-3.5 text-xs text-ink-500">
                         {formatDateTime(log.at, intlLocale)}
