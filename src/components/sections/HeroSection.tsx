@@ -46,40 +46,35 @@ export function HeroSection() {
       {/* ── Hero ──────────────────────────────────────────────── */}
       <section
         id={SECTION_IDS.home}
-        className="relative overflow-hidden bg-cream-200 pb-16 pt-28 sm:pt-36 lg:min-h-[42rem]"
+        className="relative overflow-hidden bg-cream pb-16 pt-28 sm:pt-36 lg:min-h-[42rem]"
       >
         {/*
           The artwork occupies the right side at full strength, with nothing
-          laid over it. `contain` shows the whole scene rather than cropping
-          into it, so the children and the archway all stay in frame.
-
-          It is confined to the right half rather than the full section, so
-          the headline keeps a clean cream background and needs no scrim to
-          stay readable. A narrow cream gradient softens the inner edge where
-          the picture meets the text column.
+          laid over it. It is confined to the right half rather than spanning
+          the section, so the headline keeps a clean cream background and
+          needs no scrim to stay readable.
         */}
         <div
           aria-hidden
           className="absolute inset-y-0 right-0 hidden w-[52%] lg:block"
         >
           {/*
-            A mask fades the artwork out on every open edge, so it dissolves
-            into the page rather than ending on a straight line where the
-            section meets the one below. Masking the image itself, instead of
-            layering cream over it, keeps the picture at full strength in the
-            middle where it matters.
+            `cover` rather than `contain`: with contain the artwork sat inside
+            the box with empty margins, so the mask faded those margins and
+            left the picture's own edges showing as hard lines. Filling the
+            box puts the image edges exactly where the fade happens.
+
+            The fades are deliberately short, roughly a tenth of each side, so
+            the picture stays crisp and only the last sliver softens.
           */}
           <div
-            className="absolute inset-0 bg-[url('/hero.webp')] bg-contain bg-right bg-no-repeat"
+            className="absolute inset-0 bg-[url('/hero.webp')] bg-cover bg-center bg-no-repeat"
             style={{
-              // Horizontal fade on the left, vertical fade at both top and
-              // bottom. The two gradients intersect, so the picture is only
-              // fully opaque where both say so: the middle.
               maskImage:
-                'linear-gradient(to right, transparent 0%, black 22%), linear-gradient(to bottom, transparent 0%, black 14%, black 62%, transparent 96%)',
+                'linear-gradient(to right, transparent 0%, black 12%), linear-gradient(to bottom, transparent 0%, black 9%, black 91%, transparent 100%)',
               maskComposite: 'intersect',
               WebkitMaskImage:
-                'linear-gradient(to right, transparent 0%, black 22%), linear-gradient(to bottom, transparent 0%, black 14%, black 62%, transparent 96%)',
+                'linear-gradient(to right, transparent 0%, black 12%), linear-gradient(to bottom, transparent 0%, black 9%, black 91%, transparent 100%)',
               WebkitMaskComposite: 'source-in',
             }}
           />
@@ -92,14 +87,17 @@ export function HeroSection() {
         */}
         <div aria-hidden className="absolute inset-0 lg:hidden">
           <div
-            className="absolute inset-0 bg-[url('/hero-900.webp')] bg-cover bg-right bg-no-repeat"
+            className="absolute inset-0 bg-[url('/hero-900.webp')] bg-cover bg-center bg-no-repeat"
             style={{
-              maskImage: 'linear-gradient(to bottom, transparent 0%, black 18%, black 60%, transparent 95%)',
+              // Short fades here too, so only the last sliver of each edge
+              // softens rather than washing out most of the picture.
+              maskImage:
+                'linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)',
               WebkitMaskImage:
-                'linear-gradient(to bottom, transparent 0%, black 18%, black 60%, transparent 95%)',
+                'linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)',
             }}
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-cream-200/85 via-cream-200/80 to-cream-200" />
+          <div className="absolute inset-0 bg-gradient-to-b from-cream/85 via-cream/80 to-cream" />
         </div>
 
         {/* Drifting blob gives the page a soft, hand-made feel. */}
