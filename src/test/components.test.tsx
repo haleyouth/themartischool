@@ -196,11 +196,11 @@ describe('LanguageSwitcher', () => {
   it('switches the document language between English and Turkish', async () => {
     render(wrap(<LanguageSwitcher />))
 
-    const tr = screen.getByRole('button', { name: 'TR' })
+    const tr = screen.getByRole('button', { name: 'Türkçe' })
     await userEvent.click(tr)
     await waitFor(() => expect(document.documentElement.lang).toBe('tr'))
 
-    await userEvent.click(screen.getByRole('button', { name: 'EN' }))
+    await userEvent.click(screen.getByRole('button', { name: 'English' }))
     await waitFor(() => expect(document.documentElement.lang).toBe('en'))
   })
 })

@@ -36,6 +36,8 @@ export function Footer() {
 
   return (
     <footer className="relative overflow-hidden bg-marti-800 text-marti-100">
+      {/* Screened so the grey linework reads as light tracery on the blue. */}
+      <div className="bg-pattern absolute inset-0 opacity-10 mix-blend-screen" aria-hidden />
       <div
         className="pointer-events-none absolute -left-32 -top-32 h-72 w-72 rounded-full bg-marti-600/40 blur-3xl"
         aria-hidden
@@ -48,9 +50,19 @@ export function Footer() {
       <div className="container-marti relative py-14">
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1.2fr]">
           <div>
-            <div className="inline-block rounded-3xl bg-white p-4">
-              <Logo size="md" linkTo={null} />
-            </div>
+            {/*
+              The white wordmark sits directly on the blue rather than inside a
+              white box, so the footer reads as one surface. It lightens on
+              hover to show it is a link back to the top.
+            */}
+            <button
+              type="button"
+              onClick={() => scrollToSection(SECTION_IDS.home)}
+              aria-label={t('brand.name')}
+              className="inline-block opacity-90 transition-opacity duration-200 hover:opacity-100"
+            >
+              <Logo size="xl" tone="white" linkTo={null} />
+            </button>
             <p className="mt-5 max-w-sm text-sm leading-relaxed text-marti-200">
               {t('footer.about')}
             </p>

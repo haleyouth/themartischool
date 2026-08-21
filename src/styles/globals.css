@@ -51,6 +51,17 @@
     @apply bg-gradient-to-r from-marti-600 via-marti-500 to-teal-500 bg-clip-text text-transparent;
   }
 
+  /*
+   * Geometric star pattern used as a faint texture. It is a grey image, so
+   * it is always laid over a brand colour at low opacity rather than used
+   * as a background on its own, which would wash the palette out.
+   */
+  .bg-pattern {
+    background-image: url('/pattern.webp');
+    background-size: 480px 480px;
+    background-repeat: repeat;
+  }
+
   .bg-dots {
     background-image: radial-gradient(circle, rgb(45 27 77 / 0.10) 2px, transparent 2px);
     background-size: 26px 26px;

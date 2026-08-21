@@ -438,7 +438,9 @@
     "markAllRead": "Tümünü okundu say",
     "noNotifications": "Okunmamış bir şey yok",
     "viewProfile": "Profili gör",
-    "backToDashboard": "Panele dön"
+    "backToDashboard": "Panele dön",
+    "collapseSidebar": "Menuyu daralt",
+    "expandSidebar": "Menuyu genislet"
   },
   "reg": {
     "title": "Başvurular",

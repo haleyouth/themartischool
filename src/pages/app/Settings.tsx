@@ -1,6 +1,6 @@
 import { doc, serverTimestamp, updateDoc } from 'firebase/firestore'
 import { updatePassword } from 'firebase/auth'
-import { Bell, Globe, Lock, Save, User } from 'lucide-react'
+import { Bell, Lock, Save, User } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Avatar } from '@/components/ui/Avatar'
 import { Button } from '@/components/ui/Button'
@@ -111,7 +111,7 @@ export default function Settings() {
         <p className="mt-1.5 text-sm text-ink-600">{t('settings.subtitle')}</p>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid items-start gap-6 lg:grid-cols-2">
         <Card>
           <CardHeader
             title={
@@ -186,22 +186,28 @@ export default function Settings() {
                   className="flex cursor-pointer items-center justify-between gap-4 rounded-xl px-2 py-2.5 transition-colors hover:bg-cream-200"
                 >
                   <span className="text-sm text-ink-700">{t(pref.labelKey)}</span>
+                  {/*
+                    Track is 44px with a 2px border, so the usable inner width
+                    is 40px. A 20px knob therefore travels exactly 20px. Using
+                    a rem guess here let the knob overhang the right edge.
+                  */}
                   <button
                     type="button"
                     role="switch"
                     aria-checked={prefs[pref.key]}
+                    aria-label={t(pref.labelKey)}
                     onClick={() =>
                       setPrefs((prev) => ({ ...prev, [pref.key]: !prev[pref.key] }))
                     }
                     className={cn(
-                      'relative h-6 w-11 shrink-0 rounded-full transition-colors duration-200',
-                      prefs[pref.key] ? 'bg-marti-600' : 'bg-ink-200',
+                      'relative h-6 w-11 shrink-0 rounded-full border-2 border-ink transition-colors duration-200',
+                      prefs[pref.key] ? 'bg-marti-600' : 'bg-ink-100',
                     )}
                   >
                     <span
                       className={cn(
-                        'absolute top-0.5 h-5 w-5 rounded-full bg-white shadow-soft transition-transform duration-200',
-                        prefs[pref.key] ? 'translate-x-[1.375rem]' : 'translate-x-0.5',
+                        'absolute left-0 top-0 h-5 w-5 rounded-full bg-white transition-transform duration-200',
+                        prefs[pref.key] ? 'translate-x-5' : 'translate-x-0',
                       )}
                     />
                   </button>
@@ -246,12 +252,6 @@ export default function Settings() {
             </CardBody>
           </Card>
 
-          <Card>
-            <CardBody className="flex items-center gap-3 text-sm text-ink-600">
-              <Globe className="h-4 w-4 shrink-0 text-marti-600" />
-              {t('brand.full')}
-            </CardBody>
-          </Card>
         </div>
       </div>
     </>

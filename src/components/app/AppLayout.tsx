@@ -6,19 +6,23 @@ import {
   FileBarChart,
   GraduationCap,
   LayoutDashboard,
+  LogOut,
   Menu,
   MessageSquare,
+  PanelLeftClose,
+  PanelLeftOpen,
   ScrollText,
   Settings as SettingsIcon,
   UserCog,
   X,
 } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
-import { NavLink, Outlet, useLocation } from 'react-router-dom'
+import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { Logo } from '@/components/Logo'
 import { AccountMenu } from '@/components/app/AccountMenu'
 import { NotificationBell } from '@/components/app/NotificationBell'
 import { LanguageSwitcher } from '@/components/LanguageSwitcher'
+import { Avatar } from '@/components/ui/Avatar'
 import { useAuth } from '@/contexts/AuthContext'
 import { useT } from '@/i18n'
 import { cn } from '@/lib/utils'
@@ -107,17 +111,24 @@ const NAV: NavItem[] = [
   },
 ]
 
-const GROUP_LABEL: Record<NavItem['group'], string | null> = {
-  main: null,
-  school: 'dash.classes',
-  admin: 'dash.settings',
-}
+const COLLAPSE_KEY = 'marti.sidebarCollapsed'
 
 export default function AppLayout() {
   const t = useT()
   const auth = useAuth()
   const location = useLocation()
+  const navigate = useNavigate()
+
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  // Remember the collapsed choice, since it is a workspace preference rather
+  // than something to re-decide on every page load.
+  const [collapsed, setCollapsed] = useState(() => {
+    try {
+      return window.localStorage.getItem(COLLAPSE_KEY) === 'true'
+    } catch {
+      return false
+    }
+  })
 
   const role = auth.role ?? 'student'
   const items = useMemo(() => NAV.filter((item) => item.roles.includes(role)), [role])
@@ -126,89 +137,170 @@ export default function AppLayout() {
     setSidebarOpen(false)
   }, [location.pathname])
 
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(COLLAPSE_KEY, String(collapsed))
+    } catch {
+      // A browser blocking storage must not break the layout.
+    }
+  }, [collapsed])
+
+  async function handleSignOut() {
+    await auth.signOut()
+    navigate('/', { replace: true })
+  }
+
   const groups: NavItem['group'][] = ['main', 'school', 'admin']
   const currentTitle =
-    items.find((item) => (item.end ? item.to === location.pathname : location.pathname.startsWith(item.to)))
-      ?.labelKey ?? 'dash.overview'
+    items.find((item) =>
+      item.end ? item.to === location.pathname : location.pathname.startsWith(item.to),
+    )?.labelKey ?? 'dash.overview'
 
-  const sidebarContent = (
-    <>
-      <div className="flex h-[76px] items-center justify-between px-5">
-        <Logo size="sm" linkTo="/app" />
-        <button
-          type="button"
-          onClick={() => setSidebarOpen(false)}
-          className="rounded-xl p-2 text-ink-400 hover:bg-cream-200 lg:hidden"
-          aria-label={t('nav.close')}
+  const displayName = auth.profile?.displayName ?? auth.user?.email ?? ''
+
+  /** `mini` collapses to icons only; the mobile drawer always shows labels. */
+  function renderSidebar(mini: boolean) {
+    return (
+      <>
+        <div
+          className={cn(
+            'flex h-[76px] shrink-0 items-center',
+            mini ? 'justify-center px-2' : 'justify-between px-5',
+          )}
         >
-          <X className="h-5 w-5" />
-        </button>
-      </div>
+          {!mini && <Logo size="sm" linkTo="/app" />}
+          <button
+            type="button"
+            onClick={() => setSidebarOpen(false)}
+            className="rounded-xl p-2 text-ink-400 hover:bg-cream-200 lg:hidden"
+            aria-label={t('nav.close')}
+          >
+            <X className="h-5 w-5" />
+          </button>
+          {mini && (
+            <button
+              type="button"
+              onClick={() => setCollapsed(false)}
+              className="hidden rounded-xl p-2 text-ink-500 transition-colors hover:bg-cream-200 hover:text-ink lg:block"
+              aria-label={t('dash.expandSidebar')}
+              title={t('dash.expandSidebar')}
+            >
+              <PanelLeftOpen className="h-5 w-5" />
+            </button>
+          )}
+        </div>
 
-      <nav className="scrollbar-thin flex-1 overflow-y-auto px-3 pb-4">
-        {groups.map((group) => {
-          const groupItems = items.filter((item) => item.group === group)
-          if (!groupItems.length) return null
+        <nav className={cn('scrollbar-thin flex-1 overflow-y-auto pb-4', mini ? 'px-2' : 'px-3')}>
+          {groups.map((group) => {
+            const groupItems = items.filter((item) => item.group === group)
+            if (!groupItems.length) return null
 
-          return (
-            <div key={group} className="mb-5">
-              {GROUP_LABEL[group] && (
-                <p className="px-3 pb-2 text-[10px] font-extrabold uppercase tracking-widest text-ink-400">
-                  {group === 'school' ? t('brand.short') : t('settings.title')}
-                </p>
-              )}
-              <ul className="space-y-1">
-                {groupItems.map((item) => {
-                  const Icon = item.icon
-                  return (
-                    <li key={item.to}>
-                      <NavLink
-                        to={item.to}
-                        end={item.end}
-                        className={({ isActive }) =>
-                          cn(
-                            'group relative flex items-center gap-3 rounded-2xl px-3.5 py-2.5 text-sm font-bold transition-all duration-200',
-                            isActive
-                              ? 'text-white'
-                              : 'text-ink-600 hover:bg-cream-200 hover:text-ink',
-                          )
-                        }
-                      >
-                        {({ isActive }) => (
-                          <>
-                            {isActive && (
-                              <motion.span
-                                layoutId="sidebar-active"
-                                className="absolute inset-0 rounded-2xl bg-marti-600 shadow-pop"
-                                transition={{ type: 'spring', stiffness: 380, damping: 32 }}
-                              />
-                            )}
-                            <Icon
-                              className={cn(
-                                'relative h-[18px] w-[18px] shrink-0 transition-transform duration-200 group-hover:scale-110',
-                                isActive ? 'text-white' : 'text-ink-400',
+            return (
+              <div key={group} className="mb-5">
+                {group !== 'main' && !mini && (
+                  <p className="px-3 pb-2 text-[10px] font-extrabold uppercase tracking-widest text-ink-400">
+                    {group === 'school' ? t('brand.short') : t('settings.title')}
+                  </p>
+                )}
+                {group !== 'main' && mini && <div className="mx-2 mb-3 h-0.5 bg-ink-200" />}
+                <ul className="space-y-1">
+                  {groupItems.map((item) => {
+                    const Icon = item.icon
+                    return (
+                      <li key={item.to}>
+                        <NavLink
+                          to={item.to}
+                          end={item.end}
+                          title={mini ? t(item.labelKey) : undefined}
+                          className={({ isActive }) =>
+                            cn(
+                              'group relative flex items-center rounded-2xl text-sm font-bold transition-all duration-200',
+                              mini ? 'justify-center px-2 py-2.5' : 'gap-3 px-3.5 py-2.5',
+                              isActive
+                                ? 'text-white'
+                                : 'text-ink-600 hover:bg-cream-200 hover:text-ink',
+                            )
+                          }
+                        >
+                          {({ isActive }) => (
+                            <>
+                              {isActive && (
+                                <motion.span
+                                  layoutId={mini ? 'sidebar-active-mini' : 'sidebar-active'}
+                                  className="absolute inset-0 rounded-2xl bg-marti-600"
+                                  transition={{ type: 'spring', stiffness: 380, damping: 32 }}
+                                />
                               )}
-                            />
-                            <span className="relative">{t(item.labelKey)}</span>
-                          </>
-                        )}
-                      </NavLink>
-                    </li>
-                  )
-                })}
-              </ul>
+                              <Icon
+                                className={cn(
+                                  'relative h-[18px] w-[18px] shrink-0 transition-transform duration-200 group-hover:scale-110',
+                                  isActive ? 'text-white' : 'text-ink-400',
+                                )}
+                              />
+                              {!mini && <span className="relative">{t(item.labelKey)}</span>}
+                            </>
+                          )}
+                        </NavLink>
+                      </li>
+                    )
+                  })}
+                </ul>
+              </div>
+            )
+          })}
+        </nav>
+
+        {/* Who is signed in, and a sign out that is always reachable. */}
+        <div className={cn('shrink-0 border-t-2 border-ink-200', mini ? 'p-2' : 'p-3')}>
+          {!mini && (
+            <div className="mb-2 flex items-center gap-3 rounded-2xl px-2 py-2">
+              <Avatar name={displayName} src={auth.profile?.photoURL} size="sm" />
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-sm font-bold text-ink">{displayName}</p>
+                <p className="truncate text-xs text-ink-500">
+                  {t(`staff.role${role.charAt(0).toUpperCase()}${role.slice(1)}`)}
+                </p>
+              </div>
             </div>
-          )
-        })}
-      </nav>
-    </>
-  )
+          )}
+
+          <button
+            type="button"
+            onClick={handleSignOut}
+            title={mini ? t('auth.signOut') : undefined}
+            className={cn(
+              'flex w-full items-center rounded-2xl text-sm font-bold text-magenta-600 transition-colors hover:bg-magenta-50',
+              mini ? 'justify-center px-2 py-2.5' : 'gap-3 px-3.5 py-2.5',
+            )}
+          >
+            <LogOut className="h-[18px] w-[18px] shrink-0" />
+            {!mini && t('auth.signOut')}
+          </button>
+
+          {!mini && (
+            <button
+              type="button"
+              onClick={() => setCollapsed(true)}
+              className="mt-1 hidden w-full items-center gap-3 rounded-2xl px-3.5 py-2.5 text-sm font-bold text-ink-500 transition-colors hover:bg-cream-200 hover:text-ink lg:flex"
+            >
+              <PanelLeftClose className="h-[18px] w-[18px] shrink-0" />
+              {t('dash.collapseSidebar')}
+            </button>
+          )}
+        </div>
+      </>
+    )
+  }
 
   return (
     <div className="flex min-h-screen bg-cream-200">
-      <aside className="hidden w-64 shrink-0 flex-col border-r-2 border-ink-200 bg-cream lg:flex lg:fixed lg:inset-y-0">
-        {sidebarContent}
-      </aside>
+      <motion.aside
+        animate={{ width: collapsed ? 76 : 256 }}
+        transition={{ type: 'spring', stiffness: 320, damping: 34 }}
+        className="fixed inset-y-0 z-40 hidden shrink-0 flex-col border-r-2 border-ink-200 bg-cream lg:flex"
+      >
+        {renderSidebar(collapsed)}
+      </motion.aside>
 
       <AnimatePresence>
         {sidebarOpen && (
@@ -229,13 +321,18 @@ export default function AppLayout() {
               transition={{ type: 'spring', stiffness: 320, damping: 34 }}
               className="absolute inset-y-0 left-0 flex w-[min(17rem,85vw)] flex-col bg-cream shadow-2xl"
             >
-              {sidebarContent}
+              {renderSidebar(false)}
             </motion.aside>
           </motion.div>
         )}
       </AnimatePresence>
 
-      <div className="flex min-w-0 flex-1 flex-col lg:pl-64">
+      <div
+        className={cn(
+          'flex min-w-0 flex-1 flex-col transition-[padding] duration-300',
+          collapsed ? 'lg:pl-[76px]' : 'lg:pl-64',
+        )}
+      >
         <header className="sticky top-0 z-30 flex h-[76px] shrink-0 items-center gap-3 border-b-2 border-ink-200 bg-cream/90 px-4 backdrop-blur-xl sm:px-6">
           <button
             type="button"

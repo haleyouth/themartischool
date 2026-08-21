@@ -50,7 +50,7 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
-  const [demoBusy, setDemoBusy] = useState<string | null>(null)
+  const [selectedDemo, setSelectedDemo] = useState<DemoAccountKey | null>(null)
 
   if (auth.status === 'authenticated') return <Navigate to="/app" replace />
 
@@ -106,29 +106,24 @@ export default function Login() {
     }
   }
 
-  async function handleDemo(key: DemoAccountKey) {
+  /**
+   * Picking a demo account fills the form rather than signing in. The person
+   * can see which credentials are about to be used, and still presses the
+   * same sign in button everyone else does.
+   */
+  function fillDemo(key: DemoAccountKey) {
     const account = DEMO_ACCOUNTS[key]
     setError(null)
-    setDemoBusy(key)
-    try {
-      if (account.role === 'student') {
-        await auth.signInWithStudentId(account.identifier, account.password)
-      } else {
-        await auth.signInWithEmail(account.identifier, account.password)
-      }
-      navigate('/app', { replace: true })
-    } catch (err) {
-      setError(describeError(err, account.role !== 'student'))
-    } finally {
-      setDemoBusy(null)
-    }
+    setSelectedDemo(key)
+    setIdentifier(account.identifier)
+    setPassword(account.password)
   }
 
   return (
     <div className="flex min-h-screen">
       {/* Brand panel, hidden on small screens where it would only cost scroll. */}
-      <div className="relative hidden w-1/2 overflow-hidden bg-marti-600 lg:flex lg:flex-col lg:justify-between lg:p-12">
-        <div className="bg-dots absolute inset-0 opacity-20" aria-hidden />
+      <div className="relative hidden w-1/2 overflow-hidden bg-marti-600 lg:flex lg:flex-col lg:items-center lg:justify-center lg:p-12">
+        <div className="bg-pattern absolute inset-0 opacity-15 mix-blend-screen" aria-hidden />
         <motion.div
           aria-hidden
           animate={{ scale: [1, 1.12, 1], opacity: [0.25, 0.4, 0.25] }}
@@ -136,38 +131,41 @@ export default function Login() {
           className="pointer-events-none absolute -right-20 top-20 h-96 w-96 rounded-full bg-white/20 blur-3xl"
         />
 
-        <div className="relative">
-          <div className="inline-block rounded-2xl border-2 border-ink bg-white p-3 shadow-pop">
-            <Logo size="md" linkTo="/" />
-          </div>
-        </div>
-
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.15 }}
-          className="relative max-w-md text-white"
+          transition={{ duration: 0.7 }}
+          className="relative flex max-w-md flex-col items-center text-center text-white"
         >
-          <h2 className="text-balance font-display text-4xl font-extrabold leading-tight">
+          {/* The white wordmark sits straight on the blue, no containing box. */}
+          <Link
+            to="/"
+            aria-label={t('brand.name')}
+            className="opacity-95 transition-opacity duration-200 hover:opacity-100"
+          >
+            <Logo size="2xl" tone="white" linkTo={null} />
+          </Link>
+
+          <h2 className="mt-10 text-balance font-display text-4xl font-extrabold leading-tight">
             {t('brand.tagline')}
           </h2>
           <p className="mt-5 text-pretty leading-relaxed text-marti-100">
             {t('about.missionBody')}
           </p>
-        </motion.div>
 
-        <div className="relative flex gap-8 text-white">
-          {[
-            { value: '168', key: 'home.statStudents' },
-            { value: '25', key: 'home.statTeachers' },
-            { value: '22+', key: 'home.statYears' },
-          ].map((stat) => (
-            <div key={stat.key}>
-              <p className="font-display text-2xl font-extrabold">{stat.value}</p>
-              <p className="text-xs text-marti-200">{t(stat.key)}</p>
-            </div>
-          ))}
-        </div>
+          <div className="mt-12 flex gap-10">
+            {[
+              { value: '168', key: 'home.statStudents' },
+              { value: '25', key: 'home.statTeachers' },
+              { value: '22+', key: 'home.statYears' },
+            ].map((stat) => (
+              <div key={stat.key}>
+                <p className="font-display text-2xl font-extrabold">{stat.value}</p>
+                <p className="text-xs text-marti-200">{t(stat.key)}</p>
+              </div>
+            ))}
+          </div>
+        </motion.div>
       </div>
 
       {/* Form panel */}
@@ -285,9 +283,12 @@ export default function Login() {
                     <button
                       key={key}
                       type="button"
-                      onClick={() => handleDemo(key)}
-                      disabled={demoBusy !== null}
-                      className="press flex items-center gap-2.5 rounded-2xl border-2 border-ink bg-white px-3.5 py-3 text-left disabled:opacity-50"
+                      onClick={() => fillDemo(key)}
+                                            aria-pressed={selectedDemo === key}
+                      className={cn(
+                        'press flex items-center gap-2.5 rounded-2xl border-2 border-ink px-3.5 py-3 text-left',
+                        selectedDemo === key ? 'bg-marti-50' : 'bg-white',
+                      )}
                     >
                       <span
                         className={cn(
@@ -302,7 +303,7 @@ export default function Login() {
                           {t(`auth.demo${key.charAt(0).toUpperCase()}${key.slice(1)}`)}
                         </span>
                         <span className="block truncate text-[11px] text-ink-500">
-                          {demoBusy === key ? t('auth.signingIn') : account.displayName}
+                          {account.displayName}
                         </span>
                       </span>
                     </button>

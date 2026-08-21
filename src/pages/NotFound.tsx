@@ -9,7 +9,7 @@ export default function NotFound() {
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-marti-50 to-white px-6 text-center">
-      <div className="bg-dots absolute inset-0 opacity-40" aria-hidden />
+      <div className="bg-pattern absolute inset-0 opacity-40 mix-blend-multiply" aria-hidden />
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

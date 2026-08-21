@@ -438,7 +438,9 @@
     "markAllRead": "Mark all read",
     "noNotifications": "You are all caught up",
     "viewProfile": "View profile",
-    "backToDashboard": "Back to dashboard"
+    "backToDashboard": "Back to dashboard",
+    "collapseSidebar": "Collapse menu",
+    "expandSidebar": "Expand menu"
   },
   "reg": {
     "title": "Applications",

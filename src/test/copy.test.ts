@@ -75,3 +75,22 @@ describe('tuition', () => {
     expect(TUITION_PLANS.filter((plan) => plan.featured)).toHaveLength(1)
   })
 })
+
+describe('settings notification toggles', () => {
+  const settings = readFileSync('src/pages/app/Settings.tsx', 'utf8')
+
+  it('keeps the knob inside its track', () => {
+    // A 44px track with a 2px border leaves 40px inside, so a 20px knob must
+    // travel exactly 20px (translate-x-5). An arbitrary rem value previously
+    // pushed it past the right edge.
+    expect(settings).toMatch(/h-6 w-11 shrink-0 rounded-full border-2/)
+    expect(settings).toMatch(/translate-x-5/)
+    expect(settings).not.toMatch(/translate-x-\[1\.375rem\]/)
+  })
+
+  it('labels each switch for screen readers', () => {
+    expect(settings).toMatch(/role="switch"/)
+    expect(settings).toMatch(/aria-checked=/)
+    expect(settings).toMatch(/aria-label=\{t\(pref\.labelKey\)\}/)
+  })
+})

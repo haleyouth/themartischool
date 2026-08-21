@@ -48,7 +48,7 @@ export function HeroSection() {
         id={SECTION_IDS.home}
         className="relative overflow-hidden bg-cream-200 pb-16 pt-28 sm:pt-36"
       >
-        <div className="bg-dots absolute inset-0 opacity-60" aria-hidden />
+        <div className="bg-pattern absolute inset-0 opacity-45 mix-blend-multiply" aria-hidden />
 
         {/* Drifting blobs give the page a soft, hand-made feel. */}
         <motion.div
