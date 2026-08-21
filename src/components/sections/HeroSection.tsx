@@ -49,20 +49,30 @@ export function HeroSection() {
         className="relative overflow-hidden bg-cream-200 pb-16 pt-28 sm:pt-36 lg:min-h-[42rem]"
       >
         {/*
-          The artwork is the section background, anchored right, with a cream
-          gradient laid over it. The image therefore dissolves into the page
-          behind the headline instead of sitting in a box beside it.
+          The artwork occupies the right side at full strength, with nothing
+          laid over it. `contain` shows the whole scene rather than cropping
+          into it, so the children and the archway all stay in frame.
+
+          It is confined to the right half rather than the full section, so
+          the headline keeps a clean cream background and needs no scrim to
+          stay readable. A narrow cream gradient softens the inner edge where
+          the picture meets the text column.
         */}
         <div
           aria-hidden
-          className="absolute inset-0 bg-[url('/hero-900.webp')] bg-cover bg-right bg-no-repeat lg:bg-[url('/hero.webp')]"
-        />
-        <div
-          aria-hidden
-          className="absolute inset-0 bg-gradient-to-b from-cream-200/70 via-cream-200/85 to-cream-200 lg:bg-gradient-to-r lg:from-cream-200 lg:from-20% lg:via-cream-200/80 lg:via-50% lg:to-transparent lg:to-72%"
-        />
+          className="absolute inset-y-0 right-0 hidden w-[52%] lg:block"
+        >
+          <div className="absolute inset-0 bg-[url('/hero.webp')] bg-contain bg-right bg-no-repeat" />
+          <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-cream-200 to-transparent" />
+        </div>
 
-        {/* Drifting blobs give the page a soft, hand-made feel. */}
+        {/* Below lg the picture sits under the text, so it needs a scrim. */}
+        <div aria-hidden className="absolute inset-0 lg:hidden">
+          <div className="absolute inset-0 bg-[url('/hero-900.webp')] bg-cover bg-right bg-no-repeat" />
+          <div className="absolute inset-0 bg-gradient-to-b from-cream-200/85 via-cream-200/80 to-cream-200" />
+        </div>
+
+        {/* Drifting blob gives the page a soft, hand-made feel. */}
         <motion.div
           aria-hidden
           animate={reduced ? undefined : { y: [0, 20, 0], scale: [1, 1.07, 1] }}
@@ -156,44 +166,8 @@ export function HeroSection() {
                 ))}
               </motion.div>
             </div>
-
-            {/*
-              The artwork lives in the section background now. This column
-              simply reserves the space it occupies and carries the chips
-              that sit over it.
-            */}
-            <div className="relative hidden min-h-[26rem] lg:block">
-              <motion.div
-                aria-hidden
-                animate={reduced ? undefined : { y: [0, -10, 0], rotate: [-3, 3, -3] }}
-                transition={{ duration: 5.5, repeat: Infinity, ease: 'easeInOut' }}
-                className="absolute bottom-4 left-0 flex items-center gap-2.5 rounded-3xl border-2 border-ink bg-amber-400 px-4 py-3 shadow-pop"
-              >
-                <span className="text-2xl">🎉</span>
-                <div>
-                  <p className="font-display text-lg font-extrabold leading-none text-ink">
-                    <CountUp value={168} />
-                  </p>
-                  <p className="text-[11px] font-bold text-ink-800">{t('home.statStudents')}</p>
-                </div>
-              </motion.div>
-
-              <motion.div
-                animate={reduced ? undefined : { y: [0, -8, 0] }}
-                transition={{ duration: 6.5, repeat: Infinity, ease: 'easeInOut', delay: 0.8 }}
-                className="absolute right-0 top-2 flex items-center gap-2.5 rounded-3xl border-2 border-ink bg-white px-4 py-3 shadow-pop"
-              >
-                <span className="text-2xl" aria-hidden>
-                  🗓️
-                </span>
-                <div>
-                  <p className="font-display text-sm font-extrabold leading-none text-ink">
-                    {t('calendar.timeTitle')}
-                  </p>
-                  <p className="mt-1 text-[11px] font-bold text-ink-500">09:30 to 13:00</p>
-                </div>
-              </motion.div>
-            </div>
+            {/* Reserves the right half for the artwork behind it. */}
+            <div className="hidden min-h-[28rem] lg:block" aria-hidden />
           </div>
         </div>
       </section>
