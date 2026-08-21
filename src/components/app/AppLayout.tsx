@@ -20,6 +20,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { Logo } from '@/components/Logo'
 import { AccountMenu } from '@/components/app/AccountMenu'
+import { LiveClock } from '@/components/app/LiveClock'
 import { NotificationBell } from '@/components/app/NotificationBell'
 import { LanguageSwitcher } from '@/components/LanguageSwitcher'
 import { Avatar } from '@/components/ui/Avatar'
@@ -348,6 +349,8 @@ export default function AppLayout() {
               {t(currentTitle)}
             </h1>
           </div>
+
+          <LiveClock className="hidden xl:flex" />
 
           <div className="hidden sm:block">
             <LanguageSwitcher />

@@ -1,7 +1,6 @@
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from 'framer-motion'
-import { ArrowRight, LayoutDashboard, Menu, X } from 'lucide-react'
+import { ArrowRight, LayoutDashboard, Lock, Menu, X } from 'lucide-react'
 import { useCallback, useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
 import { Logo } from '@/components/Logo'
 import { LanguageSwitcher } from '@/components/LanguageSwitcher'
 import { Button } from '@/components/ui/Button'
@@ -111,12 +110,15 @@ export function Navbar() {
               </Button>
             ) : (
               <>
-                <Link
+                {/* The padlock marks this as the way in to the private portal. */}
+                <Button
                   to="/login"
-                  className="rounded-full px-3 py-2 text-sm font-bold text-ink-600 transition-colors hover:text-marti-700"
+                  size="sm"
+                  variant="outline"
+                  leftIcon={<Lock className="h-4 w-4" />}
                 >
                   {t('nav.signIn')}
-                </Link>
+                </Button>
                 <Button
                   size="sm"
                   onClick={() => goToSection(SECTION_IDS.register)}
@@ -221,7 +223,12 @@ export function Navbar() {
                     >
                       {t('nav.register')}
                     </Button>
-                    <Button to="/login" variant="outline" fullWidth>
+                    <Button
+                      to="/login"
+                      variant="outline"
+                      fullWidth
+                      leftIcon={<Lock className="h-4 w-4" />}
+                    >
                       {t('nav.signIn')}
                     </Button>
                   </>

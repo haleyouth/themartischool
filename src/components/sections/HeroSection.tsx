@@ -12,7 +12,7 @@ import {
 import { Section, SectionEyebrow, SectionHeading, WaveDivider } from '@/components/public/Sections'
 import { Button } from '@/components/ui/Button'
 import { useI18n } from '@/i18n'
-import { HOW_STEPS, SATURDAY_SCHEDULE, SCHOOL_STATS, WHY_FEATURES } from '@/lib/content'
+import { HOW_STEPS, SCHOOL_STATS, WHY_FEATURES } from '@/lib/content'
 import { currentSchoolYear, formatSchoolYear } from '@/lib/schoolYear'
 import { SECTION_IDS } from '@/lib/useScrollSpy'
 import { cn } from '@/lib/utils'
@@ -48,7 +48,6 @@ export function HeroSection() {
         id={SECTION_IDS.home}
         className="relative overflow-hidden bg-cream-200 pb-16 pt-28 sm:pt-36"
       >
-        <div className="bg-pattern absolute inset-0 opacity-45 mix-blend-multiply" aria-hidden />
 
         {/* Drifting blobs give the page a soft, hand-made feel. */}
         <motion.div
@@ -151,54 +150,41 @@ export function HeroSection() {
               </motion.div>
             </div>
 
-            {/* A Saturday morning, shown as a friendly timetable card. */}
+            {/* Children arriving at the school, the promise the page is making. */}
             <motion.div
               initial={{ opacity: 0, scale: 0.94, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               transition={{ duration: 0.75, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
               className="relative mx-auto w-full max-w-md lg:max-w-none"
             >
-              <div className="relative rounded-5xl border-2 border-ink bg-white/85 p-6 shadow-[0_28px_56px_-18px_rgb(27_121_192/0.35)] backdrop-blur-xl">
-                <div className="flex items-center gap-3">
-                  <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-marti-600 text-2xl">
-                    🗓️
-                  </span>
-                  <div>
-                    <p className="font-display text-lg font-extrabold text-ink">
-                      {t('calendar.timeTitle')}
-                    </p>
-                    <p className="text-sm text-ink-500">09:30 to 13:00</p>
-                  </div>
-                </div>
-
-                <ul className="mt-5 space-y-2">
-                  {SATURDAY_SCHEDULE.map((slot, index) => (
-                    <motion.li
-                      key={slot.time}
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.45, delay: 0.6 + index * 0.09 }}
-                      className="flex items-center gap-3 rounded-2xl bg-cream-200 px-4 py-3"
-                    >
-                      <span className="text-xl" aria-hidden>
-                        {slot.emoji}
-                      </span>
-                      <span className="w-12 shrink-0 font-display text-sm font-extrabold text-marti-700">
-                        {slot.time}
-                      </span>
-                      <span className="min-w-0 flex-1 truncate text-sm font-semibold text-ink-700">
-                        {t(slot.labelKey)}
-                      </span>
-                    </motion.li>
-                  ))}
-                </ul>
+              <div className="relative overflow-hidden rounded-5xl border-2 border-ink shadow-pop-lg">
+                <img
+                  src="/hero.webp"
+                  // The 600px copy spares phones the full size download.
+                  srcSet="/hero-600.webp 600w, /hero.webp 1200w"
+                  sizes="(max-width: 1024px) 90vw, 560px"
+                  alt={t('home.heroImageAlt')}
+                  width={1200}
+                  height={904}
+                  // The hero is the largest paint on the page, so load it eagerly
+                  // and let the browser prioritise it.
+                  loading="eager"
+                  fetchPriority="high"
+                  decoding="async"
+                  className="block h-full w-full object-cover"
+                />
+                {/* Ties the artwork into the cream page instead of ending flat. */}
+                <div
+                  className="pointer-events-none absolute inset-0 bg-gradient-to-t from-marti-950/25 via-transparent to-transparent"
+                  aria-hidden
+                />
               </div>
 
               <motion.div
                 aria-hidden
                 animate={reduced ? undefined : { y: [0, -10, 0], rotate: [-3, 3, -3] }}
                 transition={{ duration: 5.5, repeat: Infinity, ease: 'easeInOut' }}
-                className="absolute -bottom-6 -left-5 hidden items-center gap-2.5 rounded-3xl border-2 border-ink bg-amber-400 px-4 py-3 shadow-card sm:flex"
+                className="absolute -bottom-6 -left-5 hidden items-center gap-2.5 rounded-3xl border-2 border-ink bg-amber-400 px-4 py-3 shadow-pop sm:flex"
               >
                 <span className="text-2xl">🎉</span>
                 <div>
@@ -206,6 +192,23 @@ export function HeroSection() {
                     <CountUp value={168} />
                   </p>
                   <p className="text-[11px] font-bold text-ink-800">{t('home.statStudents')}</p>
+                </div>
+              </motion.div>
+
+              {/* Saturday timings still get said, just without the big card. */}
+              <motion.div
+                animate={reduced ? undefined : { y: [0, -8, 0] }}
+                transition={{ duration: 6.5, repeat: Infinity, ease: 'easeInOut', delay: 0.8 }}
+                className="absolute -right-4 -top-5 hidden items-center gap-2.5 rounded-3xl border-2 border-ink bg-white px-4 py-3 shadow-pop sm:flex"
+              >
+                <span className="text-2xl" aria-hidden>
+                  🗓️
+                </span>
+                <div>
+                  <p className="font-display text-sm font-extrabold leading-none text-ink">
+                    {t('calendar.timeTitle')}
+                  </p>
+                  <p className="mt-1 text-[11px] font-bold text-ink-500">09:30 to 13:00</p>
                 </div>
               </motion.div>
             </motion.div>

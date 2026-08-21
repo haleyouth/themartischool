@@ -17,6 +17,13 @@ export {
   changeMyPassword,
 } from './users'
 
+export {
+  createStudent,
+  updateStudent,
+  deleteStudent,
+  restoreStudent,
+} from './students'
+
 export { onAttendanceWrite } from './attendance'
 
 export {

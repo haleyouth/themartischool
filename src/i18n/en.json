@@ -108,7 +108,8 @@
     "ctaTitle": "Give your child their language back",
     "ctaBody": "Registration for {year} is open, and places in each class are limited.",
     "ctaButton": "Start registration",
-    "ctaSecondary": "See tuition"
+    "ctaSecondary": "See tuition",
+    "heroImageAlt": "Children with MARTI backpacks walking up steps into the school, through a glowing archway"
   },
   "about": {
     "title": "About the school",
@@ -440,7 +441,8 @@
     "viewProfile": "View profile",
     "backToDashboard": "Back to dashboard",
     "collapseSidebar": "Collapse menu",
-    "expandSidebar": "Expand menu"
+    "expandSidebar": "Expand menu",
+    "schoolDay": "School day"
   },
   "reg": {
     "title": "Applications",

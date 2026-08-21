@@ -108,7 +108,8 @@
     "ctaTitle": "Çocuğunuza dilini geri kazandırın",
     "ctaBody": "{year} kayıtları açık ve her sınıfta kontenjan sınırlı.",
     "ctaButton": "Kayda başla",
-    "ctaSecondary": "Ücretleri gör"
+    "ctaSecondary": "Ücretleri gör",
+    "heroImageAlt": "MARTI sırt çantalarıyla merdivenleri çıkıp ışıklı kemerden okula giren çocuklar"
   },
   "about": {
     "title": "Okul hakkında",
@@ -440,7 +441,8 @@
     "viewProfile": "Profili gör",
     "backToDashboard": "Panele dön",
     "collapseSidebar": "Menuyu daralt",
-    "expandSidebar": "Menuyu genislet"
+    "expandSidebar": "Menuyu genislet",
+    "schoolDay": "Okul günü"
   },
   "reg": {
     "title": "Başvurular",

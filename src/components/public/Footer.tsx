@@ -1,5 +1,4 @@
 import { Mail, MapPin, Phone } from 'lucide-react'
-import { Link } from 'react-router-dom'
 import { Logo } from '@/components/Logo'
 import { Facebook, Instagram, Twitter } from '@/components/ui/BrandIcons'
 import { useT } from '@/i18n'
@@ -111,14 +110,6 @@ export function Footer() {
                   </button>
                 </li>
               ))}
-              <li>
-                <Link
-                  to="/login"
-                  className="text-sm font-semibold text-marti-200 transition-colors hover:text-white"
-                >
-                  {t('nav.signIn')}
-                </Link>
-              </li>
             </ul>
           </div>
 
