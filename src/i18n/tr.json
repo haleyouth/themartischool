@@ -344,7 +344,8 @@
     "validPhone": "Bu bir telefon numarasına benzemiyor",
     "validDate": "Lütfen geçerli bir tarih girin",
     "validAge": "Öğrenciler 3 ile 18 yaş arasında olmalı",
-    "validTerms": "Devam etmek için koşulları kabul edin"
+    "validTerms": "Devam etmek için koşulları kabul edin",
+    "feesNotice": "Yeriniz kesinleştikten sonra okul idaresi ücretleri sizinle paylaşacak. Bugün hiçbir ödeme alınmaz."
   },
   "auth": {
     "loginTitle": "Tekrar hoş geldiniz",

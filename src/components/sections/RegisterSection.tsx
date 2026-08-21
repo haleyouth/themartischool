@@ -25,7 +25,7 @@ import { GRADE_LEVELS, TUITION_PLANS, US_STATES } from '@/lib/content'
 import { db } from '@/lib/firebase'
 import { currentSchoolYear, formatSchoolYear } from '@/lib/schoolYear'
 import { SECTION_IDS } from '@/lib/useScrollSpy'
-import { cn, currency } from '@/lib/utils'
+import { cn } from '@/lib/utils'
 
 type StepId = 'student' | 'guardian' | 'academic' | 'plan' | 'review'
 
@@ -100,7 +100,7 @@ const EMPTY: FormData = {
 const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/
 
 export function RegisterSection({ selectedPlan }: { selectedPlan?: string }) {
-  const { t, intlLocale } = useI18n()
+  const { t } = useI18n()
   const toast = useToast()
   const year = currentSchoolYear()
 
@@ -722,20 +722,12 @@ export function RegisterSection({ selectedPlan }: { selectedPlan?: string }) {
                                 </span>
                                 <span className="mt-1 block text-sm text-ink-600">{plan.desc}</span>
                               </span>
-                              <span className="shrink-0 text-right">
-                                <span className="block font-display text-xl font-bold text-marti-700">
-                                  {currency(plan.price, intlLocale)}
-                                </span>
-                                <span className="block text-xs text-ink-500">
-                                  {t('tuition.perMonth')}
-                                </span>
-                              </span>
                             </button>
                           )
                         })}
                       </div>
                       <p className="rounded-xl bg-sunshine-50 px-4 py-3 text-xs leading-relaxed text-sunshine-700">
-                        {t('tuition.placeholderNotice')}
+                        {t('register.feesNotice')}
                       </p>
                       <Select
                         label={t('register.howHeard')}

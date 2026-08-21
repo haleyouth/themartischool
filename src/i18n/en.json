@@ -344,7 +344,8 @@
     "validPhone": "That does not look like a phone number",
     "validDate": "Please enter a valid date",
     "validAge": "Students need to be between 3 and 18",
-    "validTerms": "Please accept the terms to continue"
+    "validTerms": "Please accept the terms to continue",
+    "feesNotice": "The school office will confirm fees with you after your place is offered. Nothing is charged today."
   },
   "auth": {
     "loginTitle": "Welcome back",

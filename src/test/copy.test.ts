@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 import en from '@/i18n/en.json'
 import tr from '@/i18n/tr.json'
@@ -56,18 +57,23 @@ describe('organisation details', () => {
 })
 
 describe('tuition', () => {
-  it('flags its amounts as placeholders in both languages', () => {
-    const noticeEn = flatten(en as Dict).find(([k]) => k === 'tuition.placeholderNotice')?.[1]
-    const noticeTr = flatten(tr as Dict).find(([k]) => k === 'tuition.placeholderNotice')?.[1]
-    expect(noticeEn).toBeTruthy()
-    expect(noticeTr).toBeTruthy()
+  it('does not display any price in the UI', () => {
+    // Prices are deliberately hidden: the school office confirms fees after a
+    // place is offered. Guard against a price creeping back onto the page.
+    const ui = readFileSync('src/components/sections/RegisterSection.tsx', 'utf8')
+    expect(ui).not.toMatch(/plan\.price/)
+    expect(ui).not.toMatch(/currency\(/)
+  })
+
+  it('tells families the office will confirm fees, in both languages', () => {
+    const enNotice = flatten(en as Dict).find(([k]) => k === 'register.feesNotice')?.[1]
+    const trNotice = flatten(tr as Dict).find(([k]) => k === 'register.feesNotice')?.[1]
+    expect(enNotice).toBeTruthy()
+    expect(trNotice).toBeTruthy()
+    expect(enNotice).not.toEqual(trNotice)
   })
 
   it('has exactly one featured plan', () => {
     expect(TUITION_PLANS.filter((plan) => plan.featured)).toHaveLength(1)
-  })
-
-  it('prices every plan above zero', () => {
-    for (const plan of TUITION_PLANS) expect(plan.price).toBeGreaterThan(0)
   })
 })
