@@ -59,13 +59,10 @@ export function HeroSection() {
           className="absolute inset-y-0 right-0 hidden w-[52%] lg:block"
         >
           {/*
-            `cover` rather than `contain`: with contain the artwork sat inside
-            the box with empty margins, so the mask faded those margins and
-            left the picture's own edges showing as hard lines. Filling the
-            box puts the image edges exactly where the fade happens.
-
-            The fades are deliberately short, roughly a tenth of each side, so
-            the picture stays crisp and only the last sliver softens.
+            This artwork carries wide empty margins of sky and steps, so the
+            short fades land on background rather than clipping a child. Cover
+            fills the box, which is what puts the image edges where the mask
+            expects them.
           */}
           <div
             className="absolute inset-0 bg-[url('/hero.webp')] bg-cover bg-center bg-no-repeat"
