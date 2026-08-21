@@ -1,0 +1,42 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+firebase-debug.log*
+firestore-debug.log*
+ui-debug.log*
+
+node_modules
+dist
+dist-ssr
+build
+*.local
+
+# Environment — never commit real credentials or the service account key
+.env
+.env.local
+.env.*.local
+serviceAccountKey.json
+*-service-account.json
+
+# Firebase
+.firebase/
+.runtimeconfig.json
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Build info
+*.tsbuildinfo

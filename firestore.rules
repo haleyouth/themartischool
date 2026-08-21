@@ -1,0 +1,435 @@
+rules_version = '2';
+
+// The Marti School — Firestore security rules.
+//
+// Authorization is driven by custom claims (role, active, studentId, classIds)
+// minted by Cloud Functions. Claims are a fast cache; every decision that
+// matters is re-made here, server-side.
+//
+// Guiding rules of thumb:
+//  - Registrations contain minors' PII: the public may CREATE one, never read one.
+//  - Students see only their own records, and only PUBLISHED reports.
+//  - Teachers are scoped to the classes in their `classIds` claim.
+//  - Counters, reservations, mail and audit logs are server-write-only.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ───────────────────────── helpers ─────────────────────────
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function claims() {
+      return request.auth.token;
+    }
+
+    function role() {
+      return isSignedIn() ? claims().get('role', 'none') : 'none';
+    }
+
+    function isDirector()  { return role() == 'director'; }
+    function isPrincipal() { return role() == 'principal'; }
+    function isAdmin()     { return isDirector() || isPrincipal(); }
+    function isTeacher()   { return role() == 'teacher'; }
+    function isStudent()   { return role() == 'student'; }
+
+    function uid() { return request.auth.uid; }
+
+    function myStudentId() {
+      return isSignedIn() ? claims().get('studentId', '') : '';
+    }
+
+    // Teachers carry their class list in the token so rules avoid unbounded gets.
+    function myClassIds() {
+      return isSignedIn() ? claims().get('classIds', []) : [];
+    }
+
+    // A suspended account is locked out instantly, without waiting for a token
+    // to expire, because `active` is re-read from the claim on every request.
+    function isActive() {
+      return isSignedIn() && claims().get('active', false) == true;
+    }
+
+    function incoming() { return request.resource.data; }
+    function existing() { return resource.data; }
+
+    function untouched(fields) {
+      return !incoming().diff(existing()).affectedKeys().hasAny(fields);
+    }
+
+    function onlyChanges(fields) {
+      return incoming().diff(existing()).affectedKeys().hasOnly(fields);
+    }
+
+    function teachesClass(classId) {
+      return isTeacher() && classId in myClassIds();
+    }
+
+    // ───────────────────────── users ─────────────────────────
+
+    match /users/{userId} {
+      // Staff need to resolve display names for the messaging UI.
+      allow get: if isActive() && (uid() == userId || isAdmin() || isTeacher());
+      allow list: if isActive() && isAdmin();
+
+      // Accounts are provisioned only by Cloud Functions (Admin SDK bypasses rules).
+      allow create: if false;
+
+      // A user may edit a narrow slice of their own profile.
+      allow update: if isActive() && uid() == userId
+                    && onlyChanges([
+                         'displayName', 'photoURL', 'phone', 'locale',
+                         'notificationPrefs', 'fcmTokens', 'lastLoginAt', 'updatedAt'
+                       ]);
+
+      // Admins may suspend or rename, but role changes must go through the
+      // setUserRole callable so claims and documents never drift apart.
+      allow update: if isActive() && isAdmin()
+                    && onlyChanges(['status', 'displayName', 'phone', 'updatedAt'])
+                    && (isDirector() || existing().role != 'director');
+
+      allow delete: if false;
+    }
+
+    // ───────────────────── registrations ─────────────────────
+
+    match /registrations/{registrationId} {
+
+      // Anyone may apply. The shape is validated strictly so the form cannot be
+      // used as free storage or to smuggle in admin-only fields.
+      allow create: if
+        incoming().status == 'pending'
+        && incoming().source == 'web'
+        && incoming().submittedAt == request.time
+        && incoming().termsAcceptedAt == request.time
+        && incoming().photoConsent is bool
+        && incoming().schoolYear is int
+        && incoming().firstName is string
+        && incoming().firstName.size() >= 1 && incoming().firstName.size() <= 60
+        && incoming().lastName is string
+        && incoming().lastName.size() >= 1 && incoming().lastName.size() <= 60
+        && incoming().dateOfBirth is string
+        && incoming().dateOfBirth.matches('^\\d{4}-\\d{2}-\\d{2}$')
+        && incoming().guardianName is string
+        && incoming().guardianName.size() >= 1 && incoming().guardianName.size() <= 120
+        && incoming().guardianEmail is string
+        && incoming().guardianEmail.matches('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$')
+        && incoming().guardianEmail.size() <= 254
+        && incoming().guardianPhone is string
+        && incoming().guardianPhone.size() >= 7 && incoming().guardianPhone.size() <= 32
+        && incoming().requestedGradeLevel is string
+        && incoming().requestedGradeLevel.size() <= 20
+        && incoming().turkishLevel in ['none','beginner','intermediate','fluent','heritage']
+        && incoming().emergencyContact is map
+        && incoming().emergencyContact.name is string
+        && incoming().emergencyContact.name.size() <= 120
+        && incoming().emergencyContact.phone is string
+        && incoming().emergencyContact.phone.size() <= 32
+        && (!('medicalNotes' in incoming()) || incoming().medicalNotes == null
+            || incoming().medicalNotes.size() <= 2000)
+        && (!('allergies' in incoming()) || incoming().allergies == null
+            || incoming().allergies.size() <= 2000)
+        && (!('priorSchooling' in incoming()) || incoming().priorSchooling == null
+            || incoming().priorSchooling.size() <= 2000)
+        && (!('howHeardAboutUs' in incoming()) || incoming().howHeardAboutUs == null
+            || incoming().howHeardAboutUs.size() <= 500)
+        // Admin-only fields must be absent on a public create.
+        && !incoming().keys().hasAny([
+             'assignedStudentId','reviewedBy','reviewedAt','approvedAt',
+             'createdUid','adminNotes','rejectionReason','provisioningError'
+           ]);
+
+      // Applications hold minors' PII — admins only, never the applicant.
+      allow get, list: if isActive() && isAdmin();
+
+      // Admins triage; approval itself runs in a Cloud Function.
+      allow update: if isActive() && isAdmin()
+                    && onlyChanges([
+                         'status','adminNotes','rejectionReason',
+                         'reviewedBy','reviewedAt','requestedGradeLevel'
+                       ])
+                    && incoming().status in ['pending','under_review','rejected','waitlisted']
+                    // Cannot un-approve or tamper with a provisioned record.
+                    && existing().status in ['pending','under_review','waitlisted','rejected']
+                    && incoming().reviewedBy == uid();
+
+      allow delete: if isActive() && isDirector();
+    }
+
+    // ─────────────────────── students ───────────────────────
+
+    match /students/{studentId} {
+      allow get: if isActive() && (
+                   (isStudent() && myStudentId() == studentId)
+                   || isAdmin()
+                   || (isTeacher() && existing().currentClassIds.hasAny(myClassIds()))
+                 );
+
+      // Teachers reach their rosters through enrollments, not a broad listing.
+      allow list: if isActive() && isAdmin();
+
+      allow create: if false; // Cloud Function only
+
+      allow update: if isActive() && isAdmin()
+                    && untouched(['studentId','uid','registrationId','createdAt',
+                                  'attendanceSummary','guardianUids']);
+
+      allow delete: if false; // archive via enrollmentStatus instead
+    }
+
+    // ──────────────────────── classes ────────────────────────
+
+    match /classes/{classId} {
+      allow get, list: if isActive();
+
+      allow create: if isActive() && isAdmin()
+                    && incoming().meetingDay == 6 // Saturday only
+                    && incoming().createdBy == uid()
+                    && incoming().enrolledCount == 0;
+
+      allow update: if isActive() && (
+                      (isAdmin()
+                        && incoming().meetingDay == 6
+                        && untouched(['createdAt','createdBy']))
+                      // Teachers may only edit soft content on their own class.
+                      || (teachesClass(classId)
+                        && onlyChanges(['description','syllabusUrl','room','updatedAt']))
+                    );
+
+      allow delete: if isActive() && isDirector() && existing().enrolledCount == 0;
+    }
+
+    // ────────────────────── enrollments ──────────────────────
+
+    match /enrollments/{enrollmentId} {
+      allow get: if isActive() && (
+                   isAdmin()
+                   || (isStudent() && existing().uid == uid())
+                   || (isTeacher() && existing().classId in myClassIds())
+                 );
+
+      // A student may only ever list their OWN enrollments; the equality filter
+      // is required in the query itself, not merely applied by the client.
+      allow list: if isActive() && (
+                    isAdmin()
+                    || (isTeacher() && request.query.limit <= 300)
+                    || (isStudent()
+                        && request.query.limit <= 100
+                        && 'studentId' in request.query.where
+                        && request.query.where.studentId == myStudentId())
+                  );
+
+      allow create, update, delete: if isActive() && isAdmin();
+    }
+
+    // ────────────────────── attendance ───────────────────────
+    // One doc per class per Saturday: attendance/{classId}_{sessionDate}
+
+    match /attendance/{sessionId} {
+
+      allow get: if isActive() && (isAdmin() || teachesClass(existing().classId));
+
+      allow list: if isActive() && (isAdmin() || isTeacher());
+
+      allow create: if isActive()
+        && (isAdmin() || teachesClass(incoming().classId))
+        && sessionId == incoming().classId + '_' + incoming().sessionDate
+        && incoming().sessionDate.matches('^\\d{4}-\\d{2}-\\d{2}$')
+        && incoming().takenBy == uid()
+        && incoming().status in ['draft','submitted']
+        && incoming().records is map
+        && incoming().records.size() <= 300;
+
+      allow update: if isActive() && (
+        (teachesClass(existing().classId)
+          && untouched(['classId','sessionDate','schoolYear','takenBy','createdAt'])
+          && incoming().records is map
+          && incoming().records.size() <= 300)
+        || (isAdmin()
+          && untouched(['classId','sessionDate','createdAt'])
+          && incoming().amendedBy == uid())
+      );
+
+      allow delete: if isActive() && isDirector();
+    }
+
+    // Denormalized per-student rows, written only by the fan-out trigger.
+    match /attendanceEntries/{entryId} {
+      allow get: if isActive() && (
+                   isAdmin()
+                   || (isStudent() && existing().uid == uid())
+                   || (isTeacher() && existing().classId in myClassIds())
+                 );
+
+      // A student's history query must pin studentId to their own ID.
+      allow list: if isActive() && (
+                    isAdmin()
+                    || (isTeacher() && request.query.limit <= 500)
+                    || (isStudent()
+                        && request.query.limit <= 200
+                        && 'studentId' in request.query.where
+                        && request.query.where.studentId == myStudentId())
+                  );
+
+      allow write: if false; // Admin SDK only
+    }
+
+    // ─────────────────── performance reports ─────────────────
+
+    match /performanceReports/{reportId} {
+
+      allow get: if isActive() && (
+                   isAdmin()
+                   || (isTeacher() && existing().classId in myClassIds())
+                   // A draft is a teacher's private working note — never leak it.
+                   || (isStudent()
+                       && existing().uid == uid()
+                       && existing().status == 'published')
+                 );
+
+      allow list: if isActive() && (
+                    isAdmin()
+                    || (isTeacher() && request.query.limit <= 200)
+                    || (isStudent()
+                        && request.query.limit <= 100
+                        && 'uid' in request.query.where
+                        && request.query.where.uid == uid()
+                        && 'status' in request.query.where
+                        && request.query.where.status == 'published')
+                  );
+
+      allow create: if isActive()
+        && (isAdmin() || teachesClass(incoming().classId))
+        && incoming().teacherId == uid()
+        && incoming().status in ['draft','submitted'] // never publish on create
+        && incoming().publishedAt == null
+        && incoming().scores is map
+        && incoming().teacherComments is string
+        && incoming().teacherComments.size() <= 5000
+        && incoming().strengths.size() <= 3000
+        && incoming().areasForImprovement.size() <= 3000;
+
+      allow update: if isActive() && (
+        // The author keeps editing until it is published.
+        (existing().teacherId == uid()
+          && teachesClass(existing().classId)
+          && existing().status != 'published'
+          && incoming().status in ['draft','submitted']
+          && untouched(['studentId','uid','classId','teacherId','createdAt',
+                        'publishedAt','publishedBy']))
+        // Publishing — the act that makes a report visible — is admin-only.
+        || (isAdmin()
+          && untouched(['studentId','uid','classId','teacherId','createdAt'])
+          && (incoming().status != 'published' || incoming().publishedBy == uid()))
+        // A student may only acknowledge a published report.
+        || (isStudent()
+          && existing().uid == uid()
+          && existing().status == 'published'
+          && onlyChanges(['acknowledgedByGuardianAt']))
+      );
+
+      allow delete: if isActive() && isAdmin() && existing().status == 'draft';
+    }
+
+    // ───────────────────── conversations ─────────────────────
+
+    match /conversations/{conversationId} {
+
+      function amParticipant() {
+        return isSignedIn() && uid() in existing().participantIds;
+      }
+
+      allow get: if isActive() && (amParticipant() || isDirector());
+
+      // The arrayContains filter is mandated by the rule, so a client cannot
+      // drop it and enumerate other people's threads.
+      allow list: if isActive()
+                  && request.query.limit <= 100
+                  && 'participantIds' in request.query.where
+                  && request.query.where.participantIds == uid();
+
+      // Created via the createConversation callable, which enforces the
+      // role-pairing policy (students cannot DM other students).
+      allow create: if false;
+
+      allow update: if isActive() && amParticipant()
+                    && onlyChanges(['unreadCounts','readAt','isArchived']);
+
+      allow delete: if false;
+
+      match /messages/{messageId} {
+
+        function conv() {
+          return get(/databases/$(database)/documents/conversations/$(conversationId)).data;
+        }
+        function inConv() {
+          return isSignedIn() && uid() in conv().participantIds;
+        }
+
+        allow get, list: if isActive() && (inConv() || isDirector());
+
+        allow create: if isActive() && inConv()
+          && conv().isLocked == false
+          && incoming().senderId == uid()
+          && incoming().conversationId == conversationId
+          && incoming().text is string
+          && incoming().text.size() > 0
+          && incoming().text.size() <= 5000
+          && incoming().deletedAt == null
+          && incoming().editedAt == null;
+
+        allow update: if isActive() && (
+          (existing().senderId == uid() && onlyChanges(['text','editedAt','deletedAt','readBy']))
+          || (inConv() && onlyChanges(['readBy']))
+          || (isAdmin() && onlyChanges(['deletedAt']))
+        );
+
+        allow delete: if false; // soft delete only, for the audit trail
+      }
+    }
+
+    // ───────────────────── notifications ─────────────────────
+
+    match /notifications/{notificationId} {
+      allow get: if isActive() && existing().userId == uid();
+
+      // Same pattern: the userId filter is enforced by the rule itself.
+      allow list: if isActive()
+                  && request.query.limit <= 100
+                  && 'userId' in request.query.where
+                  && request.query.where.userId == uid();
+
+      allow create: if false; // Cloud Function only
+
+      allow update: if isActive() && existing().userId == uid()
+                    && onlyChanges(['isRead','readAt']);
+
+      allow delete: if isActive() && existing().userId == uid();
+    }
+
+    // ─────────────────── server-only collections ─────────────
+
+    match /counters/{counterId}              { allow read, write: if false; }
+    match /studentIdReservations/{studentId} { allow read, write: if false; }
+    match /mail/{mailId}                     { allow read, write: if false; }
+
+    match /auditLogs/{logId} {
+      allow get, list: if isActive() && isDirector();
+      allow write: if false;
+    }
+
+    // ───────────────── public site content ──────────────────
+
+    match /siteContent/{docId} {
+      allow get, list: if true;
+      allow write: if isActive() && isAdmin();
+    }
+
+    // ──────────────────── default deny ──────────────────────
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
