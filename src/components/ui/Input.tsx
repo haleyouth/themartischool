@@ -3,10 +3,10 @@ import { AlertCircle } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const fieldBase =
-  'w-full rounded-xl border bg-white px-3.5 text-sm text-ink-900 placeholder:text-ink-400 transition-all duration-200 focus:outline-none focus:ring-4 disabled:cursor-not-allowed disabled:bg-ink-50 disabled:text-ink-400'
+  'w-full rounded-xl border bg-white px-3.5 text-sm text-ink-900 placeholder:text-ink-400 transition-all duration-200 focus:outline-none focus:ring-4 disabled:cursor-not-allowed disabled:bg-cream-100 disabled:text-ink-400'
 
 const fieldOk = 'border-ink-200 focus:border-marti-500 focus:ring-marti-500/10'
-const fieldError = 'border-crimson-400 focus:border-crimson-500 focus:ring-crimson-500/10'
+const fieldError = 'border-coral-400 focus:border-coral-500 focus:ring-coral-500/10'
 
 function FieldShell({
   id,
@@ -30,12 +30,12 @@ function FieldShell({
       {label && (
         <label htmlFor={id} className="block text-sm font-medium text-ink-700">
           {label}
-          {required && <span className="ml-0.5 text-crimson-600">*</span>}
+          {required && <span className="ml-0.5 text-coral-600">*</span>}
         </label>
       )}
       {children}
       {error ? (
-        <p className="flex items-center gap-1.5 text-xs font-medium text-crimson-600">
+        <p className="flex items-center gap-1.5 text-xs font-medium text-coral-600">
           <AlertCircle className="h-3.5 w-3.5 shrink-0" aria-hidden />
           {error}
         </p>
@@ -214,7 +214,7 @@ export function Checkbox({
         <span className="leading-relaxed">{label}</span>
       </label>
       {error && (
-        <p className="flex items-center gap-1.5 pl-7 text-xs font-medium text-crimson-600">
+        <p className="flex items-center gap-1.5 pl-7 text-xs font-medium text-coral-600">
           <AlertCircle className="h-3.5 w-3.5 shrink-0" aria-hidden />
           {error}
         </p>
@@ -223,7 +223,7 @@ export function Checkbox({
   )
 }
 
-/** Segmented radio group — used for attendance status and similar choices. */
+/** Segmented radio group, used for attendance status and similar choices. */
 export function RadioPills<T extends string>({
   value,
   onChange,

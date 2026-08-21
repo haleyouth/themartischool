@@ -25,6 +25,14 @@ export function Instagram(props: IconProps) {
   )
 }
 
+export function Twitter(props: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden {...props}>
+      <path d="M18.9 1.15h3.68l-8.04 9.19L24 22.85h-7.41l-5.8-7.584-6.638 7.584H.47l8.6-9.83L0 1.15h7.594l5.243 6.932ZM17.61 20.64h2.039L6.486 3.24H4.298Z" />
+    </svg>
+  )
+}
+
 export function Youtube(props: IconProps) {
   return (
     <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden {...props}>

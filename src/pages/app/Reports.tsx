@@ -113,7 +113,7 @@ function StaffReports() {
         teacherComments: comments,
         recommendedActions: null,
         guardianVisible: true,
-        // A report is never publishable on create — publishing is an admin act.
+        // A report is never publishable on create, publishing is an admin act.
         status: submit ? 'submitted' : 'draft',
         publishedAt: null,
         publishedBy: null,
@@ -188,7 +188,7 @@ function StaffReports() {
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-ink-100 text-left text-xs uppercase tracking-wider text-ink-500">
+                  <tr className="border-b border-cream-200 text-left text-xs uppercase tracking-wider text-ink-500">
                     <th className="px-5 py-3 font-semibold">{t('reports.student')}</th>
                     <th className="px-5 py-3 font-semibold">{t('classes.className')}</th>
                     <th className="px-5 py-3 font-semibold">{t('reports.period')}</th>
@@ -197,14 +197,14 @@ function StaffReports() {
                     <th className="px-5 py-3 text-right font-semibold">{t('common.actions')}</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-ink-50">
+                <tbody className="divide-y divide-cream-200">
                   {reports.map((report, index) => (
                     <motion.tr
                       key={report.id}
                       initial={{ opacity: 0, y: 6 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: Math.min(index * 0.03, 0.3) }}
-                      className="transition-colors hover:bg-ink-50"
+                      className="transition-colors hover:bg-cream-100"
                     >
                       <td className="px-5 py-3.5">
                         <p className="font-medium text-ink-900">{report.studentId}</p>
@@ -387,7 +387,7 @@ function StaffReports() {
         }
       >
         {publishing && (
-          <div className="rounded-xl bg-ink-50 p-4">
+          <div className="rounded-xl bg-cream-100 p-4">
             <p className="text-sm font-semibold text-ink-900">{publishing.studentId}</p>
             <p className="text-xs text-ink-500">{publishing.className}</p>
           </div>
@@ -445,7 +445,7 @@ function StudentReports() {
                 )}`}
                 action={
                   report.overallGrade ? (
-                    <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-50 font-display text-lg font-bold text-emerald-700">
+                    <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-mint-50 font-display text-lg font-bold text-mint-700">
                       {report.overallGrade}
                     </span>
                   ) : null
@@ -491,13 +491,13 @@ function ReportView({ report }: { report: PerformanceReportDoc }) {
   return (
     <div className="space-y-6">
       {report.status === 'draft' && (
-        <p className="flex gap-2.5 rounded-xl bg-amber-50 p-4 text-xs leading-relaxed text-amber-800">
+        <p className="flex gap-2.5 rounded-xl bg-sunshine-50 p-4 text-xs leading-relaxed text-sunshine-800">
           <Lock className="mt-px h-4 w-4 shrink-0" aria-hidden />
           {t('reports.draftNotice')}
         </p>
       )}
 
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl bg-ink-50 p-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl bg-cream-100 p-4">
         <div>
           <p className="text-sm font-bold text-ink-900">{report.className}</p>
           <p className="text-xs text-ink-500">
@@ -506,7 +506,7 @@ function ReportView({ report }: { report: PerformanceReportDoc }) {
           </p>
         </div>
         {report.overallGrade && (
-          <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-600 font-display text-xl font-bold text-white">
+          <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-mint-600 font-display text-xl font-bold text-white">
             {report.overallGrade}
           </span>
         )}
@@ -572,7 +572,7 @@ function StarRating({ value, onChange }: { value: number; onChange: (value: numb
           <Star
             className={cn(
               'h-5 w-5',
-              score <= value ? 'fill-gold-400 text-gold-400' : 'text-ink-200',
+              score <= value ? 'fill-sunshine-400 text-sunshine-400' : 'text-ink-200',
             )}
           />
         </button>

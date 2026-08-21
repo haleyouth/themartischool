@@ -5,19 +5,27 @@ type Tone =
   | 'neutral'
   | 'marti'
   | 'success'
+  | 'mint'
   | 'warning'
-  | 'danger'
   | 'gold'
+  | 'sunshine'
+  | 'danger'
+  | 'coral'
+  | 'grape'
   | 'violet'
 
 const tones: Record<Tone, string> = {
-  neutral: 'bg-ink-100 text-ink-700 ring-ink-200',
+  neutral: 'bg-cream-100 text-ink-700 ring-cream-200',
   marti: 'bg-marti-50 text-marti-700 ring-marti-200',
-  success: 'bg-emerald-50 text-emerald-700 ring-emerald-200',
-  warning: 'bg-amber-50 text-amber-700 ring-amber-200',
-  danger: 'bg-crimson-50 text-crimson-700 ring-crimson-200',
-  gold: 'bg-gold-50 text-gold-700 ring-gold-200',
-  violet: 'bg-violet-50 text-violet-700 ring-violet-200',
+  success: 'bg-mint-50 text-mint-700 ring-mint-200',
+  mint: 'bg-mint-50 text-mint-700 ring-mint-200',
+  warning: 'bg-sunshine-50 text-sunshine-700 ring-sunshine-200',
+  gold: 'bg-sunshine-50 text-sunshine-700 ring-sunshine-200',
+  sunshine: 'bg-sunshine-50 text-sunshine-700 ring-sunshine-200',
+  danger: 'bg-coral-50 text-coral-700 ring-coral-200',
+  coral: 'bg-coral-50 text-coral-700 ring-coral-200',
+  grape: 'bg-grape-50 text-grape-700 ring-grape-200',
+  violet: 'bg-grape-50 text-grape-700 ring-grape-200',
 }
 
 export function Badge({
@@ -36,8 +44,8 @@ export function Badge({
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-1.5 rounded-full font-medium ring-1 ring-inset',
-        size === 'sm' ? 'px-2 py-0.5 text-[11px]' : 'px-2.5 py-1 text-xs',
+        'inline-flex items-center gap-1.5 rounded-full font-bold ring-2 ring-inset',
+        size === 'sm' ? 'px-2.5 py-0.5 text-[11px]' : 'px-3 py-1 text-xs',
         tones[tone],
         className,
       )}

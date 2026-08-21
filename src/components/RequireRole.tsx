@@ -6,7 +6,7 @@ import { useT } from '@/i18n'
 import type { Role } from '@/types/models'
 
 /**
- * Route guard. This is a convenience for the UI only — the authoritative
+ * Route guard. This is a convenience for the UI only, the authoritative
  * check happens in Firestore rules and in every callable, so a user who
  * forges their way past this still cannot read or write anything.
  */

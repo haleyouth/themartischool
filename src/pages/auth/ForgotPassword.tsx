@@ -72,7 +72,7 @@ export default function ForgotPassword() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="w-full max-w-md rounded-3xl border border-ink-100 bg-white p-7 shadow-card sm:p-8"
+          className="w-full max-w-md rounded-3xl border border-cream-200 bg-white p-7 shadow-card sm:p-8"
         >
           <Logo size="md" />
 
@@ -82,7 +82,7 @@ export default function ForgotPassword() {
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ type: 'spring', stiffness: 240, damping: 16 }}
-                className="flex h-14 w-14 items-center justify-center rounded-full bg-emerald-600 text-white"
+                className="flex h-14 w-14 items-center justify-center rounded-full bg-mint-600 text-white"
               >
                 <CheckCircle2 className="h-7 w-7" />
               </motion.span>

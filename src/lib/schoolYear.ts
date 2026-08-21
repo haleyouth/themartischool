@@ -16,14 +16,14 @@ export function currentSchoolYear(now: Date = new Date()): number {
 }
 
 export function formatSchoolYear(schoolYear: number): string {
-  return `${schoolYear}–${schoolYear + 1}`
+  return `${schoolYear}-${schoolYear + 1}`
 }
 
 export function isSaturday(date: Date): boolean {
   return date.getDay() === SATURDAY
 }
 
-/** 'YYYY-MM-DD' in local time — avoids the UTC shift that toISOString() causes. */
+/** 'YYYY-MM-DD' in local time, avoids the UTC shift that toISOString() causes. */
 export function toDateKey(date: Date): string {
   const y = date.getFullYear()
   const m = String(date.getMonth() + 1).padStart(2, '0')

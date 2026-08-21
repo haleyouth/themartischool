@@ -24,7 +24,7 @@ describe('currentSchoolYear', () => {
   })
 
   it('formats as a spanning label', () => {
-    expect(formatSchoolYear(2026)).toBe('2026–2027')
+    expect(formatSchoolYear(2026)).toBe('2026-2027')
   })
 })
 

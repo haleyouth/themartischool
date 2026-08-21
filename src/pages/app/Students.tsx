@@ -59,7 +59,7 @@ export default function Students() {
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-ink-100 text-left text-xs uppercase tracking-wider text-ink-500">
+                  <tr className="border-b border-cream-200 text-left text-xs uppercase tracking-wider text-ink-500">
                     <th className="px-5 py-3 font-semibold">{t('common.name')}</th>
                     <th className="px-5 py-3 font-semibold">{t('students.studentId')}</th>
                     <th className="px-5 py-3 font-semibold">{t('students.gradeLevel')}</th>
@@ -67,7 +67,7 @@ export default function Students() {
                     <th className="px-5 py-3 font-semibold">{t('common.status')}</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-ink-50">
+                <tbody className="divide-y divide-cream-200">
                   {visible.map((student, index) => {
                     const summary = student.attendanceSummary
                     const rate = summary?.totalSessions
@@ -80,7 +80,7 @@ export default function Students() {
                         initial={{ opacity: 0, y: 6 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: Math.min(index * 0.02, 0.25) }}
-                        className="transition-colors hover:bg-ink-50"
+                        className="transition-colors hover:bg-cream-100"
                       >
                         <td className="px-5 py-3.5">
                           <Link
@@ -106,17 +106,17 @@ export default function Students() {
                         <td className="px-5 py-3.5 text-ink-600">{student.gradeLevel}</td>
                         <td className="px-5 py-3.5">
                           {rate === null ? (
-                            <span className="text-xs text-ink-400">—</span>
+                            <span className="text-xs text-ink-400">-</span>
                           ) : (
                             <div className="flex items-center gap-2">
                               <div className="h-1.5 w-16 overflow-hidden rounded-full bg-ink-100">
                                 <div
                                   className={`h-full rounded-full ${
                                     rate >= 90
-                                      ? 'bg-emerald-500'
+                                      ? 'bg-mint-500'
                                       : rate >= 75
-                                        ? 'bg-amber-500'
-                                        : 'bg-crimson-500'
+                                        ? 'bg-sunshine-500'
+                                        : 'bg-coral-500'
                                   }`}
                                   style={{ width: `${rate}%` }}
                                 />

@@ -69,7 +69,7 @@ export default function Classes() {
                     <dl className="mt-4 space-y-2 text-sm">
                       <div className="flex items-center gap-2 text-ink-600">
                         <Clock className="h-4 w-4 shrink-0 text-ink-400" aria-hidden />
-                        {formatTime(cls.startTime, intlLocale)} –{' '}
+                        {formatTime(cls.startTime, intlLocale)} -{' '}
                         {formatTime(cls.endTime, intlLocale)}
                       </div>
                       {cls.room && (
@@ -91,12 +91,12 @@ export default function Classes() {
                           animate={{ width: `${fill}%` }}
                           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
                           className={`h-full rounded-full ${
-                            full ? 'bg-crimson-500' : fill > 80 ? 'bg-amber-500' : 'bg-marti-600'
+                            full ? 'bg-coral-500' : fill > 80 ? 'bg-sunshine-500' : 'bg-marti-600'
                           }`}
                         />
                       </div>
                       {full && (
-                        <p className="mt-1.5 text-xs font-medium text-crimson-600">
+                        <p className="mt-1.5 text-xs font-medium text-coral-600">
                           {t('classes.full')}
                         </p>
                       )}

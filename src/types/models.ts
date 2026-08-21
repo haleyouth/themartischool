@@ -4,7 +4,7 @@ export type Role = 'director' | 'principal' | 'teacher' | 'student'
 
 export const ROLES: Role[] = ['director', 'principal', 'teacher', 'student']
 
-/** Custom claims minted by Cloud Functions. Kept small — under the 1000-byte budget. */
+/** Custom claims minted by Cloud Functions. Kept small, under the 1000-byte budget. */
 export interface MartiClaims {
   role: Role
   active: boolean
@@ -12,7 +12,7 @@ export interface MartiClaims {
   v: number
   studentId?: string
   schoolYear?: number
-  /** Teachers only — the classes they teach, so rules avoid unbounded get() calls. */
+  /** Teachers only, the classes they teach, so rules avoid unbounded get() calls. */
   classIds?: string[]
 }
 
@@ -91,7 +91,7 @@ export interface RegistrationDoc {
   gender?: 'male' | 'female' | 'prefer_not_to_say' | null
 
   guardianName: string
-  /** The real, reachable email — this is where the school contacts the family. */
+  /** The real, reachable email, this is where the school contacts the family. */
   guardianEmail: string
   guardianPhone: string
   secondaryGuardian?: SecondaryGuardian | null
@@ -190,7 +190,7 @@ export interface ClassDoc {
   schoolYear: number
   term: 'fall' | 'spring' | 'full_year'
 
-  /** ISO weekday. Always 6 (Saturday) — this is a weekend school. */
+  /** ISO weekday. Always 6 (Saturday), this is a weekend school. */
   meetingDay: 6
   startTime: string // 'HH:mm'
   endTime: string
@@ -334,7 +334,7 @@ export interface PerformanceReportDoc {
   recommendedActions: string | null
   guardianVisible: boolean
 
-  /** Drafts are invisible to students — enforced in rules, not just the UI. */
+  /** Drafts are invisible to students, enforced in rules, not just the UI. */
   status: 'draft' | 'submitted' | 'published'
   publishedAt: Timestamp | null
   publishedBy: string | null
@@ -413,7 +413,7 @@ export interface NotificationDoc {
   isRead: boolean
   readAt: Timestamp | null
   createdAt: Timestamp
-  /** Backed by a Firestore TTL policy — cleanup needs no cron. */
+  /** Backed by a Firestore TTL policy, cleanup needs no cron. */
   expiresAt: Timestamp | null
 }
 

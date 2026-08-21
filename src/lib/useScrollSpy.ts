@@ -4,20 +4,17 @@ import { useEffect, useState } from 'react'
 export const SECTION_IDS = {
   home: 'home',
   about: 'about',
-  programs: 'programs',
-  tuition: 'tuition',
-  calendar: 'calendar',
-  contact: 'contact',
+  programs: 'classes',
   register: 'register',
 } as const
 
 /**
  * Tracks which section is currently in view so the navbar can highlight it.
  *
- * Uses scroll position rather than IntersectionObserver: sections here vary
- * wildly in height, and "the last section whose top has passed the header"
- * matches what a reader perceives as the current section far better than
- * intersection ratios do.
+ * Uses scroll position rather than IntersectionObserver: sections vary a lot
+ * in height, and "the last section whose top has passed the header" matches
+ * what a reader perceives as the current section far better than intersection
+ * ratios do.
  */
 export function useScrollSpy(ids: string[], offset = 100): string | null {
   const [activeId, setActiveId] = useState<string | null>(ids[0] ?? null)
@@ -28,8 +25,7 @@ export function useScrollSpy(ids: string[], offset = 100): string | null {
     const update = () => {
       frame = 0
 
-      // At the very bottom of the page the last section may never reach the
-      // offset line, so pin it explicitly.
+      // At the very bottom the last section may never cross the offset line.
       const atBottom =
         window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2
       if (atBottom) {

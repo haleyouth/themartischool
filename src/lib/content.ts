@@ -1,11 +1,10 @@
 /**
- * Static marketing content for the public site.
+ * Static marketing content for the public page.
  *
- * Values here are translation KEYS, not text — every string is resolved through
- * the i18n dictionary at render time so EN and TR stay in sync.
+ * Values here are translation KEYS, not text, so EN and TR stay in sync.
  *
- * NOTE FOR THE SCHOOL: tuition amounts below are PLACEHOLDERS. Replace the
- * `price` values in TUITION_PLANS with the school's real monthly rates.
+ * Organisation facts come from themarti.org. Tuition amounts are PLACEHOLDERS:
+ * replace the `price` values in TUITION_PLANS with the school's real rates.
  */
 
 export interface ProgramContent {
@@ -16,8 +15,8 @@ export interface ProgramContent {
   level: 'beginner' | 'intermediate' | 'advanced' | 'heritage' | 'all'
   duration: string
   capacity: number
-  icon: string
-  accent: 'marti' | 'gold' | 'crimson' | 'emerald' | 'violet' | 'amber'
+  emoji: string
+  accent: 'marti' | 'sunshine' | 'mint' | 'coral' | 'grape'
 }
 
 export const PROGRAMS: ProgramContent[] = [
@@ -27,10 +26,10 @@ export const PROGRAMS: ProgramContent[] = [
     ageKey: 'programs.p1Age',
     descKey: 'programs.p1Desc',
     level: 'beginner',
-    duration: '1.5h',
+    duration: '1.5',
     capacity: 12,
-    icon: 'Sprout',
-    accent: 'emerald',
+    emoji: '🌱',
+    accent: 'mint',
   },
   {
     id: 'foundations',
@@ -38,9 +37,9 @@ export const PROGRAMS: ProgramContent[] = [
     ageKey: 'programs.p2Age',
     descKey: 'programs.p2Desc',
     level: 'beginner',
-    duration: '3h',
+    duration: '3',
     capacity: 16,
-    icon: 'BookOpen',
+    emoji: '📚',
     accent: 'marti',
   },
   {
@@ -49,10 +48,10 @@ export const PROGRAMS: ProgramContent[] = [
     ageKey: 'programs.p3Age',
     descKey: 'programs.p3Desc',
     level: 'intermediate',
-    duration: '3h',
+    duration: '3',
     capacity: 18,
-    icon: 'PenTool',
-    accent: 'gold',
+    emoji: '✏️',
+    accent: 'sunshine',
   },
   {
     id: 'young-voices',
@@ -60,10 +59,10 @@ export const PROGRAMS: ProgramContent[] = [
     ageKey: 'programs.p4Age',
     descKey: 'programs.p4Desc',
     level: 'advanced',
-    duration: '3h',
+    duration: '3',
     capacity: 18,
-    icon: 'MessagesSquare',
-    accent: 'violet',
+    emoji: '💬',
+    accent: 'grape',
   },
   {
     id: 'heritage',
@@ -71,10 +70,10 @@ export const PROGRAMS: ProgramContent[] = [
     ageKey: 'programs.p5Age',
     descKey: 'programs.p5Desc',
     level: 'heritage',
-    duration: '3h',
+    duration: '3',
     capacity: 16,
-    icon: 'Home',
-    accent: 'crimson',
+    emoji: '🏡',
+    accent: 'coral',
   },
   {
     id: 'culture',
@@ -82,10 +81,10 @@ export const PROGRAMS: ProgramContent[] = [
     ageKey: 'programs.p6Age',
     descKey: 'programs.p6Desc',
     level: 'all',
-    duration: '1.5h',
+    duration: '1.5',
     capacity: 24,
-    icon: 'Music',
-    accent: 'amber',
+    emoji: '🪕',
+    accent: 'sunshine',
   },
 ]
 
@@ -93,7 +92,7 @@ export interface TuitionPlan {
   id: string
   nameKey: string
   descKey: string
-  /** PLACEHOLDER — replace with the school's real monthly rate. */
+  /** PLACEHOLDER: replace with the school's real monthly rate. */
   price: number
   featured: boolean
   featureKeys: string[]
@@ -126,7 +125,6 @@ export const TUITION_PLANS: TuitionPlan[] = [
       'tuition.featurePortal',
       'tuition.featureCulture',
       'tuition.featureEvents',
-      'tuition.featureConference',
     ],
   },
   {
@@ -143,118 +141,57 @@ export const TUITION_PLANS: TuitionPlan[] = [
       'tuition.featureCulture',
       'tuition.featureEvents',
       'tuition.featureSibling',
-      'tuition.featurePriority',
     ],
   },
 ]
 
-export const TUITION_FAQS = [
-  { qKey: 'tuition.faq1Q', aKey: 'tuition.faq1A' },
-  { qKey: 'tuition.faq2Q', aKey: 'tuition.faq2A' },
-  { qKey: 'tuition.faq3Q', aKey: 'tuition.faq3A' },
-  { qKey: 'tuition.faq4Q', aKey: 'tuition.faq4A' },
-  { qKey: 'tuition.faq5Q', aKey: 'tuition.faq5A' },
-  { qKey: 'tuition.faq6Q', aKey: 'tuition.faq6A' },
-]
-
 export const WHY_FEATURES = [
-  { icon: 'GraduationCap', titleKey: 'home.why1Title', bodyKey: 'home.why1Body' },
-  { icon: 'Layers', titleKey: 'home.why2Title', bodyKey: 'home.why2Body' },
-  { icon: 'Drama', titleKey: 'home.why3Title', bodyKey: 'home.why3Body' },
-  { icon: 'TrendingUp', titleKey: 'home.why4Title', bodyKey: 'home.why4Body' },
-  { icon: 'CalendarDays', titleKey: 'home.why5Title', bodyKey: 'home.why5Body' },
-  { icon: 'Users', titleKey: 'home.why6Title', bodyKey: 'home.why6Body' },
+  { emoji: '👩‍🏫', titleKey: 'home.why1Title', bodyKey: 'home.why1Body', accent: 'marti' as const },
+  { emoji: '🎯', titleKey: 'home.why2Title', bodyKey: 'home.why2Body', accent: 'mint' as const },
+  { emoji: '🪘', titleKey: 'home.why3Title', bodyKey: 'home.why3Body', accent: 'coral' as const },
+  { emoji: '📈', titleKey: 'home.why4Title', bodyKey: 'home.why4Body', accent: 'sunshine' as const },
+  { emoji: '📅', titleKey: 'home.why5Title', bodyKey: 'home.why5Body', accent: 'grape' as const },
+  { emoji: '🤝', titleKey: 'home.why6Title', bodyKey: 'home.why6Body', accent: 'marti' as const },
 ]
 
 export const HOW_STEPS = [
-  { titleKey: 'home.how1Title', bodyKey: 'home.how1Body', icon: 'FileText' },
-  { titleKey: 'home.how2Title', bodyKey: 'home.how2Body', icon: 'Search' },
-  { titleKey: 'home.how3Title', bodyKey: 'home.how3Body', icon: 'BadgeCheck' },
-  { titleKey: 'home.how4Title', bodyKey: 'home.how4Body', icon: 'PartyPopper' },
+  { titleKey: 'home.how1Title', bodyKey: 'home.how1Body', emoji: '📝' },
+  { titleKey: 'home.how2Title', bodyKey: 'home.how2Body', emoji: '🔍' },
+  { titleKey: 'home.how3Title', bodyKey: 'home.how3Body', emoji: '🎫' },
+  { titleKey: 'home.how4Title', bodyKey: 'home.how4Body', emoji: '🎉' },
 ]
 
-/** Representative parent voices for the testimonials band. */
-export const TESTIMONIALS = [
-  {
-    id: 't1',
-    quoteEn:
-      'My daughter went from refusing to speak Turkish to arguing with her grandmother on the phone. That is worth every Saturday morning.',
-    quoteTr:
-      'Kızım Türkçe konuşmayı reddederken şimdi telefonda anneannesiyle tartışıyor. Bu, her cumartesi sabahına değer.',
-    nameEn: 'Ayşe D.',
-    roleEn: 'Parent, Rockville',
-    roleTr: 'Veli, Rockville',
-  },
-  {
-    id: 't2',
-    quoteEn:
-      'The teachers actually know how to teach heritage kids. My son was bored everywhere else because he already spoke a little. Here he was placed properly on day one.',
-    quoteTr:
-      'Öğretmenler miras dili öğrencilerine nasıl öğreteceğini gerçekten biliyor. Oğlum biraz Türkçe bildiği için başka yerlerde sıkılıyordu. Burada ilk günden doğru sınıfa yerleştirildi.',
-    nameEn: 'Mehmet K.',
-    roleEn: 'Parent, Baltimore',
-    roleTr: 'Veli, Baltimore',
-  },
-  {
-    id: 't3',
-    quoteEn:
-      'We came for the language and stayed for the community. Our family found other Turkish families we now see every week.',
-    quoteTr:
-      'Dil için geldik, topluluk için kaldık. Ailemiz burada her hafta görüştüğümüz başka Türk aileler buldu.',
-    nameEn: 'Zeynep A.',
-    roleEn: 'Parent, Silver Spring',
-    roleTr: 'Veli, Silver Spring',
-  },
-]
-
+/** Figures published by the organisation on themarti.org. */
 export const SCHOOL_STATS = [
-  { value: 180, labelKey: 'home.statStudents', suffix: '+' },
-  { value: 14, labelKey: 'home.statTeachers', suffix: '' },
-  { value: 12, labelKey: 'home.statYears', suffix: '' },
-  { value: 30, labelKey: 'home.statSaturdays', suffix: '' },
+  { value: 168, labelKey: 'home.statStudents', suffix: '', emoji: '🎒' },
+  { value: 25, labelKey: 'home.statTeachers', suffix: '', emoji: '👩‍🏫' },
+  { value: 22, labelKey: 'home.statYears', suffix: '+', emoji: '🎂' },
+  { value: 30, labelKey: 'home.statSaturdays', suffix: '', emoji: '📅' },
 ]
 
 export const SATURDAY_SCHEDULE = [
-  { time: '09:30', labelKey: 'calendar.time1' },
-  { time: '10:00', labelKey: 'calendar.time2' },
-  { time: '11:15', labelKey: 'calendar.time3' },
-  { time: '11:45', labelKey: 'calendar.time4' },
-  { time: '12:45', labelKey: 'calendar.time5' },
+  { time: '09:30', labelKey: 'calendar.time1', emoji: '👋' },
+  { time: '10:00', labelKey: 'calendar.time2', emoji: '📖' },
+  { time: '11:15', labelKey: 'calendar.time3', emoji: '🍎' },
+  { time: '11:45', labelKey: 'calendar.time4', emoji: '🎨' },
+  { time: '12:45', labelKey: 'calendar.time5', emoji: '🚗' },
 ]
 
+/** Real organisation details, from themarti.org. */
 export const SCHOOL_INFO = {
-  email: 'info@themartischool.org',
-  phone: '(301) 555-0142',
-  addressLines: ['Maryland Turkish American Inhabitants', 'Rockville, Maryland'],
-  hoursKey: 'contact.hoursValue',
-  officeKey: 'contact.officeValue',
+  orgName: 'Maryland Turkish-American Community',
+  email: 'info@themarti.org',
+  phone: '(410) 660-0501',
+  addressLines: ['9115 Guilford Rd, Suite 200', 'Columbia, MD 21046'],
+  foundedYear: 2003,
+  website: 'https://www.themarti.org',
+  social: {
+    facebook: 'https://www.facebook.com/martimd',
+    instagram: 'https://www.instagram.com/marti_youth',
+    twitter: 'https://x.com/ATFAmd',
+  },
 }
 
-export const GRADE_LEVELS = [
-  'K',
-  '1',
-  '2',
-  '3',
-  '4',
-  '5',
-  '6',
-  '7',
-  '8',
-  '9',
-  '10',
-  '11',
-  '12',
-]
+export const GRADE_LEVELS = ['K', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']
 
-export const US_STATES = [
-  'MD',
-  'VA',
-  'DC',
-  'PA',
-  'DE',
-  'WV',
-  'NJ',
-  'NY',
-  'NC',
-  'Other',
-]
+export const US_STATES = ['MD', 'VA', 'DC', 'PA', 'DE', 'WV', 'NJ', 'NY', 'NC', 'Other']

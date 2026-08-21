@@ -3,8 +3,8 @@ import type { Role } from '@/types/models'
 /**
  * Demo accounts wired to the one-click buttons on the login page.
  *
- * These are REAL Firebase Auth users created by `scripts/seed.ts`, not mocks —
- * signing in as one exercises the same rules and claims as a real account.
+ * These are REAL Firebase Auth users created by `scripts/seed.ts`, not mocks.
+ * Signing in as one exercises the same rules and claims as a real account.
  * Because the credentials are public by design, the seeded data is fictional
  * and these accounts must never be given real student records.
  */

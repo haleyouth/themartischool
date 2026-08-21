@@ -41,7 +41,7 @@ export function CardSkeleton({ count = 3 }: { count?: number }) {
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3" aria-hidden>
       {Array.from({ length: count }).map((_, index) => (
-        <div key={index} className="rounded-2xl border border-ink-100 bg-white p-5">
+        <div key={index} className="rounded-2xl border border-cream-200 bg-white p-5">
           <Skeleton className="h-11 w-11 rounded-xl" />
           <Skeleton className="mt-4 h-5 w-2/3" />
           <Skeleton className="mt-2.5 h-3.5 w-full" />
@@ -68,7 +68,7 @@ export function EmptyState({
   return (
     <div
       className={cn(
-        'flex flex-col items-center justify-center rounded-2xl border border-dashed border-ink-200 bg-ink-50/40 px-6 py-14 text-center',
+        'flex flex-col items-center justify-center rounded-2xl border border-dashed border-ink-200 bg-cream-100/40 px-6 py-14 text-center',
         className,
       )}
     >
@@ -107,10 +107,10 @@ export function ErrorState({
   retryLabel?: string
 }) {
   return (
-    <div className="rounded-2xl border border-crimson-200 bg-crimson-50 p-6 text-center">
-      <h3 className="font-display text-base font-semibold text-crimson-900">{title}</h3>
+    <div className="rounded-2xl border border-coral-200 bg-coral-50 p-6 text-center">
+      <h3 className="font-display text-base font-semibold text-coral-900">{title}</h3>
       {description && (
-        <p className="mx-auto mt-1.5 max-w-md text-sm leading-relaxed text-crimson-700">
+        <p className="mx-auto mt-1.5 max-w-md text-sm leading-relaxed text-coral-700">
           {description}
         </p>
       )}

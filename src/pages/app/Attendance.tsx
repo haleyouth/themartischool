@@ -30,9 +30,9 @@ import { cn, formatDate, fullName, percent } from '@/lib/utils'
 import type { AttendanceStatus } from '@/types/models'
 
 const STATUS_STYLES: Record<AttendanceStatus, string> = {
-  present: 'bg-emerald-600 text-white',
-  absent: 'bg-crimson-600 text-white',
-  late: 'bg-amber-500 text-white',
+  present: 'bg-mint-600 text-white',
+  absent: 'bg-coral-600 text-white',
+  late: 'bg-sunshine-500 text-white',
   excused: 'bg-marti-600 text-white',
 }
 
@@ -142,7 +142,7 @@ function TeacherAttendance() {
 
     try {
       const now = serverTimestamp()
-      // The whole roster is one document, so a class is saved atomically —
+      // The whole roster is one document, so a class is saved atomically:
       // there is no state where half the students are marked.
       const recordMap = Object.fromEntries(
         Object.entries(records).map(([studentId, status]) => [
@@ -241,7 +241,7 @@ function TeacherAttendance() {
       </Card>
 
       {!dateIsSaturday && (
-        <div className="mb-5 flex gap-2.5 rounded-xl bg-amber-50 p-4 text-sm text-amber-800">
+        <div className="mb-5 flex gap-2.5 rounded-xl bg-sunshine-50 p-4 text-sm text-sunshine-800">
           <TriangleAlert className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
           {t('attendance.notSaturday')}
         </div>
@@ -264,7 +264,7 @@ function TeacherAttendance() {
 
       <Card>
         <CardHeader
-          title={selectedClass?.name ?? '—'}
+          title={selectedClass?.name ?? '-'}
           subtitle={`${formatDate(sessionDate, intlLocale, {
             weekday: 'long',
             month: 'long',
@@ -290,14 +290,14 @@ function TeacherAttendance() {
               title={t('students.noStudents')}
             />
           ) : (
-            <ul className="divide-y divide-ink-50">
+            <ul className="divide-y divide-cream-200">
               {roster.map((student, index) => (
                 <motion.li
                   key={student.studentId}
                   initial={{ opacity: 0, y: 6 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: Math.min(index * 0.02, 0.25) }}
-                  className="flex flex-col gap-3 px-5 py-3.5 transition-colors hover:bg-ink-50 sm:flex-row sm:items-center sm:justify-between"
+                  className="flex flex-col gap-3 px-5 py-3.5 transition-colors hover:bg-cream-100 sm:flex-row sm:items-center sm:justify-between"
                 >
                   <div className="flex min-w-0 items-center gap-3">
                     <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-marti-50 text-xs font-bold text-marti-700">
@@ -342,7 +342,7 @@ function TeacherAttendance() {
         </CardBody>
 
         {roster.length > 0 && (
-          <div className="border-t border-ink-100 p-5">
+          <div className="border-t border-cream-200 p-5">
             <Textarea
               label={t('attendance.classNotes')}
               hint={t('attendance.classNotesHint')}
@@ -428,7 +428,7 @@ function StudentAttendance() {
               title={t('students.noAttendance')}
             />
           ) : (
-            <ul className="divide-y divide-ink-50">
+            <ul className="divide-y divide-cream-200">
               {history.map((entry) => (
                 <li key={entry.id} className="flex items-center gap-3 px-5 py-3.5">
                   <div className="min-w-0 flex-1">

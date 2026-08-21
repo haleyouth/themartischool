@@ -68,7 +68,7 @@ describe('shadow email mapping', () => {
     expect(toShadowEmail('MRT-2026-0042')).toBe(`mrt-2026-0042@${SHADOW_EMAIL_DOMAIN}`)
   })
 
-  it('is stable — the same ID always yields the same address', () => {
+  it('is stable, the same ID always yields the same address', () => {
     expect(toShadowEmail('MRT-2026-0001')).toBe(toShadowEmail('mrt-2026-0001'.toUpperCase()))
   })
 

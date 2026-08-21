@@ -2,22 +2,26 @@ import type { ReactNode } from 'react'
 import { Reveal } from '@/components/motion'
 import { cn } from '@/lib/utils'
 
-/** Small pill above a section heading. */
+/** Rounded pill that sits above a section heading. */
 export function SectionEyebrow({
   children,
   tone = 'light',
+  emoji,
 }: {
   children: ReactNode
   tone?: 'light' | 'dark'
+  emoji?: string
 }) {
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider',
-        tone === 'light' ? 'bg-marti-50 text-marti-700' : 'bg-white/10 text-marti-200',
+        'inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-extrabold uppercase tracking-wide',
+        tone === 'light'
+          ? 'bg-white text-marti-700 shadow-soft ring-2 ring-marti-100'
+          : 'bg-white/15 text-white ring-2 ring-white/20',
       )}
     >
-      <span className="h-1.5 w-1.5 rounded-full bg-current" />
+      {emoji ? <span aria-hidden>{emoji}</span> : <span className="h-2 w-2 rounded-full bg-current" />}
       {children}
     </span>
   )
@@ -25,6 +29,7 @@ export function SectionEyebrow({
 
 export function SectionHeading({
   eyebrow,
+  eyebrowEmoji,
   title,
   subtitle,
   align = 'center',
@@ -32,6 +37,7 @@ export function SectionHeading({
   className,
 }: {
   eyebrow?: string
+  eyebrowEmoji?: string
   title: ReactNode
   subtitle?: string
   align?: 'center' | 'left'
@@ -39,17 +45,15 @@ export function SectionHeading({
   className?: string
 }) {
   return (
-    <Reveal
-      className={cn(
-        'max-w-2xl',
-        align === 'center' && 'mx-auto text-center',
-        className,
+    <Reveal className={cn('max-w-2xl', align === 'center' && 'mx-auto text-center', className)}>
+      {eyebrow && (
+        <SectionEyebrow tone={tone} emoji={eyebrowEmoji}>
+          {eyebrow}
+        </SectionEyebrow>
       )}
-    >
-      {eyebrow && <SectionEyebrow tone={tone}>{eyebrow}</SectionEyebrow>}
       <h2
         className={cn(
-          'mt-4 text-balance font-display text-3xl font-bold leading-tight sm:text-4xl',
+          'mt-5 text-balance font-display text-3xl font-extrabold leading-[1.15] sm:text-[2.6rem]',
           tone === 'light' ? 'text-ink-950' : 'text-white',
         )}
       >
@@ -58,8 +62,8 @@ export function SectionHeading({
       {subtitle && (
         <p
           className={cn(
-            'mt-4 text-pretty text-base leading-relaxed',
-            tone === 'light' ? 'text-ink-600' : 'text-ink-300',
+            'mt-4 text-pretty text-base leading-relaxed sm:text-lg',
+            tone === 'light' ? 'text-ink-600' : 'text-marti-100',
           )}
         >
           {subtitle}
@@ -69,22 +73,21 @@ export function SectionHeading({
   )
 }
 
-/** Standard vertical rhythm for a marketing section. */
 export function Section({
   children,
   className,
   id,
-  tone = 'white',
+  tone = 'cream',
 }: {
   children: ReactNode
   className?: string
   id?: string
-  tone?: 'white' | 'tint' | 'dark'
+  tone?: 'cream' | 'white' | 'dark'
 }) {
   const tones = {
-    white: 'bg-white',
-    tint: 'bg-gradient-to-b from-marti-50/60 via-white to-white',
-    dark: 'bg-ink-950',
+    cream: 'bg-cream-100',
+    white: 'bg-cream-50',
+    dark: 'bg-marti-800',
   }
 
   return (
@@ -94,26 +97,28 @@ export function Section({
   )
 }
 
-/** Page header used by every inner marketing page. */
-export function PageHero({
-  eyebrow,
-  title,
-  subtitle,
+/**
+ * Soft wave divider between sections. Keeps the page feeling hand-made rather
+ * than a stack of rectangles.
+ */
+export function WaveDivider({
+  from = 'fill-cream-100',
+  flip = false,
+  className,
 }: {
-  eyebrow?: string
-  title: string
-  subtitle?: string
+  from?: string
+  flip?: boolean
+  className?: string
 }) {
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-marti-50 via-marti-50/40 to-white pb-16 pt-32 sm:pb-20 sm:pt-40">
-      <div className="bg-dots absolute inset-0 opacity-40" aria-hidden />
-      <div
-        className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-marti-200/40 blur-3xl"
-        aria-hidden
-      />
-      <div className="container-marti relative">
-        <SectionHeading eyebrow={eyebrow} title={title} subtitle={subtitle} />
-      </div>
-    </section>
+    <div className={cn('pointer-events-none -mt-px w-full leading-none', className)} aria-hidden>
+      <svg
+        viewBox="0 0 1440 60"
+        preserveAspectRatio="none"
+        className={cn('h-[40px] w-full sm:h-[60px]', from, flip && 'rotate-180')}
+      >
+        <path d="M0,32 C240,64 480,0 720,20 C960,40 1200,64 1440,36 L1440,60 L0,60 Z" />
+      </svg>
+    </div>
   )
 }

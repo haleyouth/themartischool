@@ -33,7 +33,7 @@ interface CollectionState<T> {
  * Live Firestore collection subscription.
  *
  * `constraints` is rebuilt on every render by callers, so it is intentionally
- * NOT in the dependency array — `depsKey` is the stable signal for when the
+ * NOT in the dependency array, `depsKey` is the stable signal for when the
  * query genuinely changed. Passing the array directly would tear down and
  * recreate the listener on every render.
  */
@@ -164,7 +164,7 @@ export function useReports(teacherId?: string, studentId?: string) {
 
 /**
  * A student's own reports. The uid + status filters are mandated by the
- * security rules, not merely a convenience — drafts must never be readable.
+ * security rules, not merely a convenience, drafts must never be readable.
  */
 export function usePublishedReports(uid?: string) {
   return useCollection<PerformanceReportDoc>(
@@ -202,12 +202,16 @@ export function useConversations(uid?: string) {
   )
 }
 
+/**
+ * Every user account, for the account management screen. Admins only, which
+ * matches the `list` rule on the users collection.
+ */
 export function useStaff() {
   const { role } = useAuth()
   return useCollection<UserDoc>(
     'users',
-    [fbLimit(200)],
-    'staff',
+    [fbLimit(500)],
+    'accounts',
     role === 'director' || role === 'principal',
   )
 }

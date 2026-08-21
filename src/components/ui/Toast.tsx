@@ -32,18 +32,18 @@ const ToastContext = createContext<ToastContextValue | null>(null)
 const kinds: Record<ToastKind, { icon: typeof Info; className: string; iconClass: string }> = {
   success: {
     icon: CheckCircle2,
-    className: 'border-emerald-200 bg-emerald-50',
-    iconClass: 'text-emerald-600',
+    className: 'border-mint-200 bg-mint-50',
+    iconClass: 'text-mint-600',
   },
   error: {
     icon: XCircle,
-    className: 'border-crimson-200 bg-crimson-50',
-    iconClass: 'text-crimson-600',
+    className: 'border-coral-200 bg-coral-50',
+    iconClass: 'text-coral-600',
   },
   warning: {
     icon: AlertCircle,
-    className: 'border-amber-200 bg-amber-50',
-    iconClass: 'text-amber-600',
+    className: 'border-sunshine-200 bg-sunshine-50',
+    iconClass: 'text-sunshine-600',
   },
   info: { icon: Info, className: 'border-marti-200 bg-marti-50', iconClass: 'text-marti-600' },
 }
@@ -61,7 +61,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     (kind: ToastKind, message: string, description?: string) => {
       const id = nextId++
       setToasts((prev) => [...prev, { id, kind, message, description }])
-      // Errors linger longer — they usually carry something to act on.
+      // Errors linger longer, they usually carry something to act on.
       window.setTimeout(() => dismiss(id), kind === 'error' ? 7000 : 4500)
     },
     [dismiss],

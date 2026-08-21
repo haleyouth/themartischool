@@ -34,10 +34,10 @@ const DEMO_ICONS = {
 } as const
 
 const DEMO_STYLES = {
-  director: 'hover:border-violet-300 hover:bg-violet-50 text-violet-600',
+  director: 'hover:border-grape-300 hover:bg-grape-50 text-grape-600',
   principal: 'hover:border-marti-300 hover:bg-marti-50 text-marti-600',
-  teacher: 'hover:border-emerald-300 hover:bg-emerald-50 text-emerald-600',
-  student: 'hover:border-gold-300 hover:bg-gold-50 text-gold-600',
+  teacher: 'hover:border-mint-300 hover:bg-mint-50 text-mint-600',
+  student: 'hover:border-sunshine-300 hover:bg-sunshine-50 text-sunshine-600',
 } as const
 
 export default function Login() {
@@ -115,7 +115,7 @@ export default function Login() {
 
   return (
     <div className="flex min-h-screen">
-      {/* Brand panel — hidden on small screens where it would just cost scroll. */}
+      {/* Brand panel, hidden on small screens where it would just cost scroll. */}
       <div className="relative hidden w-1/2 overflow-hidden bg-marti-gradient lg:flex lg:flex-col lg:justify-between lg:p-12">
         <div className="bg-dots absolute inset-0 opacity-20" aria-hidden />
         <motion.div
@@ -272,7 +272,7 @@ export default function Login() {
                     initial={{ opacity: 0, height: 0 }}
                     animate={{ opacity: 1, height: 'auto' }}
                     exit={{ opacity: 0, height: 0 }}
-                    className="rounded-xl bg-crimson-50 px-4 py-3 text-sm font-medium text-crimson-700"
+                    className="rounded-xl bg-coral-50 px-4 py-3 text-sm font-medium text-coral-700"
                     role="alert"
                   >
                     {error}

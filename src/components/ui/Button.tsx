@@ -3,27 +3,30 @@ import { Link } from 'react-router-dom'
 import { Loader2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
-type Variant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'gold' | 'white'
+type Variant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'sunshine' | 'white'
 type Size = 'sm' | 'md' | 'lg' | 'xl' | 'icon'
 
+/**
+ * Buttons use a chunky offset shadow that presses down on click. It is the
+ * detail that makes the whole interface read as a children's school rather
+ * than a corporate dashboard.
+ */
 const variants: Record<Variant, string> = {
-  primary:
-    'bg-marti-600 text-white shadow-soft hover:bg-marti-700 hover:shadow-lift active:bg-marti-800',
-  secondary: 'bg-marti-50 text-marti-700 hover:bg-marti-100 active:bg-marti-200',
-  outline:
-    'border border-ink-200 bg-white text-ink-700 hover:border-marti-300 hover:bg-marti-50 hover:text-marti-700',
+  primary: 'bg-marti-600 text-white shadow-pop hover:bg-marti-500 btn-pop',
+  secondary: 'bg-marti-50 text-marti-700 ring-2 ring-marti-200 hover:bg-marti-100',
+  outline: 'bg-white text-ink-700 ring-2 ring-cream-200 hover:ring-marti-300 hover:text-marti-700',
   ghost: 'text-ink-600 hover:bg-ink-100 hover:text-ink-900',
-  danger: 'bg-crimson-600 text-white shadow-soft hover:bg-crimson-700 active:bg-crimson-800',
-  gold: 'bg-gold-500 text-white shadow-soft hover:bg-gold-600 active:bg-gold-700',
-  white: 'bg-white text-marti-700 shadow-soft hover:bg-marti-50 hover:shadow-lift',
+  danger: 'bg-coral-500 text-white shadow-[0_6px_0_0_rgb(190_18_60)] hover:bg-coral-400 btn-pop',
+  sunshine: 'bg-sunshine-400 text-ink-950 shadow-pop-amber hover:bg-sunshine-300 btn-pop',
+  white: 'bg-white text-marti-700 shadow-[0_6px_0_0_rgb(219_215_204)] hover:bg-cream-50 btn-pop',
 }
 
 const sizes: Record<Size, string> = {
-  sm: 'h-9 px-3.5 text-sm gap-1.5 rounded-lg',
-  md: 'h-11 px-5 text-sm gap-2 rounded-xl',
-  lg: 'h-12 px-6 text-base gap-2 rounded-xl',
-  xl: 'h-14 px-8 text-base gap-2.5 rounded-2xl',
-  icon: 'h-10 w-10 rounded-xl',
+  sm: 'h-9 px-4 text-sm gap-1.5 rounded-xl',
+  md: 'h-11 px-5 text-sm gap-2 rounded-2xl',
+  lg: 'h-12 px-6 text-base gap-2 rounded-2xl',
+  xl: 'h-14 px-8 text-base gap-2.5 rounded-3xl',
+  icon: 'h-11 w-11 rounded-2xl',
 }
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -33,7 +36,6 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   leftIcon?: ReactNode
   rightIcon?: ReactNode
   fullWidth?: boolean
-  /** Renders a react-router Link that looks identical to the button. */
   to?: string
   href?: string
 }
@@ -57,10 +59,10 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
   ref,
 ) {
   const classes = cn(
-    'group relative inline-flex items-center justify-center font-medium',
-    'transition-all duration-200 ease-out active:scale-[0.98]',
+    'group relative inline-flex items-center justify-center font-bold',
+    'transition-all duration-150 ease-out',
     'disabled:pointer-events-none disabled:opacity-50',
-    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-marti-600 focus-visible:ring-offset-2',
+    'focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-marti-500/40 focus-visible:ring-offset-2',
     variants[variant],
     sizes[size],
     fullWidth && 'w-full',
@@ -69,11 +71,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
 
   const content = (
     <>
-      {loading ? (
-        <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
-      ) : (
-        leftIcon
-      )}
+      {loading ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> : leftIcon}
       {children}
       {!loading && rightIcon}
     </>
@@ -96,13 +94,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
   }
 
   return (
-    <button
-      ref={ref}
-      type={type}
-      className={classes}
-      disabled={disabled || loading}
-      {...props}
-    >
+    <button ref={ref} type={type} className={classes} disabled={disabled || loading} {...props}>
       {content}
     </button>
   )

@@ -124,13 +124,13 @@ export default function Settings() {
           <CardBody className="space-y-5">
             <div className="flex items-center gap-4">
               <Avatar
-                name={auth.profile?.displayName ?? '—'}
+                name={auth.profile?.displayName ?? '-'}
                 src={auth.profile?.photoURL}
                 size="lg"
               />
               <div className="min-w-0">
                 <p className="truncate text-sm font-semibold text-ink-900">
-                  {auth.profile?.email ?? auth.profile?.studentId ?? '—'}
+                  {auth.profile?.email ?? auth.profile?.studentId ?? '-'}
                 </p>
                 <p className="text-xs text-ink-500">
                   {t(`staff.role${cap(auth.role ?? 'student')}`)}
@@ -183,7 +183,7 @@ export default function Settings() {
               {PREF_KEYS.map((pref) => (
                 <label
                   key={pref.key}
-                  className="flex cursor-pointer items-center justify-between gap-4 rounded-xl px-2 py-2.5 transition-colors hover:bg-ink-50"
+                  className="flex cursor-pointer items-center justify-between gap-4 rounded-xl px-2 py-2.5 transition-colors hover:bg-cream-100"
                 >
                   <span className="text-sm text-ink-700">{t(pref.labelKey)}</span>
                   <button

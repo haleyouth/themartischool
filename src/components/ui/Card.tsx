@@ -9,8 +9,8 @@ export function Card({
   return (
     <div
       className={cn(
-        'rounded-2xl border border-ink-100 bg-white shadow-soft',
-        hover && 'card-hover',
+        'rounded-4xl border-2 border-cream-200 bg-white shadow-soft',
+        hover && 'transition-all duration-300 hover:-translate-y-1 hover:shadow-card',
         className,
       )}
       {...props}
@@ -32,11 +32,14 @@ export function CardHeader({
 }) {
   return (
     <div
-      className={cn('flex items-start justify-between gap-4 border-b border-ink-100 p-5', className)}
+      className={cn(
+        'flex items-start justify-between gap-4 border-b-2 border-cream-200 p-5',
+        className,
+      )}
       {...props}
     >
       <div className="min-w-0">
-        {title && <h3 className="text-base font-semibold text-ink-900">{title}</h3>}
+        {title && <h3 className="font-display text-base font-extrabold text-ink-950">{title}</h3>}
         {subtitle && <p className="mt-1 text-sm text-ink-500">{subtitle}</p>}
       </div>
       {action && <div className="shrink-0">{action}</div>}
@@ -51,11 +54,25 @@ export function CardBody({ className, ...props }: HTMLAttributes<HTMLDivElement>
 export function CardFooter({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={cn('flex items-center gap-3 border-t border-ink-100 bg-ink-50/50 p-5', className)}
+      className={cn(
+        'flex items-center gap-3 border-t-2 border-cream-200 bg-cream-100 p-5',
+        className,
+      )}
       {...props}
     />
   )
 }
+
+const STAT_ACCENTS = {
+  marti: 'bg-marti-100 text-marti-700',
+  gold: 'bg-sunshine-100 text-sunshine-700',
+  sunshine: 'bg-sunshine-100 text-sunshine-700',
+  coral: 'bg-coral-100 text-coral-700',
+  crimson: 'bg-coral-100 text-coral-700',
+  mint: 'bg-mint-100 text-mint-700',
+  emerald: 'bg-mint-100 text-mint-700',
+  grape: 'bg-grape-100 text-grape-700',
+} as const
 
 /** Dashboard metric tile. */
 export function StatCard({
@@ -70,32 +87,25 @@ export function StatCard({
   value: ReactNode
   icon?: ReactNode
   trend?: { value: string; positive: boolean }
-  accent?: 'marti' | 'gold' | 'crimson' | 'emerald'
+  accent?: keyof typeof STAT_ACCENTS
   className?: string
 }) {
-  const accents = {
-    marti: 'bg-marti-50 text-marti-600',
-    gold: 'bg-gold-50 text-gold-600',
-    crimson: 'bg-crimson-50 text-crimson-600',
-    emerald: 'bg-emerald-50 text-emerald-600',
-  }
-
   return (
     <div
       className={cn(
-        'group relative overflow-hidden rounded-2xl border border-ink-100 bg-white p-5 shadow-soft transition-all duration-300 hover:-translate-y-0.5 hover:shadow-card',
+        'group relative overflow-hidden rounded-4xl border-2 border-cream-200 bg-white p-5 shadow-soft transition-all duration-300 hover:-translate-y-1 hover:shadow-card',
         className,
       )}
     >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <p className="truncate text-sm font-medium text-ink-500">{label}</p>
-          <p className="mt-2 font-display text-3xl font-bold text-ink-950">{value}</p>
+          <p className="truncate text-sm font-bold text-ink-500">{label}</p>
+          <p className="mt-2 font-display text-3xl font-extrabold text-ink-950">{value}</p>
           {trend && (
             <p
               className={cn(
-                'mt-1.5 text-xs font-medium',
-                trend.positive ? 'text-emerald-600' : 'text-crimson-600',
+                'mt-1.5 text-xs font-bold',
+                trend.positive ? 'text-mint-600' : 'text-coral-600',
               )}
             >
               {trend.value}
@@ -105,8 +115,8 @@ export function StatCard({
         {icon && (
           <div
             className={cn(
-              'flex h-11 w-11 shrink-0 items-center justify-center rounded-xl transition-transform duration-300 group-hover:scale-110',
-              accents[accent],
+              'flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6',
+              STAT_ACCENTS[accent],
             )}
           >
             {icon}

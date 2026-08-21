@@ -75,7 +75,7 @@ export default function Notifications() {
               title={t('dash.noNotifications')}
             />
           ) : (
-            <ul className="divide-y divide-ink-50">
+            <ul className="divide-y divide-cream-200">
               {notifications.map((item, index) => (
                 <motion.li
                   key={item.id}
@@ -83,7 +83,7 @@ export default function Notifications() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: Math.min(index * 0.02, 0.3) }}
                   className={cn(
-                    'group flex gap-3 px-5 py-4 transition-colors hover:bg-ink-50',
+                    'group flex gap-3 px-5 py-4 transition-colors hover:bg-cream-100',
                     !item.isRead && 'bg-marti-50/40',
                   )}
                 >
@@ -115,7 +115,7 @@ export default function Notifications() {
                     type="button"
                     onClick={() => remove(item.id)}
                     aria-label={t('common.delete')}
-                    className="h-8 shrink-0 rounded-lg p-2 text-ink-300 opacity-0 transition-all hover:bg-crimson-50 hover:text-crimson-600 focus-visible:opacity-100 group-hover:opacity-100"
+                    className="h-8 shrink-0 rounded-lg p-2 text-ink-300 opacity-0 transition-all hover:bg-coral-50 hover:text-coral-600 focus-visible:opacity-100 group-hover:opacity-100"
                   >
                     <Trash2 className="h-4 w-4" />
                   </button>

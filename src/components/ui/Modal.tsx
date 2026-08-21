@@ -88,7 +88,7 @@ export function Modal({
             )}
           >
             {(title || description) && (
-              <div className="flex items-start justify-between gap-4 border-b border-ink-100 p-5 sm:p-6">
+              <div className="flex items-start justify-between gap-4 border-b border-cream-200 p-5 sm:p-6">
                 <div className="min-w-0">
                   {title && (
                     <h2 className="font-display text-lg font-bold text-ink-950">{title}</h2>
@@ -111,7 +111,7 @@ export function Modal({
             <div className="scrollbar-thin flex-1 overflow-y-auto p-5 sm:p-6">{children}</div>
 
             {footer && (
-              <div className="flex flex-wrap items-center justify-end gap-3 border-t border-ink-100 bg-ink-50/60 p-5 sm:p-6">
+              <div className="flex flex-wrap items-center justify-end gap-3 border-t border-cream-200 bg-cream-100/60 p-5 sm:p-6">
                 {footer}
               </div>
             )}

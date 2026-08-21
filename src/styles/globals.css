@@ -1,15 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;500;600;700;800&family=Caveat:wght@600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
-  :root {
-    --marti-600: #1b79c0;
-    --marti-700: #1a629b;
-  }
-
   * {
     @apply border-ink-200;
   }
@@ -21,12 +16,12 @@
   }
 
   body {
-    @apply bg-white text-ink-800 font-sans antialiased;
+    @apply bg-cream-50 font-sans text-ink-700 antialiased;
     text-rendering: optimizeLegibility;
   }
 
   h1, h2, h3, h4 {
-    @apply font-display tracking-tight text-ink-950;
+    @apply font-display font-bold tracking-tight text-ink-950;
   }
 
   /* Respect users who ask the OS to reduce motion. */
@@ -40,46 +35,54 @@
   }
 
   ::selection {
-    @apply bg-marti-600/20 text-marti-900;
+    @apply bg-sunshine-200 text-ink-950;
   }
 
-  /* Visible focus for keyboard users only. */
   :focus-visible {
-    @apply outline-none ring-2 ring-marti-600 ring-offset-2;
+    @apply outline-none ring-4 ring-marti-500/40 ring-offset-2 ring-offset-cream-50;
   }
 }
 
 @layer components {
   .container-marti {
-    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+    @apply mx-auto w-full max-w-6xl px-5 sm:px-6 lg:px-8;
   }
 
   .text-gradient {
-    @apply bg-gradient-to-r from-marti-600 via-marti-500 to-marti-700 bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-marti-600 via-marti-500 to-mint-500 bg-clip-text text-transparent;
   }
 
-  .glass {
-    @apply bg-white/80 backdrop-blur-xl border border-white/60;
-  }
-
-  .card-hover {
-    @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-lift;
-  }
-
-  /* Subtle dot grid used behind hero and CTA bands. */
+  /* Playful dotted texture used behind the hero and CTA bands. */
   .bg-dots {
-    background-image: radial-gradient(circle, rgb(27 121 192 / 0.14) 1px, transparent 1px);
-    background-size: 22px 22px;
+    background-image: radial-gradient(circle, rgb(27 121 192 / 0.12) 2px, transparent 2px);
+    background-size: 26px 26px;
+  }
+
+  .bg-dots-warm {
+    background-image: radial-gradient(circle, rgb(245 158 11 / 0.16) 2px, transparent 2px);
+    background-size: 26px 26px;
   }
 
   .skeleton {
-    @apply relative overflow-hidden bg-ink-100 rounded;
+    @apply relative overflow-hidden rounded-xl bg-ink-100;
   }
 
   .skeleton::after {
     @apply absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/70 to-transparent;
     content: '';
     animation: shimmer 1.8s infinite;
+  }
+
+  /*
+   * Chunky offset shadow that presses down on click. This is the single detail
+   * that makes buttons read as playful rather than corporate.
+   */
+  .btn-pop {
+    @apply translate-y-0 transition-all duration-150;
+  }
+
+  .btn-pop:active {
+    @apply translate-y-1 shadow-none;
   }
 }
 
@@ -90,12 +93,12 @@
   }
 
   .scrollbar-thin::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    width: 8px;
+    height: 8px;
   }
 
   .scrollbar-thin::-webkit-scrollbar-thumb {
-    @apply bg-ink-300 rounded-full;
+    @apply rounded-full bg-ink-300;
   }
 
   .no-scrollbar::-webkit-scrollbar {

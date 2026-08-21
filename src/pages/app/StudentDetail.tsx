@@ -174,7 +174,7 @@ export default function StudentDetail() {
                 value={formatDate(student.dateOfBirth, intlLocale)}
               />
               <InfoRow label={t('reg.turkishLevel')} value={student.turkishLevel} />
-              <InfoRow label={t('register.medicalNotes')} value={student.medicalNotes || '—'} />
+              <InfoRow label={t('register.medicalNotes')} value={student.medicalNotes || '-'} />
               <InfoRow
                 label={t('register.photoConsent')}
                 value={student.photoConsent ? t('common.yes') : t('common.no')}
@@ -194,7 +194,7 @@ export default function StudentDetail() {
                 title={t('students.noAttendance')}
               />
             ) : (
-              <ul className="divide-y divide-ink-50">
+              <ul className="divide-y divide-cream-200">
                 {attendance.map((entry) => (
                   <li key={entry.id} className="flex items-center gap-3 px-5 py-3.5">
                     <div className="min-w-0 flex-1">
@@ -226,7 +226,7 @@ export default function StudentDetail() {
                 title={t('students.noReports')}
               />
             ) : (
-              <ul className="divide-y divide-ink-50">
+              <ul className="divide-y divide-cream-200">
                 {reports.map((report) => (
                   <li key={report.id} className="flex items-center gap-3 px-5 py-3.5">
                     <div className="min-w-0 flex-1">

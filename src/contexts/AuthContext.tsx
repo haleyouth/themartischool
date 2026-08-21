@@ -82,7 +82,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return
       }
 
-      // Use the cached token — forcing a refresh here costs a round trip on
+      // Use the cached token, forcing a refresh here costs a round trip on
       // every page load. Staleness is caught by the claimsVersion watcher below.
       const token = await user.getIdTokenResult()
       const claims = token.claims as unknown as MartiClaims

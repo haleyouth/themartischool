@@ -19,8 +19,8 @@ export const STUDENT_ID_PREFIX = 'MRT'
 export const STUDENT_ID_PATTERN = /^MRT-\d{4}-\d{4}$/
 
 /**
- * Accepts what a human might actually type — lowercase, extra spaces, missing
- * dashes, or a bare sequence number — and returns the canonical form.
+ * Accepts what a human might actually type, lowercase, extra spaces, missing
+ * dashes, or a bare sequence number, and returns the canonical form.
  * Returns null when the input cannot be read as a student ID.
  */
 export function normalizeStudentId(input: string, fallbackYear?: number): string | null {

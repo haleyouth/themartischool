@@ -1,4 +1,4 @@
-import { AnimatePresence, motion, useScroll, useMotionValueEvent } from 'framer-motion'
+import { AnimatePresence, motion, useMotionValueEvent, useScroll } from 'framer-motion'
 import { ArrowRight, LayoutDashboard, Menu, X } from 'lucide-react'
 import { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
@@ -14,13 +14,11 @@ const LINKS = [
   { id: SECTION_IDS.home, key: 'nav.home' },
   { id: SECTION_IDS.about, key: 'nav.about' },
   { id: SECTION_IDS.programs, key: 'nav.programs' },
-  { id: SECTION_IDS.tuition, key: 'nav.tuition' },
-  { id: SECTION_IDS.calendar, key: 'nav.calendar' },
-  { id: SECTION_IDS.contact, key: 'nav.contact' },
+  { id: SECTION_IDS.register, key: 'nav.register' },
 ]
 
 /** Height of the fixed header, so anchor scrolling lands below it. */
-const HEADER_OFFSET = 72
+const HEADER_OFFSET = 76
 
 export function Navbar() {
   const t = useT()
@@ -33,9 +31,7 @@ export function Navbar() {
     HEADER_OFFSET + 40,
   )
 
-  useMotionValueEvent(scrollY, 'change', (latest) => {
-    setScrolled(latest > 20)
-  })
+  useMotionValueEvent(scrollY, 'change', (latest) => setScrolled(latest > 20))
 
   useEffect(() => {
     document.body.style.overflow = menuOpen ? 'hidden' : ''
@@ -44,10 +40,6 @@ export function Navbar() {
     }
   }, [menuOpen])
 
-  /**
-   * Smooth-scroll to a section and keep the URL hash in sync, without letting
-   * the browser's default jump fight the animation.
-   */
   const goToSection = useCallback((id: string) => {
     setMenuOpen(false)
     const element = document.getElementById(id)
@@ -70,11 +62,11 @@ export function Navbar() {
         className={cn(
           'fixed inset-x-0 top-0 z-50 transition-all duration-300',
           scrolled
-            ? 'border-b border-ink-100 bg-white/85 shadow-soft backdrop-blur-xl'
-            : 'border-b border-transparent bg-transparent',
+            ? 'bg-cream-50/90 shadow-soft backdrop-blur-xl'
+            : 'bg-transparent',
         )}
       >
-        <nav className="container-marti flex h-[72px] items-center justify-between gap-4">
+        <nav className="container-marti flex h-[76px] items-center justify-between gap-4">
           <button
             type="button"
             onClick={() => goToSection(SECTION_IDS.home)}
@@ -94,18 +86,18 @@ export function Navbar() {
                   onClick={() => goToSection(link.id)}
                   aria-current={isActive ? 'true' : undefined}
                   className={cn(
-                    'relative rounded-lg px-3.5 py-2 text-sm font-medium transition-colors',
+                    'relative rounded-full px-4 py-2 text-sm font-bold transition-colors',
                     isActive ? 'text-marti-700' : 'text-ink-600 hover:text-marti-700',
                   )}
                 >
-                  {t(link.key)}
                   {isActive && (
                     <motion.span
                       layoutId="nav-active"
-                      className="absolute inset-x-3 -bottom-0.5 h-0.5 rounded-full bg-marti-600"
+                      className="absolute inset-0 rounded-full bg-white shadow-soft"
                       transition={{ type: 'spring', stiffness: 380, damping: 32 }}
                     />
                   )}
+                  <span className="relative">{t(link.key)}</span>
                 </button>
               )
             })}
@@ -121,7 +113,7 @@ export function Navbar() {
               <>
                 <Link
                   to="/login"
-                  className="rounded-lg px-3 py-2 text-sm font-medium text-ink-600 transition-colors hover:text-marti-700"
+                  className="rounded-full px-3 py-2 text-sm font-bold text-ink-600 transition-colors hover:text-marti-700"
                 >
                   {t('nav.signIn')}
                 </Link>
@@ -145,9 +137,9 @@ export function Navbar() {
               onClick={() => setMenuOpen((prev) => !prev)}
               aria-label={t('a11y.toggleMenu')}
               aria-expanded={menuOpen}
-              className="rounded-xl p-2 text-ink-700 transition-colors hover:bg-ink-100"
+              className="rounded-2xl bg-white p-2.5 text-ink-700 shadow-soft transition-colors hover:text-marti-700"
             >
-              {menuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
           </div>
         </nav>
@@ -170,15 +162,15 @@ export function Navbar() {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', stiffness: 320, damping: 34 }}
-              className="absolute right-0 top-0 flex h-full w-[min(20rem,85vw)] flex-col bg-white shadow-2xl"
+              className="absolute right-0 top-0 flex h-full w-[min(20rem,85vw)] flex-col bg-cream-50 shadow-2xl"
             >
-              <div className="flex h-[72px] items-center justify-between border-b border-ink-100 px-5">
+              <div className="flex h-[76px] items-center justify-between px-5">
                 <Logo size="sm" linkTo={null} />
                 <button
                   type="button"
                   onClick={() => setMenuOpen(false)}
                   aria-label={t('nav.close')}
-                  className="rounded-lg p-2 text-ink-500 hover:bg-ink-100"
+                  className="rounded-2xl bg-white p-2.5 text-ink-500 shadow-soft"
                 >
                   <X className="h-5 w-5" />
                 </button>
@@ -189,26 +181,23 @@ export function Navbar() {
                   initial="hidden"
                   animate="visible"
                   variants={{
-                    visible: { transition: { staggerChildren: 0.05, delayChildren: 0.1 } },
+                    visible: { transition: { staggerChildren: 0.06, delayChildren: 0.1 } },
                   }}
-                  className="space-y-1"
+                  className="space-y-2"
                 >
                   {LINKS.map((link) => (
                     <motion.li
                       key={link.id}
-                      variants={{
-                        hidden: { opacity: 0, x: 20 },
-                        visible: { opacity: 1, x: 0 },
-                      }}
+                      variants={{ hidden: { opacity: 0, x: 20 }, visible: { opacity: 1, x: 0 } }}
                     >
                       <button
                         type="button"
                         onClick={() => goToSection(link.id)}
                         className={cn(
-                          'block w-full rounded-xl px-4 py-3 text-left text-[15px] font-medium transition-colors',
+                          'block w-full rounded-2xl px-5 py-3.5 text-left text-base font-bold transition-colors',
                           activeId === link.id
-                            ? 'bg-marti-50 text-marti-700'
-                            : 'text-ink-700 hover:bg-ink-50',
+                            ? 'bg-marti-600 text-white shadow-pop-sm'
+                            : 'bg-white text-ink-700 shadow-soft',
                         )}
                       >
                         {t(link.key)}
@@ -218,7 +207,7 @@ export function Navbar() {
                 </motion.ul>
               </div>
 
-              <div className="space-y-2.5 border-t border-ink-100 p-5">
+              <div className="space-y-2.5 p-5">
                 {signedIn ? (
                   <Button to="/app" fullWidth leftIcon={<LayoutDashboard className="h-4 w-4" />}>
                     {t('nav.dashboard')}

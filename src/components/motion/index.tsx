@@ -159,8 +159,8 @@ export function StaggerItem({
 }
 
 /**
- * Counts up to `value` when scrolled into view. Used for the stats band —
- * a static number reads as decoration, a counting one reads as a claim.
+ * Counts up to `value` when scrolled into view. Used for the stats band.
+ * A static number reads as decoration, a counting one reads as a claim.
  */
 export function CountUp({
   value,
@@ -219,7 +219,7 @@ export function ScrollProgress() {
   return (
     <motion.div
       style={{ scaleX }}
-      className="fixed inset-x-0 top-0 z-[60] h-0.5 origin-left bg-gradient-to-r from-marti-500 via-marti-600 to-gold-500"
+      className="fixed inset-x-0 top-0 z-[60] h-0.5 origin-left bg-gradient-to-r from-marti-500 via-marti-600 to-sunshine-400"
     />
   )
 }
@@ -289,7 +289,7 @@ export function TiltCard({
   )
 }
 
-/** Reveals each word in sequence — used once, on the hero headline. */
+/** Reveals each word in sequence, used once, on the hero headline. */
 export function WordReveal({
   text,
   className,

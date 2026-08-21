@@ -9,7 +9,7 @@ import LandingPage from '@/pages/public/LandingPage'
 import Login from '@/pages/auth/Login'
 import NotFound from '@/pages/NotFound'
 
-// The dashboard is a distinct bundle — a visiting parent never downloads it.
+// The dashboard is a distinct bundle, a visiting parent never downloads it.
 const AppLayout = lazy(() => import('@/components/app/AppLayout'))
 const Dashboard = lazy(() => import('@/pages/app/Dashboard'))
 const Registrations = lazy(() => import('@/pages/app/Registrations'))

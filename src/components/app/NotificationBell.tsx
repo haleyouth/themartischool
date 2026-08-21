@@ -75,7 +75,7 @@ export function NotificationBell() {
           <motion.span
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
-            className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-crimson-600 px-1 text-[10px] font-bold text-white"
+            className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-coral-600 px-1 text-[10px] font-bold text-white"
           >
             {unread.length > 9 ? '9+' : unread.length}
           </motion.span>
@@ -89,9 +89,9 @@ export function NotificationBell() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -8, scale: 0.97 }}
             transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
-            className="absolute right-0 top-full z-50 mt-2 w-[min(22rem,calc(100vw-2rem))] overflow-hidden rounded-2xl border border-ink-100 bg-white shadow-card"
+            className="absolute right-0 top-full z-50 mt-2 w-[min(22rem,calc(100vw-2rem))] overflow-hidden rounded-2xl border border-cream-200 bg-white shadow-card"
           >
-            <div className="flex items-center justify-between border-b border-ink-100 px-4 py-3">
+            <div className="flex items-center justify-between border-b border-cream-200 px-4 py-3">
               <p className="text-sm font-bold text-ink-900">{t('dash.notifications')}</p>
               {unread.length > 0 && (
                 <button
@@ -111,14 +111,14 @@ export function NotificationBell() {
                   {t('dash.noNotifications')}
                 </p>
               ) : (
-                <ul className="divide-y divide-ink-50">
+                <ul className="divide-y divide-cream-200">
                   {notifications.map((item) => (
                     <li key={item.id}>
                       <button
                         type="button"
                         onClick={() => openNotification(item.id, item.link, item.isRead)}
                         className={cn(
-                          'flex w-full gap-3 px-4 py-3 text-left transition-colors hover:bg-ink-50',
+                          'flex w-full gap-3 px-4 py-3 text-left transition-colors hover:bg-cream-100',
                           !item.isRead && 'bg-marti-50/50',
                         )}
                       >
@@ -152,7 +152,7 @@ export function NotificationBell() {
                 setOpen(false)
                 navigate('/app/notifications')
               }}
-              className="block w-full border-t border-ink-100 bg-ink-50/60 px-4 py-3 text-center text-xs font-semibold text-marti-600 transition-colors hover:bg-ink-100"
+              className="block w-full border-t border-cream-200 bg-cream-100/60 px-4 py-3 text-center text-xs font-semibold text-marti-600 transition-colors hover:bg-ink-100"
             >
               {t('common.viewAll')}
             </button>

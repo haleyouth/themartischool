@@ -94,7 +94,7 @@ export default function Registrations() {
         ...(classId ? { classId } : {}),
       })
 
-      // The password is shown once and never persisted — the admin hands it over.
+      // The password is shown once and never persisted, the admin hands it over.
       setCredentials(result.data)
       toast.success(t('reg.approvedTitle'))
     } catch (error) {
@@ -179,7 +179,7 @@ export default function Registrations() {
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-ink-100 text-left text-xs uppercase tracking-wider text-ink-500">
+                  <tr className="border-b border-cream-200 text-left text-xs uppercase tracking-wider text-ink-500">
                     <th className="px-5 py-3 font-semibold">{t('reg.applicant')}</th>
                     <th className="px-5 py-3 font-semibold">{t('reg.guardian')}</th>
                     <th className="px-5 py-3 font-semibold">{t('reg.grade')}</th>
@@ -188,14 +188,14 @@ export default function Registrations() {
                     <th className="px-5 py-3 text-right font-semibold">{t('common.actions')}</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-ink-50">
+                <tbody className="divide-y divide-cream-200">
                   {visible.map((item, index) => (
                     <motion.tr
                       key={item.id}
                       initial={{ opacity: 0, y: 6 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: Math.min(index * 0.03, 0.3) }}
-                      className="transition-colors hover:bg-ink-50"
+                      className="transition-colors hover:bg-cream-100"
                     >
                       <td className="px-5 py-3.5">
                         <p className="font-semibold text-ink-900">
@@ -241,7 +241,7 @@ export default function Registrations() {
                                 onClick={() => setRejecting(item)}
                                 aria-label={t('reg.reject')}
                               >
-                                <X className="h-4 w-4 text-crimson-600" />
+                                <X className="h-4 w-4 text-coral-600" />
                               </Button>
                             </>
                           )}
@@ -289,8 +289,8 @@ export default function Registrations() {
             <DetailGroup
               title={t('reg.healthInfo')}
               rows={[
-                [t('register.medicalNotes'), detail.medicalNotes || '—'],
-                [t('register.allergies'), detail.allergies || '—'],
+                [t('register.medicalNotes'), detail.medicalNotes || '-'],
+                [t('register.allergies'), detail.allergies || '-'],
                 [t('register.photoConsent'), detail.photoConsent ? t('common.yes') : t('common.no')],
               ]}
             />
@@ -335,9 +335,9 @@ export default function Registrations() {
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              className="flex flex-col items-center rounded-2xl bg-emerald-50 py-8"
+              className="flex flex-col items-center rounded-2xl bg-mint-50 py-8"
             >
-              <span className="flex h-14 w-14 items-center justify-center rounded-full bg-emerald-600 text-white">
+              <span className="flex h-14 w-14 items-center justify-center rounded-full bg-mint-600 text-white">
                 <CheckCircle2 className="h-7 w-7" />
               </span>
             </motion.div>
@@ -355,7 +355,7 @@ export default function Registrations() {
               icon={<KeyRound className="h-4 w-4" />}
             />
 
-            <p className="flex gap-2.5 rounded-xl bg-amber-50 p-4 text-xs leading-relaxed text-amber-800">
+            <p className="flex gap-2.5 rounded-xl bg-sunshine-50 p-4 text-xs leading-relaxed text-sunshine-800">
               <TriangleAlert className="mt-px h-4 w-4 shrink-0" aria-hidden />
               {t('reg.passwordWarning')}
             </p>
@@ -363,7 +363,7 @@ export default function Registrations() {
         ) : (
           approving && (
             <div className="space-y-5">
-              <div className="rounded-xl bg-ink-50 p-4">
+              <div className="rounded-xl bg-cream-100 p-4">
                 <p className="text-sm font-semibold text-ink-900">
                   {fullName(approving.firstName, approving.lastName)}
                 </p>
@@ -441,7 +441,7 @@ function DetailGroup({ title, rows }: { title: string; rows: [string, string][] 
   return (
     <div>
       <h3 className="text-xs font-bold uppercase tracking-wider text-ink-500">{title}</h3>
-      <dl className="mt-3 space-y-2.5 rounded-xl border border-ink-100 p-4">
+      <dl className="mt-3 space-y-2.5 rounded-xl border border-cream-200 p-4">
         {rows.map(([label, value]) => (
           <div key={label} className="flex justify-between gap-4 text-sm">
             <dt className="shrink-0 text-ink-500">{label}</dt>

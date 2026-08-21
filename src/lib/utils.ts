@@ -19,12 +19,12 @@ export function formatDate(
   locale = 'en-US',
   options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'short', day: 'numeric' },
 ): string {
-  if (!value) return '—'
+  if (!value) return '-'
   const date =
     typeof value === 'string'
       ? new Date(value.includes('T') ? value : `${value}T00:00:00`)
       : toDate(value)
-  if (!date || Number.isNaN(date.getTime())) return '—'
+  if (!date || Number.isNaN(date.getTime())) return '-'
   return new Intl.DateTimeFormat(locale, options).format(date)
 }
 
@@ -40,7 +40,7 @@ export function formatDateTime(value: Timestamp | Date | null | undefined, local
 
 export function formatRelative(value: Timestamp | Date | null | undefined, locale = 'en'): string {
   const date = toDate(value)
-  if (!date) return '—'
+  if (!date) return '-'
 
   const diffMs = date.getTime() - Date.now()
   const absSec = Math.abs(diffMs) / 1000
@@ -88,11 +88,11 @@ export function fullName(first: string, last: string, preferred?: string | null)
 export function avatarColor(seed: string): string {
   const palette = [
     'bg-marti-100 text-marti-700',
-    'bg-gold-100 text-gold-700',
-    'bg-crimson-100 text-crimson-700',
-    'bg-emerald-100 text-emerald-700',
-    'bg-violet-100 text-violet-700',
-    'bg-amber-100 text-amber-700',
+    'bg-sunshine-100 text-sunshine-700',
+    'bg-coral-100 text-coral-700',
+    'bg-mint-100 text-mint-700',
+    'bg-grape-100 text-grape-700',
+    'bg-sunshine-100 text-sunshine-700',
   ]
   let hash = 0
   for (let i = 0; i < seed.length; i++) hash = (hash * 31 + seed.charCodeAt(i)) >>> 0

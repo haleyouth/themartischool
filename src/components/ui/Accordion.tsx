@@ -21,7 +21,7 @@ export function Accordion({
   const [open, setOpen] = useState<number | null>(defaultOpen)
 
   return (
-    <div className={cn('divide-y divide-ink-100 overflow-hidden rounded-2xl border border-ink-100 bg-white', className)}>
+    <div className={cn('divide-y divide-cream-200 overflow-hidden rounded-2xl border border-cream-200 bg-white', className)}>
       {items.map((item, index) => {
         const isOpen = open === index
         return (

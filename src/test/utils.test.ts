@@ -48,9 +48,9 @@ describe('formatDate', () => {
   })
 
   it('shows a dash rather than crashing on missing or invalid input', () => {
-    expect(formatDate(null)).toBe('—')
-    expect(formatDate(undefined)).toBe('—')
-    expect(formatDate('not-a-date')).toBe('—')
+    expect(formatDate(null)).toBe('-')
+    expect(formatDate(undefined)).toBe('-')
+    expect(formatDate('not-a-date')).toBe('-')
   })
 
   it('respects the locale', () => {
