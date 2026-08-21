@@ -62,13 +62,43 @@ export function HeroSection() {
           aria-hidden
           className="absolute inset-y-0 right-0 hidden w-[52%] lg:block"
         >
-          <div className="absolute inset-0 bg-[url('/hero.webp')] bg-contain bg-right bg-no-repeat" />
-          <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-cream-200 to-transparent" />
+          {/*
+            A mask fades the artwork out on every open edge, so it dissolves
+            into the page rather than ending on a straight line where the
+            section meets the one below. Masking the image itself, instead of
+            layering cream over it, keeps the picture at full strength in the
+            middle where it matters.
+          */}
+          <div
+            className="absolute inset-0 bg-[url('/hero.webp')] bg-contain bg-right bg-no-repeat"
+            style={{
+              // Horizontal fade on the left, vertical fade at both top and
+              // bottom. The two gradients intersect, so the picture is only
+              // fully opaque where both say so: the middle.
+              maskImage:
+                'linear-gradient(to right, transparent 0%, black 22%), linear-gradient(to bottom, transparent 0%, black 14%, black 62%, transparent 96%)',
+              maskComposite: 'intersect',
+              WebkitMaskImage:
+                'linear-gradient(to right, transparent 0%, black 22%), linear-gradient(to bottom, transparent 0%, black 14%, black 62%, transparent 96%)',
+              WebkitMaskComposite: 'source-in',
+            }}
+          />
         </div>
 
-        {/* Below lg the picture sits under the text, so it needs a scrim. */}
+        {/*
+          Below lg the picture sits behind the text rather than beside it, so
+          it keeps a cream scrim for readability and fades at top and bottom
+          so neither edge lands on a line.
+        */}
         <div aria-hidden className="absolute inset-0 lg:hidden">
-          <div className="absolute inset-0 bg-[url('/hero-900.webp')] bg-cover bg-right bg-no-repeat" />
+          <div
+            className="absolute inset-0 bg-[url('/hero-900.webp')] bg-cover bg-right bg-no-repeat"
+            style={{
+              maskImage: 'linear-gradient(to bottom, transparent 0%, black 18%, black 60%, transparent 95%)',
+              WebkitMaskImage:
+                'linear-gradient(to bottom, transparent 0%, black 18%, black 60%, transparent 95%)',
+            }}
+          />
           <div className="absolute inset-0 bg-gradient-to-b from-cream-200/85 via-cream-200/80 to-cream-200" />
         </div>
 
