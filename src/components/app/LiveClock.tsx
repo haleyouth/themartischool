@@ -4,11 +4,12 @@ import { useI18n } from '@/i18n'
 import { cn } from '@/lib/utils'
 
 /**
- * Live date and time in the portal header, as plain text.
+ * Live date and time in the portal header.
  *
- * Digits roll only when their own value changes, so the seconds tick over
- * without the hours and minutes twitching alongside them. Saturday is called
- * out, because the whole school runs on that one day.
+ * Plain text, no chrome. The weekday and date sit quietly above a larger
+ * time, so the eye reads the hour first and the context second. Digits roll
+ * only when their own value changes, so the seconds tick without the hours
+ * twitching alongside them.
  */
 export function LiveClock({ className }: { className?: string }) {
   const { intlLocale, t } = useI18n()
@@ -32,37 +33,41 @@ export function LiveClock({ className }: { className?: string }) {
   const isSaturday = now.getDay() === 6
 
   const weekday = new Intl.DateTimeFormat(intlLocale, { weekday: 'long' }).format(now)
-  const date = new Intl.DateTimeFormat(intlLocale, { day: 'numeric', month: 'long' }).format(now)
+  const date = new Intl.DateTimeFormat(intlLocale, { day: 'numeric', month: 'short' }).format(now)
   const hours = String(now.getHours()).padStart(2, '0')
   const minutes = String(now.getMinutes()).padStart(2, '0')
   const seconds = String(now.getSeconds()).padStart(2, '0')
 
   return (
-    <div className={cn('select-none text-right leading-tight', className)}>
-      <p className="flex items-center justify-end gap-1.5 text-[11px] font-bold uppercase tracking-wide text-ink-400">
+    <div className={cn('select-none text-right leading-none', className)}>
+      <p className="flex items-center justify-end gap-1.5">
         {isSaturday && (
           <motion.span
-            // A quiet pulse rather than a badge, since there is no chrome now.
-            animate={{ opacity: [1, 0.35, 1] }}
-            transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
+            // A slow breath rather than a badge, since there is no chrome now.
+            animate={{ opacity: [1, 0.3, 1], scale: [1, 0.82, 1] }}
+            transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
             className="h-1.5 w-1.5 rounded-full bg-amber-500"
             aria-hidden
           />
         )}
-        <span className={cn(isSaturday && 'text-amber-600')}>
-          {weekday}
-          {isSaturday ? ` · ${t('dash.schoolDay')}` : ''}
+        <span
+          className={cn(
+            'text-[10px] font-extrabold uppercase tracking-[0.14em]',
+            isSaturday ? 'text-amber-600' : 'text-ink-400',
+          )}
+        >
+          {isSaturday ? t('dash.schoolDay') : weekday}
         </span>
       </p>
 
-      <p className="mt-0.5 flex items-baseline justify-end gap-1.5 font-display text-sm font-extrabold text-ink">
-        <span>{date}</span>
-        <span className="tabular-nums">
+      <p className="mt-1.5 flex items-baseline justify-end gap-2">
+        <span className="font-display text-[13px] font-bold text-ink-500">{date}</span>
+        <span className="flex items-baseline font-display text-xl font-extrabold tabular-nums text-ink">
           <Digits value={hours} />
           <Colon />
           <Digits value={minutes} />
-          <Colon />
-          <Digits value={seconds} className="text-ink-400" />
+          {/* Seconds sit smaller and lighter, so the glance lands on the hour. */}
+          <Digits value={seconds} className="ml-1 text-[13px] text-ink-400" />
         </span>
       </p>
     </div>
@@ -70,25 +75,27 @@ export function LiveClock({ className }: { className?: string }) {
 }
 
 /**
- * Rolls a two digit group upward when it changes.
+ * Rolls a two digit group when it changes.
  *
- * The wrapper is inline-flex with a fixed character width so the surrounding
- * text never shifts as digits swap, which would otherwise make the whole
- * header jitter once a second.
+ * Fixed at two characters wide so the header never shifts as digits swap,
+ * which would otherwise make the whole bar jitter once a second.
  */
 function Digits({ value, className }: { value: string; className?: string }) {
   return (
     <span
-      className={cn('relative inline-flex h-[1.15em] w-[2ch] overflow-hidden align-baseline', className)}
+      className={cn(
+        'relative inline-flex h-[1.1em] w-[2ch] items-baseline justify-center overflow-hidden',
+        className,
+      )}
     >
       <AnimatePresence mode="popLayout" initial={false}>
         <motion.span
           key={value}
-          initial={{ y: '-110%', opacity: 0 }}
+          initial={{ y: '-100%', opacity: 0 }}
           animate={{ y: '0%', opacity: 1 }}
-          exit={{ y: '110%', opacity: 0 }}
-          transition={{ type: 'spring', stiffness: 420, damping: 34, mass: 0.6 }}
-          className="absolute inset-0 inline-flex items-center justify-center"
+          exit={{ y: '100%', opacity: 0 }}
+          transition={{ type: 'spring', stiffness: 450, damping: 36, mass: 0.5 }}
+          className="absolute inset-0 flex items-center justify-center"
         >
           {value}
         </motion.span>
@@ -102,9 +109,9 @@ function Colon() {
   return (
     <motion.span
       aria-hidden
-      animate={{ opacity: [1, 0.2, 1] }}
+      animate={{ opacity: [1, 0.15, 1] }}
       transition={{ duration: 1, repeat: Infinity, ease: 'easeInOut' }}
-      className="mx-[1px] inline-block text-ink-300"
+      className="mx-[0.5px] text-ink-300"
     >
       :
     </motion.span>

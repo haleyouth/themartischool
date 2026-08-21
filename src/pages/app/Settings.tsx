@@ -1,15 +1,16 @@
 import { doc, serverTimestamp, updateDoc } from 'firebase/firestore'
 import { updatePassword } from 'firebase/auth'
-import { Bell, Lock, Save, User } from 'lucide-react'
+import { Bell, ClipboardList, Lock, Save, User } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Avatar } from '@/components/ui/Avatar'
 import { Button } from '@/components/ui/Button'
 import { Card, CardBody, CardHeader } from '@/components/ui/Card'
-import { Input, Select } from '@/components/ui/Input'
+import { Input, Select, Textarea } from '@/components/ui/Input'
 import { useToast } from '@/components/ui/Toast'
-import { useAuth } from '@/contexts/AuthContext'
+import { isAdminRole, useAuth } from '@/contexts/AuthContext'
 import { useI18n } from '@/i18n'
 import { auth as fbAuth, db } from '@/lib/firebase'
+import { setRegistrationOpen, useSiteSettings } from '@/lib/useSiteSettings'
 import { cn } from '@/lib/utils'
 import type { Locale, NotificationPrefs } from '@/types/models'
 
@@ -41,6 +42,42 @@ export default function Settings() {
   const [confirmPassword, setConfirmPassword] = useState('')
   const [passwordError, setPasswordError] = useState<string | null>(null)
   const [savingPassword, setSavingPassword] = useState(false)
+
+  const { settings } = useSiteSettings()
+  const [closedMessage, setClosedMessage] = useState('')
+  const [savingRegistration, setSavingRegistration] = useState(false)
+
+  // Keep the editable copy in step with what the server holds.
+  useEffect(() => {
+    setClosedMessage(settings.registrationClosedMessage ?? '')
+  }, [settings.registrationClosedMessage])
+
+  async function toggleRegistration() {
+    if (!auth.user) return
+    setSavingRegistration(true)
+    try {
+      await setRegistrationOpen(!settings.registrationOpen, auth.user.uid, closedMessage || null)
+      toast.success(t('settings.savedSuccess'))
+    } catch (error) {
+      console.error('Toggle registration failed', error)
+      toast.error(t('common.error'), (error as Error)?.message)
+    } finally {
+      setSavingRegistration(false)
+    }
+  }
+
+  /** Saved on blur so a half typed message is never published. */
+  async function saveClosedMessage() {
+    if (!auth.user) return
+    if ((settings.registrationClosedMessage ?? '') === closedMessage) return
+    try {
+      await setRegistrationOpen(settings.registrationOpen, auth.user.uid, closedMessage || null)
+      toast.success(t('settings.savedSuccess'))
+    } catch (error) {
+      console.error('Save closed message failed', error)
+      toast.error(t('common.error'), (error as Error)?.message)
+    }
+  }
 
   // Hydrate the form once the profile arrives.
   useEffect(() => {
@@ -252,6 +289,65 @@ export default function Settings() {
             </CardBody>
           </Card>
 
+          {/* Only a director or principal decides whether intake is open. */}
+          {isAdminRole(auth.role) && (
+            <Card>
+              <CardHeader
+                title={
+                  <span className="flex items-center gap-2">
+                    <ClipboardList className="h-4 w-4 text-marti-600" />
+                    {t('settings.registrationTitle')}
+                  </span>
+                }
+              />
+              <CardBody className="space-y-4">
+                <div className="flex items-center justify-between gap-4">
+                  <div className="min-w-0">
+                    <p className="text-sm font-bold text-ink">
+                      {settings.registrationOpen
+                        ? t('settings.registrationOpen')
+                        : t('settings.registrationClosed')}
+                    </p>
+                    <p className="mt-0.5 text-xs text-ink-500">
+                      {settings.registrationOpen
+                        ? t('settings.registrationOpenHint')
+                        : t('settings.registrationClosedHint')}
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    role="switch"
+                    aria-checked={settings.registrationOpen}
+                    aria-label={t('settings.registrationTitle')}
+                    disabled={savingRegistration}
+                    onClick={toggleRegistration}
+                    className={cn(
+                      'relative h-6 w-11 shrink-0 rounded-full border-2 border-ink transition-colors duration-200 disabled:opacity-60',
+                      settings.registrationOpen ? 'bg-teal-500' : 'bg-ink-100',
+                    )}
+                  >
+                    <span
+                      className={cn(
+                        'absolute left-0 top-0 h-5 w-5 rounded-full bg-white transition-transform duration-200',
+                        settings.registrationOpen ? 'translate-x-5' : 'translate-x-0',
+                      )}
+                    />
+                  </button>
+                </div>
+
+                {!settings.registrationOpen && (
+                  <Textarea
+                    label={t('settings.registrationMessage')}
+                    hint={t('settings.registrationMessageHint')}
+                    rows={3}
+                    value={closedMessage}
+                    onChange={(e) => setClosedMessage(e.target.value)}
+                    onBlur={saveClosedMessage}
+                  />
+                )}
+              </CardBody>
+            </Card>
+          )}
         </div>
       </div>
     </>

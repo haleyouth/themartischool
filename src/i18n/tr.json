@@ -351,7 +351,10 @@
     "dobMonth": "Ay",
     "dobYear": "Yıl",
     "dobHint": "Çocuğunuzun doğduğu gün, ay ve yılı seçin.",
-    "dobAge": "{age} yaşında"
+    "dobAge": "{age} yaşında",
+    "closedTitle": "Kayıtlar şu an kapalı",
+    "closedBody": "Şu anda yeni başvuru almıyoruz. Kayıtlar bir sonraki öğretim yılından önce tekrar açılacak.",
+    "closedContact": "Sorularınız için bize yazın:"
   },
   "auth": {
     "loginTitle": "Tekrar hoş geldiniz",
@@ -693,7 +696,14 @@
     "notifyMessages": "Yeni mesajlar",
     "securityTitle": "Güvenlik",
     "changePassword": "Parolayı değiştir",
-    "savedSuccess": "Ayarlar kaydedildi"
+    "savedSuccess": "Ayarlar kaydedildi",
+    "registrationTitle": "Kayıt durumu",
+    "registrationOpen": "Kayıtlar açık",
+    "registrationOpenHint": "Aileler siteden başvuru gönderebilir.",
+    "registrationClosed": "Kayıtlar kapalı",
+    "registrationClosedHint": "Kayıt formu yerine bir bilgi mesajı gösterilir.",
+    "registrationMessage": "Kapalıyken gösterilecek mesaj",
+    "registrationMessageHint": "Boş bırakırsanız standart metin kullanılır."
   },
   "staff": {
     "title": "Personel",

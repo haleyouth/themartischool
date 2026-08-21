@@ -94,3 +94,41 @@ describe('settings notification toggles', () => {
     expect(settings).toMatch(/aria-label=\{t\(pref\.labelKey\)\}/)
   })
 })
+
+describe('registration gate', () => {
+  const register = readFileSync('src/components/sections/RegisterSection.tsx', 'utf8')
+  const settings = readFileSync('src/pages/app/Settings.tsx', 'utf8')
+  const navbar = readFileSync('src/components/public/Navbar.tsx', 'utf8')
+
+  it('replaces the form when registration is closed', () => {
+    // A disabled form that still renders would let a family fill in five
+    // steps before finding out the intake is shut.
+    expect(register).toMatch(/!settings\.registrationOpen/)
+    expect(register).toMatch(/register\.closedTitle/)
+  })
+
+  it('defaults to open when the setting has never been written', () => {
+    const hook = readFileSync('src/lib/useSiteSettings.ts', 'utf8')
+    expect(hook).toMatch(/registrationOpen:\s*true/)
+  })
+
+  it('shows the toggle to admins only', () => {
+    expect(settings).toMatch(/isAdminRole\(auth\.role\) && \(/)
+    expect(settings).toMatch(/settings\.registrationTitle/)
+  })
+
+  it('explains the closed state in both languages', () => {
+    for (const dict of [en, tr]) {
+      const flat = Object.fromEntries(flatten(dict as Dict))
+      expect(flat['register.closedTitle']).toBeTruthy()
+      expect(flat['register.closedBody']).toBeTruthy()
+      expect(flat['settings.registrationTitle']).toBeTruthy()
+    }
+  })
+
+  it('keeps register in the nav but drops the duplicate button', () => {
+    expect(navbar).toMatch(/SECTION_IDS\.register, key: 'nav\.register'/)
+    // The old call to action button also lived in the header.
+    expect(navbar).not.toMatch(/goToSection\(SECTION_IDS\.register\)/)
+  })
+})

@@ -22,10 +22,11 @@ import { DateOfBirthField } from '@/components/ui/DateOfBirthField'
 import { Checkbox, Input, Select, Textarea } from '@/components/ui/Input'
 import { useToast } from '@/components/ui/Toast'
 import { useI18n } from '@/i18n'
-import { GRADE_LEVELS, TUITION_PLANS, US_STATES } from '@/lib/content'
+import { GRADE_LEVELS, SCHOOL_INFO, TUITION_PLANS, US_STATES } from '@/lib/content'
 import { db } from '@/lib/firebase'
 import { currentSchoolYear, formatSchoolYear } from '@/lib/schoolYear'
 import { SECTION_IDS } from '@/lib/useScrollSpy'
+import { useSiteSettings } from '@/lib/useSiteSettings'
 import { cn } from '@/lib/utils'
 
 type StepId = 'student' | 'guardian' | 'academic' | 'plan' | 'review'
@@ -104,6 +105,7 @@ export function RegisterSection({ selectedPlan }: { selectedPlan?: string }) {
   const { t } = useI18n()
   const toast = useToast()
   const year = currentSchoolYear()
+  const { settings, loading: settingsLoading } = useSiteSettings()
 
   const [stepIndex, setStepIndex] = useState(0)
   const [data, setData] = useState<FormData>({ ...EMPTY, plan: selectedPlan ?? EMPTY.plan })
@@ -259,6 +261,39 @@ export function RegisterSection({ selectedPlan }: { selectedPlan?: string }) {
       })),
     [t],
   )
+
+  // A closed intake replaces the form entirely. Leaving it visible but inert
+  // would let a family fill in five steps before discovering it is shut.
+  if (!settingsLoading && !settings.registrationOpen) {
+    return (
+      <Section id={SECTION_IDS.register} tone="cream" className="scroll-mt-20">
+        <div className="container-marti">
+          <Reveal className="mx-auto max-w-2xl">
+            <div className="rounded-5xl border-2 border-ink bg-white p-8 text-center shadow-pop sm:p-12">
+              <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-3xl bg-amber-100 text-3xl">
+                🔒
+              </span>
+              <h2 className="mt-6 font-display text-2xl font-extrabold text-ink">
+                {t('register.closedTitle')}
+              </h2>
+              <p className="mx-auto mt-3 max-w-md text-pretty leading-relaxed text-ink-600">
+                {settings.registrationClosedMessage?.trim() || t('register.closedBody')}
+              </p>
+              <p className="mt-6 text-sm text-ink-500">
+                {t('register.closedContact')}{' '}
+                <a
+                  href={`mailto:${SCHOOL_INFO.email}`}
+                  className="font-bold text-marti-600 underline underline-offset-4 hover:text-marti-800"
+                >
+                  {SCHOOL_INFO.email}
+                </a>
+              </p>
+            </div>
+          </Reveal>
+        </div>
+      </Section>
+    )
+  }
 
   if (submitted) {
     return (

@@ -1,5 +1,5 @@
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from 'framer-motion'
-import { ArrowRight, LayoutDashboard, Lock, Menu, X } from 'lucide-react'
+import { LayoutDashboard, Lock, Menu, X } from 'lucide-react'
 import { useCallback, useEffect, useState } from 'react'
 import { Logo } from '@/components/Logo'
 import { LanguageSwitcher } from '@/components/LanguageSwitcher'
@@ -109,26 +109,15 @@ export function Navbar() {
                 {t('nav.dashboard')}
               </Button>
             ) : (
-              <>
-                {/* The padlock marks this as the way in to the private portal. */}
-                <Button
-                  to="/login"
-                  size="sm"
-                  variant="outline"
-                  leftIcon={<Lock className="h-4 w-4" />}
-                >
-                  {t('nav.signIn')}
-                </Button>
-                <Button
-                  size="sm"
-                  onClick={() => goToSection(SECTION_IDS.register)}
-                  rightIcon={
-                    <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
-                  }
-                >
-                  {t('nav.register')}
-                </Button>
-              </>
+              /* Register already has its own nav link, so only sign in here. */
+              <Button
+                to="/login"
+                size="sm"
+                variant="outline"
+                leftIcon={<Lock className="h-4 w-4" />}
+              >
+                {t('nav.signIn')}
+              </Button>
             )}
           </div>
 
@@ -216,13 +205,6 @@ export function Navbar() {
                   </Button>
                 ) : (
                   <>
-                    <Button
-                      fullWidth
-                      onClick={() => goToSection(SECTION_IDS.register)}
-                      rightIcon={<ArrowRight className="h-4 w-4" />}
-                    >
-                      {t('nav.register')}
-                    </Button>
                     <Button
                       to="/login"
                       variant="outline"

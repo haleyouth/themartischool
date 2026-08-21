@@ -351,7 +351,10 @@
     "dobMonth": "Month",
     "dobYear": "Year",
     "dobHint": "Pick the day, month and year your child was born.",
-    "dobAge": "{age} years old"
+    "dobAge": "{age} years old",
+    "closedTitle": "Registration is closed for now",
+    "closedBody": "We are not taking new applications at the moment. Registration opens again before the next school year.",
+    "closedContact": "Questions? Email us at"
   },
   "auth": {
     "loginTitle": "Welcome back",
@@ -693,7 +696,14 @@
     "notifyMessages": "New messages",
     "securityTitle": "Security",
     "changePassword": "Change password",
-    "savedSuccess": "Settings saved"
+    "savedSuccess": "Settings saved",
+    "registrationTitle": "Registration status",
+    "registrationOpen": "Registration is open",
+    "registrationOpenHint": "Families can submit applications from the website.",
+    "registrationClosed": "Registration is closed",
+    "registrationClosedHint": "A notice is shown in place of the form.",
+    "registrationMessage": "Message shown while closed",
+    "registrationMessageHint": "Leave blank to use the standard wording."
   },
   "staff": {
     "title": "Staff",
