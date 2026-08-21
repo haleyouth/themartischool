@@ -22,7 +22,8 @@ import { DateOfBirthField } from '@/components/ui/DateOfBirthField'
 import { Checkbox, Input, Select, Textarea } from '@/components/ui/Input'
 import { useToast } from '@/components/ui/Toast'
 import { useI18n } from '@/i18n'
-import { GRADE_LEVELS, SCHOOL_INFO, TUITION_PLANS, US_STATES } from '@/lib/content'
+import { SCHOOL_INFO, TUITION_PLANS, US_STATES } from '@/lib/content'
+import { GRADE_LEVELS, gradeLabelKey } from '@/lib/curriculum'
 import { db } from '@/lib/firebase'
 import { currentSchoolYear, formatSchoolYear } from '@/lib/schoolYear'
 import { SECTION_IDS } from '@/lib/useScrollSpy'
@@ -650,7 +651,7 @@ export function RegisterSection({ selectedPlan }: { selectedPlan?: string }) {
                           <option value="">{t('common.none')}</option>
                           {GRADE_LEVELS.map((grade) => (
                             <option key={grade} value={grade}>
-                              {grade}
+                              {t(gradeLabelKey(grade))}
                             </option>
                           ))}
                         </Select>

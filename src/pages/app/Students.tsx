@@ -24,7 +24,7 @@ import { Tabs } from '@/components/ui/Tabs'
 import { useToast } from '@/components/ui/Toast'
 import { isAdminRole, useAuth } from '@/contexts/AuthContext'
 import { useI18n } from '@/i18n'
-import { GRADE_LEVELS } from '@/lib/content'
+import { GRADE_LEVELS, gradeLabelKey } from '@/lib/curriculum'
 import { functions } from '@/lib/firebase'
 import { useClasses, useStudents } from '@/lib/hooks'
 import { cn, fullName, percent } from '@/lib/utils'
@@ -689,7 +689,7 @@ function StudentFields({
           <option value="">{t('common.none')}</option>
           {GRADE_LEVELS.map((grade) => (
             <option key={grade} value={grade}>
-              {grade}
+              {t(gradeLabelKey(grade))}
             </option>
           ))}
         </Select>

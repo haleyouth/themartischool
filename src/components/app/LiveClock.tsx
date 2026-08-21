@@ -6,11 +6,10 @@ import { cn } from '@/lib/utils'
 /**
  * Live date and time for the portal header.
  *
- * Built as a grid rather than inline text, because the two lines must stay
- * right aligned to the same edge while the digits underneath keep changing
- * width class. Each digit is animated on its own, so the seconds roll without
- * disturbing the hours beside them, and every glyph box is a fixed width so
- * the header never shifts as the numbers change.
+ * The time is the anchor, set large and tabular. The weekday and date sit
+ * beneath it in a quieter line. Each digit animates in its own box, and the
+ * boxes are sized in `em` against a tabular figure so glyphs are never
+ * cramped and the row never changes width as the numbers roll.
  */
 export function LiveClock({ className }: { className?: string }) {
   const { intlLocale, t } = useI18n()
@@ -42,48 +41,46 @@ export function LiveClock({ className }: { className?: string }) {
 
   return (
     <div className={cn('select-none', className)}>
-      <div className="flex flex-col items-end gap-1">
-        {/* Context line: which day it is, and whether school is on. */}
-        <div className="flex items-center gap-1.5">
-          {isSaturday && (
-            <motion.span
-              className="relative flex h-1.5 w-1.5"
-              aria-hidden
-              initial={false}
-            >
-              <motion.span
-                animate={reduced ? undefined : { scale: [1, 2.4], opacity: [0.7, 0] }}
-                transition={{ duration: 2, repeat: Infinity, ease: 'easeOut' }}
-                className="absolute inset-0 rounded-full bg-amber-400"
-              />
-              <span className="relative h-1.5 w-1.5 rounded-full bg-amber-500" />
-            </motion.span>
-          )}
-          <span
-            className={cn(
-              'text-[10px] font-extrabold uppercase leading-none tracking-[0.16em]',
-              isSaturday ? 'text-amber-600' : 'text-ink-400',
-            )}
-          >
-            {isSaturday ? t('dash.schoolDay') : weekday}
-          </span>
+      <div className="flex flex-col items-end">
+        {/* The time, reading as one unit to assistive tech. */}
+        <div
+          className="flex items-baseline font-display text-[22px] font-extrabold leading-none text-ink"
+          role="timer"
+          aria-label={`${hours}:${minutes}`}
+        >
+          <Pair value={hours} reduced={reduced} />
+          <Colon reduced={reduced} />
+          <Pair value={minutes} reduced={reduced} />
+          <Pair
+            value={seconds}
+            reduced={reduced}
+            className="ml-1.5 text-[13px] font-bold text-ink-400"
+          />
         </div>
 
-        {/* Time line: date, then the clock itself. */}
-        <div className="flex items-center gap-2">
-          <span className="text-xs font-bold leading-none text-ink-500">{date}</span>
-          <span className="h-3 w-px bg-ink-200" aria-hidden />
-          <span
-            className="flex items-center font-display text-lg font-extrabold leading-none text-ink"
-            // One accessible label, so a screen reader reads a time rather
-            // than a stream of separately animated digits.
-            role="timer"
-            aria-label={`${hours}:${minutes}`}
-          >
-            <Group value={hours} reduced={reduced} />
-            <Separator reduced={reduced} />
-            <Group value={minutes} reduced={reduced} />
-            <Group value={seconds} reduced={reduced} className="ml-1.5 text-xs text-ink-400" />
+        {/* Context beneath: the date, and whether school is on. */}
+        <div className="mt-2 flex items-center gap-2">
+          <span className="text-[11px] font-bold leading-none text-ink-500">{date}</span>
+          <span className="h-2.5 w-px bg-ink-200" aria-hidden />
+          <span className="flex items-center gap-1.5">
+            {isSaturday && (
+              <span className="relative flex h-1.5 w-1.5" aria-hidden>
+                <motion.span
+                  animate={reduced ? undefined : { scale: [1, 2.6], opacity: [0.7, 0] }}
+                  transition={{ duration: 2, repeat: Infinity, ease: 'easeOut' }}
+                  className="absolute inset-0 rounded-full bg-amber-400"
+                />
+                <span className="relative h-1.5 w-1.5 rounded-full bg-amber-500" />
+              </span>
+            )}
+            <span
+              className={cn(
+                'text-[10px] font-extrabold uppercase leading-none tracking-[0.12em]',
+                isSaturday ? 'text-amber-600' : 'text-ink-400',
+              )}
+            >
+              {isSaturday ? t('dash.schoolDay') : weekday}
+            </span>
           </span>
         </div>
       </div>
@@ -91,8 +88,8 @@ export function LiveClock({ className }: { className?: string }) {
   )
 }
 
-/** A two digit group, animated one digit at a time. */
-function Group({
+/** A two digit group, each digit animated independently. */
+function Pair({
   value,
   reduced,
   className,
@@ -102,10 +99,10 @@ function Group({
   className?: string
 }) {
   return (
-    <span className={cn('flex', className)} aria-hidden>
+    <span className={cn('flex tabular-nums', className)} aria-hidden>
       {value.split('').map((digit, index) => (
-        // Index is a stable position here, not a list identity, so keying on
-        // it is correct: slot 0 is always the tens digit.
+        // Index is a stable slot here, not a list identity: position 0 is
+        // always the tens digit, so keying on it is correct.
         <Digit key={index} value={digit} reduced={reduced} />
       ))}
     </span>
@@ -113,24 +110,25 @@ function Group({
 }
 
 /**
- * One digit in a fixed width box.
+ * One digit in a fixed box.
  *
- * The box is sized in `ch` so it never resizes as the glyph changes, which is
- * what stops the header jittering once a second.
+ * The box is 0.62em wide, which matches a tabular figure in this face with a
+ * little air either side. Sizing in `em` means it scales with the font size
+ * rather than needing a separate value per use.
  */
 function Digit({ value, reduced }: { value: string; reduced: boolean | null }) {
   return (
-    <span className="relative inline-block h-[1em] w-[0.62ch] overflow-hidden tabular-nums">
+    <span className="relative inline-block h-[1.05em] w-[0.62em] overflow-hidden">
       <AnimatePresence initial={false} mode="popLayout">
         <motion.span
           key={value}
-          initial={reduced ? { opacity: 0 } : { y: '-100%', opacity: 0 }}
+          initial={reduced ? { opacity: 0 } : { y: '-105%', opacity: 0 }}
           animate={reduced ? { opacity: 1 } : { y: '0%', opacity: 1 }}
-          exit={reduced ? { opacity: 0 } : { y: '100%', opacity: 0 }}
+          exit={reduced ? { opacity: 0 } : { y: '105%', opacity: 0 }}
           transition={
             reduced
               ? { duration: 0.15 }
-              : { type: 'spring', stiffness: 500, damping: 38, mass: 0.45 }
+              : { type: 'spring', stiffness: 480, damping: 36, mass: 0.5 }
           }
           className="absolute inset-0 flex items-center justify-center"
         >
@@ -142,13 +140,13 @@ function Digit({ value, reduced }: { value: string; reduced: boolean | null }) {
 }
 
 /** The colon pulses once a second, which is what makes a clock read live. */
-function Separator({ reduced }: { reduced: boolean | null }) {
+function Colon({ reduced }: { reduced: boolean | null }) {
   return (
     <motion.span
       aria-hidden
       animate={reduced ? undefined : { opacity: [1, 0.2, 1] }}
       transition={{ duration: 1, repeat: Infinity, ease: 'easeInOut' }}
-      className="px-[1px] text-ink-300"
+      className="mx-[0.06em] text-ink-300"
     >
       :
     </motion.span>

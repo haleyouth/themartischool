@@ -21,7 +21,7 @@ import { Modal } from '@/components/ui/Modal'
 import { Tabs } from '@/components/ui/Tabs'
 import { useToast } from '@/components/ui/Toast'
 import { useI18n } from '@/i18n'
-import { GRADE_LEVELS } from '@/lib/content'
+import { GRADE_LEVELS, gradeLabelKey } from '@/lib/curriculum'
 import { functions } from '@/lib/firebase'
 import { useClasses, useRegistrations } from '@/lib/hooks'
 import { formatDate, formatRelative, fullName } from '@/lib/utils'
@@ -379,7 +379,7 @@ export default function Registrations() {
                 <option value="">{t('common.none')}</option>
                 {GRADE_LEVELS.map((grade) => (
                   <option key={grade} value={grade}>
-                    {grade}
+                    {t(gradeLabelKey(grade))}
                   </option>
                 ))}
               </Select>

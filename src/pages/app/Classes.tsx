@@ -12,7 +12,7 @@ import {
   UserPlus,
   Users,
 } from 'lucide-react'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Badge, statusTone } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
 import { Card, CardBody } from '@/components/ui/Card'
@@ -22,33 +22,13 @@ import { Modal } from '@/components/ui/Modal'
 import { useToast } from '@/components/ui/Toast'
 import { isAdminRole, useAuth } from '@/contexts/AuthContext'
 import { useI18n } from '@/i18n'
-import { GRADE_LEVELS } from '@/lib/content'
+import { GRADE_LEVELS, gradeLabelKey, spansBothStages, subjectKey, subjectsForGrades } from '@/lib/curriculum'
 import { db, functions } from '@/lib/firebase'
 import { useClasses, useEnrollments, useMyClasses, useStaff, useStudents } from '@/lib/hooks'
 import { currentSchoolYear, formatSchoolYear } from '@/lib/schoolYear'
 import { cn, formatTime, fullName, percent } from '@/lib/utils'
 import type { ClassDoc } from '@/types/models'
 
-const SUBJECTS = [
-  'turkish_language',
-  'culture',
-  'history',
-  'music',
-  'folk_dance',
-  'religion',
-  'other',
-] as const
-
-/** 'turkish_language' -> 'Turkish', matching the i18n key names. */
-const SUBJECT_KEY: Record<string, string> = {
-  turkish_language: 'Turkish',
-  culture: 'Culture',
-  history: 'History',
-  music: 'Music',
-  folk_dance: 'FolkDance',
-  religion: 'Religion',
-  other: 'Other',
-}
 
 interface ClassForm {
   name: string
@@ -64,7 +44,7 @@ interface ClassForm {
 
 const EMPTY_FORM: ClassForm = {
   name: '',
-  subject: 'turkish_language',
+  subject: 'turkish',
   gradeLevels: [],
   startTime: '10:00',
   endTime: '11:30',
@@ -91,6 +71,19 @@ export default function Classes() {
   const [managing, setManaging] = useState<ClassDoc | null>(null)
   const [form, setForm] = useState<ClassForm>(EMPTY_FORM)
   const [busy, setBusy] = useState(false)
+
+  const availableSubjects = useMemo(
+    () => subjectsForGrades(form.gradeLevels),
+    [form.gradeLevels],
+  )
+
+  // If a grade change makes the current subject invalid, fall back to the
+  // first one that is allowed rather than saving something impossible.
+  useEffect(() => {
+    if (form.subject && !availableSubjects.includes(form.subject as never)) {
+      setForm((prev) => ({ ...prev, subject: availableSubjects[0] ?? '' }))
+    }
+  }, [availableSubjects, form.subject])
 
   function openCreate() {
     setForm(EMPTY_FORM)
@@ -272,7 +265,7 @@ export default function Classes() {
                       {cls.name}
                     </h2>
                     <p className="mt-1 text-xs font-bold uppercase tracking-wide text-marti-600">
-                      {t(`classes.subject${SUBJECT_KEY[cls.subject] ?? 'Other'}`)}
+                      {t(`classes.subject${subjectKey(cls.subject)}`)}
                     </p>
 
                     {cls.description && (
@@ -401,13 +394,19 @@ export default function Classes() {
           />
 
           <div className="grid gap-4 sm:grid-cols-2">
+            {/*
+              The subject list follows the grades chosen: the early years and
+              grades 1 to 5 teach different things, so offering the full list
+              would let someone put Islamic Studies on a Pre-K class.
+            */}
             <Select
               label={t('classes.subject')}
+              hint={t('classes.subjectForGrade')}
               value={form.subject}
               onChange={(e) => setForm({ ...form, subject: e.target.value })}
-              options={SUBJECTS.map((s) => ({
+              options={availableSubjects.map((s) => ({
                 value: s,
-                label: t(`classes.subject${SUBJECT_KEY[s]}`),
+                label: t(`classes.subject${subjectKey(s)}`),
               }))}
             />
             <Select
@@ -494,11 +493,18 @@ export default function Classes() {
                         : 'border-ink-200 bg-white text-ink-600 hover:border-marti-300',
                     )}
                   >
-                    {grade}
+                    {t(gradeLabelKey(grade))}
                   </button>
                 )
               })}
             </div>
+
+            {/* Worth saying out loud, since it widens the subject list. */}
+            {spansBothStages(form.gradeLevels) && (
+              <p className="mt-2.5 rounded-2xl bg-amber-50 px-4 py-2.5 text-xs leading-relaxed text-amber-700">
+                {t('classes.mixedStages')}
+              </p>
+            )}
           </div>
 
           <Textarea

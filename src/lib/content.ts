@@ -192,6 +192,5 @@ export const SCHOOL_INFO = {
   },
 }
 
-export const GRADE_LEVELS = ['K', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']
 
 export const US_STATES = ['MD', 'VA', 'DC', 'PA', 'DE', 'WV', 'NJ', 'NY', 'NC', 'Other']

@@ -586,7 +586,16 @@
     "confirmDelete": "Cancel class",
     "cancelled": "Class cancelled",
     "deleteBlocked": "Remove the students from this class before deleting it.",
-    "sessionsCreated": "{count} Saturday sessions created"
+    "sessionsCreated": "{count} Saturday sessions created",
+    "subjectIslamicStudies": "Islamic Studies",
+    "subjectQuran": "Quran",
+    "subjectActivities": "Activities",
+    "subjectPhysicalEducation": "Physical Education",
+    "subjectArt": "Art",
+    "subjectDance": "Dance",
+    "subjectReading": "Reading",
+    "subjectForGrade": "Subjects available depend on the grades you pick.",
+    "mixedStages": "This class mixes early years with graded years, so it offers both subject lists."
   },
   "attendance": {
     "title": "Attendance",
@@ -703,7 +712,21 @@
     "edited": "edited",
     "deleted": "This message was deleted",
     "unread": "unread",
-    "searchConversations": "Search conversations"
+    "searchConversations": "Search conversations",
+    "directory": "Who you can message",
+    "directoryEmpty": "There is nobody for you to message yet.",
+    "parentOf": "Parent of",
+    "searchPeople": "Search people",
+    "startWith": "Message",
+    "broadcast": "Send to everyone",
+    "broadcastTitle": "Announcement to the whole school",
+    "broadcastBody": "Every active account receives this as a notification. Use it for things that genuinely affect everyone.",
+    "broadcastScopeSchool": "Everyone at the school",
+    "broadcastScopeClass": "One class only",
+    "broadcastSubject": "Subject",
+    "broadcastMessage": "Message",
+    "broadcastSend": "Send announcement",
+    "broadcastSent": "Sent to {count} people"
   },
   "settings": {
     "title": "Settings",
@@ -785,5 +808,16 @@
     "userMenu": "Account menu",
     "closeDialog": "Close",
     "loading": "Loading"
+  },
+  "grades": {
+    "gPK": "Pre-K",
+    "gK": "Kindergarten",
+    "g1": "Grade 1",
+    "g2": "Grade 2",
+    "g3": "Grade 3",
+    "g4": "Grade 4",
+    "g5": "Grade 5",
+    "earlyYears": "Early years",
+    "gradedYears": "Grades 1 to 5"
   }
 }

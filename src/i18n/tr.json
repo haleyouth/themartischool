@@ -586,7 +586,16 @@
     "confirmDelete": "Sınıfı iptal et",
     "cancelled": "Sınıf iptal edildi",
     "deleteBlocked": "Silmeden önce bu sınıftaki öğrencileri çıkarın.",
-    "sessionsCreated": "{count} cumartesi dersi oluşturuldu"
+    "sessionsCreated": "{count} cumartesi dersi oluşturuldu",
+    "subjectIslamicStudies": "İslami Bilgiler",
+    "subjectQuran": "Kur’an",
+    "subjectActivities": "Etkinlikler",
+    "subjectPhysicalEducation": "Beden Eğitimi",
+    "subjectArt": "Sanat",
+    "subjectDance": "Dans",
+    "subjectReading": "Okuma",
+    "subjectForGrade": "Seçtiğiniz sınıflara göre dersler değişir.",
+    "mixedStages": "Bu sınıf okul öncesi ile 1 ile 5. sınıfları birlikte içeriyor, bu yüzden iki ders listesi de sunuluyor."
   },
   "attendance": {
     "title": "Devam",
@@ -703,7 +712,21 @@
     "edited": "düzenlendi",
     "deleted": "Bu mesaj silindi",
     "unread": "okunmamış",
-    "searchConversations": "Görüşmelerde ara"
+    "searchConversations": "Görüşmelerde ara",
+    "directory": "Kiminle yazışabilirsiniz",
+    "directoryEmpty": "Henüz yazışabileceğiniz kimse yok.",
+    "parentOf": "Velisi:",
+    "searchPeople": "Kişi ara",
+    "startWith": "Mesaj gönder",
+    "broadcast": "Herkese gönder",
+    "broadcastTitle": "Tüm okula duyuru",
+    "broadcastBody": "Bütün aktif hesaplar bunu bildirim olarak alır. Gerçekten herkesi ilgilendiren konular için kullanın.",
+    "broadcastScopeSchool": "Okuldaki herkes",
+    "broadcastScopeClass": "Yalnızca bir sınıf",
+    "broadcastSubject": "Konu",
+    "broadcastMessage": "Mesaj",
+    "broadcastSend": "Duyuruyu gönder",
+    "broadcastSent": "{count} kişiye gönderildi"
   },
   "settings": {
     "title": "Ayarlar",
@@ -785,5 +808,16 @@
     "userMenu": "Hesap menüsü",
     "closeDialog": "Kapat",
     "loading": "Yükleniyor"
+  },
+  "grades": {
+    "gPK": "Anaokulu öncesi",
+    "gK": "Anaokulu",
+    "g1": "1. sınıf",
+    "g2": "2. sınıf",
+    "g3": "3. sınıf",
+    "g4": "4. sınıf",
+    "g5": "5. sınıf",
+    "earlyYears": "Okul öncesi",
+    "gradedYears": "1 ile 5. sınıflar"
   }
 }

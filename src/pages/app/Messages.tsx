@@ -1,4 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion'
+import { httpsCallable } from 'firebase/functions'
 import {
   addDoc,
   collection,
@@ -10,19 +11,21 @@ import {
   serverTimestamp,
   updateDoc,
 } from 'firebase/firestore'
-import { Lock, MessageSquare, Search, Send } from 'lucide-react'
+import { Lock, Megaphone, MessageSquare, PenSquare, Search, Send } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { Avatar } from '@/components/ui/Avatar'
 import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
+import { Modal } from '@/components/ui/Modal'
 import { EmptyState, Spinner } from '@/components/ui/Feedback'
-import { Input } from '@/components/ui/Input'
+import { Input, Select, Textarea } from '@/components/ui/Input'
 import { useToast } from '@/components/ui/Toast'
-import { useAuth } from '@/contexts/AuthContext'
+import { isAdminRole, useAuth } from '@/contexts/AuthContext'
 import { useI18n } from '@/i18n'
-import { db } from '@/lib/firebase'
-import { useConversations } from '@/lib/hooks'
+import { db, functions } from '@/lib/firebase'
+import { groupContacts, useContacts } from '@/lib/contacts'
+import { useClasses, useConversations } from '@/lib/hooks'
 import { cn, formatRelative, truncate } from '@/lib/utils'
 import type { ConversationDoc, MessageDoc } from '@/types/models'
 
@@ -39,6 +42,8 @@ export default function Messages() {
   const [draft, setDraft] = useState('')
   const [sending, setSending] = useState(false)
   const [search, setSearch] = useState('')
+  const [picking, setPicking] = useState(false)
+  const [broadcasting, setBroadcasting] = useState(false)
   const bottomRef = useRef<HTMLDivElement>(null)
 
   const active = conversations.find((conv) => conv.id === activeId) ?? null
@@ -133,9 +138,28 @@ export default function Messages() {
 
   return (
     <>
-      <div className="mb-6">
-        <h1 className="font-display text-2xl font-bold text-ink">{t('messages.title')}</h1>
-        <p className="mt-1.5 text-sm text-ink-600">{t('messages.subtitle')}</p>
+      <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <h1 className="font-display text-2xl font-bold text-ink">{t('messages.title')}</h1>
+          <p className="mt-1.5 text-sm text-ink-600">{t('messages.subtitle')}</p>
+        </div>
+        <div className="flex flex-wrap gap-2.5">
+          {isAdminRole(auth.role) && (
+            <Button
+              variant="outline"
+              onClick={() => setBroadcasting(true)}
+              leftIcon={<Megaphone className="h-4 w-4" />}
+            >
+              {t('messages.broadcast')}
+            </Button>
+          )}
+          <Button
+            onClick={() => setPicking(true)}
+            leftIcon={<PenSquare className="h-4 w-4" />}
+          >
+            {t('messages.newConversation')}
+          </Button>
+        </div>
       </div>
 
       <Card className="grid h-[calc(100vh-14rem)] min-h-[32rem] grid-cols-1 overflow-hidden lg:grid-cols-[20rem_1fr]">
@@ -341,6 +365,17 @@ export default function Messages() {
           )}
         </div>
       </Card>
+
+      <NewConversationModal
+        open={picking}
+        onClose={() => setPicking(false)}
+        onCreated={(id) => {
+          setPicking(false)
+          setActiveId(id)
+        }}
+      />
+
+      <BroadcastModal open={broadcasting} onClose={() => setBroadcasting(false)} />
     </>
   )
 }
@@ -352,4 +387,232 @@ function conversationTitle(conv: ConversationDoc, uid: string): string {
     .filter(([id]) => id !== uid)
     .map(([, name]) => name)
   return others.join(', ') || '-'
+}
+
+
+/**
+ * The directory of people this user is allowed to message.
+ *
+ * The list comes from useContacts, which mirrors the policy createConversation
+ * enforces server-side, so nobody is offered a contact the server would refuse.
+ */
+function NewConversationModal({
+  open,
+  onClose,
+  onCreated,
+}: {
+  open: boolean
+  onClose: () => void
+  onCreated: (conversationId: string) => void
+}) {
+  const { t } = useI18n()
+  const toast = useToast()
+  const { contacts, loading } = useContacts()
+  const [search, setSearch] = useState('')
+  const [busy, setBusy] = useState<string | null>(null)
+
+  const groups = groupContacts(
+    contacts.filter((c) => {
+      const term = search.trim().toLowerCase()
+      if (!term) return true
+      return c.displayName.toLowerCase().includes(term) || c.subtitle.toLowerCase().includes(term)
+    }),
+  )
+
+  async function start(contactUid: string) {
+    setBusy(contactUid)
+    try {
+      const result = await httpsCallable<
+        { participantIds: string[]; type: 'direct' },
+        { conversationId: string }
+      >(functions, 'createConversation')({ participantIds: [contactUid], type: 'direct' })
+      onCreated(result.data.conversationId)
+      setSearch('')
+    } catch (error) {
+      console.error('createConversation failed', error)
+      toast.error(t('common.error'), (error as Error)?.message)
+    } finally {
+      setBusy(null)
+    }
+  }
+
+  return (
+    <Modal open={open} onClose={onClose} title={t('messages.directory')} size="lg">
+      <div className="space-y-4">
+        <Input
+          placeholder={t('messages.searchPeople')}
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          leftIcon={<Search className="h-4 w-4" />}
+        />
+
+        {loading ? (
+          <div className="flex justify-center py-10">
+            <Spinner />
+          </div>
+        ) : groups.length === 0 ? (
+          <EmptyState
+            className="border-0 bg-transparent py-8"
+            icon={<MessageSquare className="h-5 w-5" />}
+            title={t('messages.directoryEmpty')}
+          />
+        ) : (
+          <div className="scrollbar-thin max-h-96 space-y-5 overflow-y-auto pr-1">
+            {groups.map((group) => (
+              <div key={group.role}>
+                <p className="text-[11px] font-extrabold uppercase tracking-wide text-ink-400">
+                  {t(`staff.role${group.role.charAt(0).toUpperCase()}${group.role.slice(1)}`)}
+                </p>
+                <ul className="mt-2 space-y-2">
+                  {group.people.map((person) => (
+                    <li
+                      key={person.uid}
+                      className="flex items-center justify-between gap-3 rounded-2xl border-2 border-ink-100 px-4 py-2.5"
+                    >
+                      <span className="flex min-w-0 items-center gap-3">
+                        <Avatar name={person.displayName} size="sm" />
+                        <span className="min-w-0">
+                          <span className="block truncate text-sm font-bold text-ink">
+                            {person.displayName}
+                          </span>
+                          {/*
+                            A student account is the family account, so name
+                            the guardian who will actually read this.
+                          */}
+                          <span className="block truncate text-xs text-ink-500">
+                            {person.role === 'student' && person.subtitle
+                              ? `${t('messages.parentOf')} ${person.subtitle}`
+                              : person.subtitle}
+                          </span>
+                        </span>
+                      </span>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        loading={busy === person.uid}
+                        disabled={busy !== null}
+                        onClick={() => start(person.uid)}
+                      >
+                        {t('messages.startWith')}
+                      </Button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </Modal>
+  )
+}
+
+/** Announcement to everyone, or to a single class. Admins only. */
+function BroadcastModal({ open, onClose }: { open: boolean; onClose: () => void }) {
+  const { t } = useI18n()
+  const toast = useToast()
+  const { data: classes } = useClasses()
+
+  const [scope, setScope] = useState<'school' | 'class'>('school')
+  const [classId, setClassId] = useState('')
+  const [title, setTitle] = useState('')
+  const [body, setBody] = useState('')
+  const [busy, setBusy] = useState(false)
+
+  async function send() {
+    setBusy(true)
+    try {
+      const result = await httpsCallable<
+        { scope: 'school' | 'class'; classId?: string; title: string; body: string },
+        { recipients: number }
+      >(
+        functions,
+        'sendAnnouncement',
+      )({
+        scope,
+        ...(scope === 'class' ? { classId } : {}),
+        title: title.trim(),
+        body: body.trim(),
+      })
+      toast.success(t('messages.broadcastSent', { count: String(result.data.recipients ?? 0) }))
+      setTitle('')
+      setBody('')
+      onClose()
+    } catch (error) {
+      console.error('sendAnnouncement failed', error)
+      toast.error(t('common.error'), (error as Error)?.message)
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  return (
+    <Modal
+      open={open}
+      onClose={onClose}
+      title={t('messages.broadcastTitle')}
+      description={t('messages.broadcastBody')}
+      size="lg"
+      footer={
+        <>
+          <Button variant="ghost" onClick={onClose} disabled={busy}>
+            {t('common.cancel')}
+          </Button>
+          <Button
+            onClick={send}
+            loading={busy}
+            disabled={!title.trim() || !body.trim() || (scope === 'class' && !classId)}
+            leftIcon={<Megaphone className="h-4 w-4" />}
+          >
+            {t('messages.broadcastSend')}
+          </Button>
+        </>
+      }
+    >
+      <div className="space-y-5">
+        <Select
+          label={t('messages.announcementScope')}
+          value={scope}
+          onChange={(e) => setScope(e.target.value as 'school' | 'class')}
+          options={[
+            { value: 'school', label: t('messages.broadcastScopeSchool') },
+            { value: 'class', label: t('messages.broadcastScopeClass') },
+          ]}
+        />
+
+        {scope === 'class' && (
+          <Select
+            label={t('classes.className')}
+            value={classId}
+            onChange={(e) => setClassId(e.target.value)}
+          >
+            <option value="">{t('common.none')}</option>
+            {classes
+              .filter((c) => c.status === 'active')
+              .map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.name}
+                </option>
+              ))}
+          </Select>
+        )}
+
+        <Input
+          label={t('messages.broadcastSubject')}
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          maxLength={120}
+          required
+        />
+        <Textarea
+          label={t('messages.broadcastMessage')}
+          rows={5}
+          maxLength={2000}
+          value={body}
+          onChange={(e) => setBody(e.target.value)}
+          required
+        />
+      </div>
+    </Modal>
+  )
 }
