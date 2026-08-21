@@ -30,7 +30,7 @@ interface ApproveResponse {
  *
  * This runs in phases because a Firestore transaction cannot span the Auth
  * API. The ID is reserved BEFORE the Auth user is created, so a crash between
- * the two burns an ID number rather than risking a duplicate — cheap insurance
+ * the two burns an ID number rather than risking a duplicate, cheap insurance
  * against two students sharing a login.
  */
 export const approveRegistration = onCall<ApproveRequest, Promise<ApproveResponse>>(
@@ -236,6 +236,24 @@ export const approveRegistration = onCall<ApproveRequest, Promise<ApproveRespons
       after: { studentId, uid, gradeLevel, classId: classId ?? null },
     })
 
+    // Tell the other admins. Previously only submission raised a notice, so a
+    // director never learned that a principal had approved an application.
+    const others = (await adminUids()).filter((id) => id !== caller.uid)
+    await Promise.all(
+      others.map((userId) =>
+        notify({
+          userId,
+          type: 'registration_approved',
+          title: 'Registration approved',
+          body: `${reg.firstName} ${reg.lastName} was approved as ${studentId}.`,
+          link: '/app/students',
+          entityType: 'student',
+          entityId: studentId,
+          priority: 'normal',
+        }),
+      ),
+    )
+
     // The password is returned once for in-person handover and never stored.
     return { studentId, tempPassword, uid }
   },
@@ -291,7 +309,7 @@ export const onRegistrationCreated = onDocumentCreated(
           userId,
           type: 'registration_submitted',
           title: 'New registration',
-          body: `${name} has applied for ${data.requestedGradeLevel ?? '—'}.`,
+          body: `${name} has applied for ${data.requestedGradeLevel ?? 'a grade'}.`,
           link: '/app/registrations',
           entityType: 'registration',
           entityId: event.params.registrationId,

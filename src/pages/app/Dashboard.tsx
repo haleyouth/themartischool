@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import {
   BookOpen,
   CalendarCheck,
@@ -19,13 +20,15 @@ import {
   useAttendanceHistory,
   useClasses,
   useConversations,
+  useEnrollments,
   useMyClasses,
   usePublishedReports,
   useRegistrations,
   useReports,
   useStudents,
 } from '@/lib/hooks'
-import { formatDate, formatRelative, fullName, percent } from '@/lib/utils'
+import { subjectKey } from '@/lib/curriculum'
+import { formatDate, formatRelative, formatTime, fullName, percent } from '@/lib/utils'
 
 export default function Dashboard() {
   const { role } = useAuth()
@@ -411,6 +414,15 @@ function StudentDashboard() {
 
   const { data: attendance } = useAttendanceHistory(studentId)
   const { data: reports } = usePublishedReports(auth.user?.uid)
+  const { data: enrollments } = useEnrollments(undefined, studentId)
+  const { data: allClasses } = useClasses()
+
+  const myClasses = useMemo(() => {
+    const mine = new Set(
+      enrollments.filter((e) => e.status === 'active').map((e) => e.classId),
+    )
+    return allClasses.filter((c) => mine.has(c.id))
+  }, [enrollments, allClasses])
 
   const present = attendance.filter((a) => a.status === 'present').length
   const late = attendance.filter((a) => a.status === 'late').length
@@ -454,6 +466,39 @@ function StudentDashboard() {
           />
         </StaggerItem>
       </StaggerGroup>
+
+      {/* A student should be able to see what they are actually enrolled in. */}
+      <Card className="mt-6">
+        <CardHeader title={t('dash.myClasses')} />
+        <CardBody className="p-0">
+          {myClasses.length === 0 ? (
+            <EmptyState
+              className="m-4 border-0 bg-transparent"
+              icon={<BookOpen className="h-6 w-6" />}
+              title={t('classes.noClasses')}
+            />
+          ) : (
+            <ul className="divide-y divide-ink-100">
+              {myClasses.map((cls) => (
+                <li key={cls.id} className="flex items-center gap-3 px-5 py-3.5">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-marti-50 text-marti-600">
+                    <BookOpen className="h-5 w-5" />
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-bold text-ink">{cls.name}</p>
+                    <p className="text-xs text-ink-500">
+                      {t(`classes.subject${subjectKey(cls.subject)}`)} ·{' '}
+                      {formatTime(cls.startTime, intlLocale)} to{' '}
+                      {formatTime(cls.endTime, intlLocale)}
+                      {cls.room ? ` · ${cls.room}` : ''}
+                    </p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+        </CardBody>
+      </Card>
 
       <div className="mt-6 grid gap-6 lg:grid-cols-2">
         <Card>

@@ -238,7 +238,7 @@ export default function Classes() {
           action={admin ? { label: t('classes.createClass'), onClick: openCreate } : undefined}
         />
       ) : (
-        <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
           {classes.map((cls, index) => {
             const fill = percent(cls.enrolledCount, cls.capacity)
             const full = cls.enrolledCount >= cls.capacity
@@ -253,15 +253,15 @@ export default function Classes() {
                 <Card hover className="flex h-full flex-col">
                   <CardBody className="flex flex-1 flex-col">
                     <div className="flex items-start justify-between gap-3">
-                      <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-marti-50 text-marti-600">
-                        <BookOpen className="h-5 w-5" />
+                      <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-marti-50 text-marti-600">
+                        <BookOpen className="h-4 w-4" />
                       </span>
                       <Badge tone={statusTone(cls.status)} size="sm">
                         {t(`classes.status${cap(cls.status)}`)}
                       </Badge>
                     </div>
 
-                    <h2 className="mt-4 font-display text-lg font-extrabold text-ink">
+                    <h2 className="mt-3 font-display text-base font-extrabold leading-snug text-ink">
                       {cls.name}
                     </h2>
                     <p className="mt-1 text-xs font-bold uppercase tracking-wide text-marti-600">
@@ -269,12 +269,12 @@ export default function Classes() {
                     </p>
 
                     {cls.description && (
-                      <p className="mt-3 line-clamp-2 text-sm leading-relaxed text-ink-600">
+                      <p className="mt-2 line-clamp-2 text-xs leading-relaxed text-ink-600">
                         {cls.description}
                       </p>
                     )}
 
-                    <dl className="mt-4 space-y-2 text-sm">
+                    <dl className="mt-3 space-y-1.5 text-xs">
                       <div className="flex items-center gap-2 text-ink-600">
                         <Clock className="h-4 w-4 shrink-0 text-ink-400" aria-hidden />
                         {formatTime(cls.startTime, intlLocale)} to{' '}
@@ -292,7 +292,7 @@ export default function Classes() {
                       </div>
                     </dl>
 
-                    <div className="mt-4">
+                    <div className="mt-3">
                       <div className="h-1.5 overflow-hidden rounded-full bg-ink-100">
                         <motion.div
                           initial={{ width: 0 }}
@@ -312,7 +312,7 @@ export default function Classes() {
                     </div>
 
                     {admin && (
-                      <div className="mt-auto flex flex-wrap gap-2 border-t-2 border-dashed border-ink-100 pt-4">
+                      <div className="mt-auto flex flex-wrap gap-1.5 border-t-2 border-dashed border-ink-100 pt-3">
                         <Button
                           size="sm"
                           variant="outline"

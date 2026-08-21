@@ -206,8 +206,19 @@ export default function Messages() {
                       <Avatar name={conversationTitle(conv, uid)} size="sm" />
                       <span className="min-w-0 flex-1">
                         <span className="flex items-center justify-between gap-2">
-                          <span className="truncate text-sm font-semibold text-ink">
+                          <span className="min-w-0 truncate text-sm font-semibold text-ink">
                             {conversationTitle(conv, uid)}
+                            {/* Naming the role saves guessing who a thread is with. */}
+                            {conversationRole(conv, uid) && (
+                              <span className="ml-1.5 text-[11px] font-bold text-marti-600">
+                                {t(
+                                  `staff.role${
+                                    conversationRole(conv, uid)!.charAt(0).toUpperCase() +
+                                    conversationRole(conv, uid)!.slice(1)
+                                  }`,
+                                )}
+                              </span>
+                            )}
                           </span>
                           {(conv.unreadCounts?.[uid] ?? 0) > 0 && (
                             <Badge tone="danger" size="sm">
@@ -288,8 +299,24 @@ export default function Messages() {
                           {!mine && <Avatar name={message.senderName} size="xs" />}
                           <div className={cn('max-w-[75%]', mine && 'items-end')}>
                             {!mine && (
-                              <p className="mb-1 text-[11px] font-medium text-ink-500">
-                                {message.senderName}
+                              // The role matters here: a parent needs to know
+                              // whether a message came from a teacher or the
+                              // principal before they read it.
+                              <p className="mb-1 flex items-center gap-1.5 text-[11px] text-ink-500">
+                                <span className="font-bold">{message.senderName}</span>
+                                {message.senderRole && (
+                                  <>
+                                    <span className="text-ink-300">·</span>
+                                    <span className="font-semibold text-marti-600">
+                                      {t(
+                                        `staff.role${
+                                          message.senderRole.charAt(0).toUpperCase() +
+                                          message.senderRole.slice(1)
+                                        }`,
+                                      )}
+                                    </span>
+                                  </>
+                                )}
                               </p>
                             )}
                             <div
@@ -378,6 +405,17 @@ export default function Messages() {
       <BroadcastModal open={broadcasting} onClose={() => setBroadcasting(false)} />
     </>
   )
+}
+
+/**
+ * The other person's role in a one to one thread.
+ *
+ * Only meaningful for a direct thread: a group has several roles, so naming
+ * one would mislead.
+ */
+function conversationRole(conv: ConversationDoc, uid: string): string | null {
+  const others = Object.entries(conv.participantRoles ?? {}).filter(([id]) => id !== uid)
+  return others.length === 1 ? others[0][1] : null
 }
 
 /** A direct thread is named after the other person, not the signed-in user. */

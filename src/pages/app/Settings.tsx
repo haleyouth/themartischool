@@ -207,6 +207,7 @@ export default function Settings() {
         </Card>
 
         <div className="space-y-6">
+          {auth.role !== 'student' && (
           <Card>
             <CardHeader
               title={
@@ -252,6 +253,7 @@ export default function Settings() {
               ))}
             </CardBody>
           </Card>
+          )}
 
           <Card>
             <CardHeader
