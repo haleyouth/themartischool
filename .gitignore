@@ -40,3 +40,6 @@ serviceAccountKey.json
 
 # Build info
 *.tsbuildinfo
+
+# Compiled Cloud Functions output
+functions/lib/
