@@ -560,8 +560,19 @@
     "syllabus": "Ders programı",
     "gradeLevels": "Sınıflar",
     "sessionDates": "Ders tarihleri",
-    "generateSessions": "Cumartesi derslerini oluştur",
-    "full": "Dolu"
+    "generateSessions": "Cumartesi tarihlerini oluştur",
+    "full": "Dolu",
+    "manage": "Öğretmenler ve öğrenciler",
+    "manageBody": "Bu sınıfa öğretmen atayın ve öğrenci kaydedin.",
+    "assign": "Ata",
+    "unassign": "Çıkar",
+    "saturdayNote": "Bütün dersler cumartesi yapılır. Bu, okulun tamamı için sabittir.",
+    "deleteTitle": "Bu sınıfı iptal et",
+    "deleteBody": "Sınıf iptal edildi olarak işaretlenir ve ders programından kalkar. Kaydedilmiş devam ve karne bilgileri korunur.",
+    "confirmDelete": "Sınıfı iptal et",
+    "cancelled": "Sınıf iptal edildi",
+    "deleteBlocked": "Silmeden önce bu sınıftaki öğrencileri çıkarın.",
+    "sessionsCreated": "{count} cumartesi dersi oluşturuldu"
   },
   "attendance": {
     "title": "Devam",

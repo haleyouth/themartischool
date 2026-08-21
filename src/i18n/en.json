@@ -560,8 +560,19 @@
     "syllabus": "Syllabus",
     "gradeLevels": "Grades",
     "sessionDates": "Session dates",
-    "generateSessions": "Create Saturday sessions",
-    "full": "Full"
+    "generateSessions": "Create Saturday dates",
+    "full": "Full",
+    "manage": "Teachers and students",
+    "manageBody": "Assign teachers and enrol students for this class.",
+    "assign": "Assign",
+    "unassign": "Remove",
+    "saturdayNote": "Every class meets on Saturday. That is fixed for the whole school.",
+    "deleteTitle": "Cancel this class",
+    "deleteBody": "The class is marked cancelled and disappears from the timetable. Attendance and reports already recorded are kept.",
+    "confirmDelete": "Cancel class",
+    "cancelled": "Class cancelled",
+    "deleteBlocked": "Remove the students from this class before deleting it.",
+    "sessionsCreated": "{count} Saturday sessions created"
   },
   "attendance": {
     "title": "Attendance",

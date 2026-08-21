@@ -94,7 +94,7 @@ export default function App() {
           <Route
             path="audit"
             element={
-              <RequireRole roles={['director']}>
+              <RequireRole roles={['principal']}>
                 <AuditLog />
               </RequireRole>
             }

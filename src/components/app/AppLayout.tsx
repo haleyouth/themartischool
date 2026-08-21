@@ -100,7 +100,7 @@ const NAV: NavItem[] = [
     to: '/app/audit',
     labelKey: 'dash.auditLog',
     icon: ScrollText,
-    roles: ['director'],
+    roles: ['principal'],
     group: 'admin',
   },
   {
@@ -163,21 +163,27 @@ export default function AppLayout() {
   function renderSidebar(mini: boolean) {
     return (
       <>
+        {/*
+          The logo is centred and given room to breathe. The close and expand
+          controls sit absolutely so they do not pull it off centre.
+        */}
         <div
           className={cn(
-            'flex h-[76px] shrink-0 items-center',
-            mini ? 'justify-center px-2' : 'justify-between px-5',
+            'relative flex shrink-0 items-center justify-center',
+            mini ? 'h-[76px] px-2' : 'h-[104px] px-5',
           )}
         >
-          {!mini && <Logo size="sm" linkTo="/app" />}
+          {!mini && <Logo size="lg" linkTo="/app" />}
+
           <button
             type="button"
             onClick={() => setSidebarOpen(false)}
-            className="rounded-xl p-2 text-ink-400 hover:bg-cream-200 lg:hidden"
+            className="absolute right-4 top-1/2 -translate-y-1/2 rounded-xl p-2 text-ink-400 hover:bg-cream-200 lg:hidden"
             aria-label={t('nav.close')}
           >
             <X className="h-5 w-5" />
           </button>
+
           {mini && (
             <button
               type="button"
@@ -350,7 +356,7 @@ export default function AppLayout() {
             </h1>
           </div>
 
-          <LiveClock className="hidden xl:flex" />
+          <LiveClock className="hidden xl:block" />
 
           <div className="hidden sm:block">
             <LanguageSwitcher />

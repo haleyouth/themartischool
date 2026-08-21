@@ -5,7 +5,6 @@ import {
   generateTempPassword,
   requireAdmin,
   requireAuth,
-  requireDirector,
   toShadowEmail,
   writeAudit,
   type Role,
@@ -17,7 +16,8 @@ export const createStaffUser = onCall<{
   role: 'principal' | 'teacher'
   phone?: string
 }>({ region: 'us-central1' }, async (request) => {
-  const caller = requireDirector(request)
+  const caller = requireAdmin(request)
+
   const { email, displayName, role, phone } = request.data
 
   if (!email || !displayName) {
@@ -87,7 +87,15 @@ export const createStaffUser = onCall<{
 export const setUserRole = onCall<{ uid: string; role: Role; classIds?: string[] }>(
   { region: 'us-central1' },
   async (request) => {
-    const caller = requireDirector(request)
+    const caller = requireAdmin(request)
+
+  // A principal may manage teachers and principals, never directors, and may
+  // not hand out the director role.
+  if (caller.role !== 'director') {
+    if (request.data?.role === 'director') {
+      throw new HttpsError('permission-denied', 'Only a director can grant the director role.')
+    }
+  }
     const { uid, role, classIds } = request.data
 
     if (uid === caller.uid) {
@@ -187,6 +195,10 @@ export const adminResetStudentPassword = onCall<{ studentId: string }>(
   { region: 'us-central1' },
   async (request) => {
     const caller = requireAdmin(request)
+
+  if (caller.role !== 'principal') {
+    throw new HttpsError('permission-denied', 'Only the principal can reset a student password.')
+  }
     const { studentId } = request.data
 
     const db = getFirestore()

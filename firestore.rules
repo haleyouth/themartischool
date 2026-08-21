@@ -198,7 +198,7 @@ service cloud.firestore {
                         && onlyChanges(['description','syllabusUrl','room','updatedAt']))
                     );
 
-      allow delete: if isActive() && isDirector() && existing().enrolledCount == 0;
+      allow delete: if isActive() && isAdmin() && existing().enrolledCount == 0;
     }
 
     // ────────────────────── enrollments ──────────────────────
@@ -408,7 +408,7 @@ service cloud.firestore {
     match /mail/{mailId}                     { allow read, write: if false; }
 
     match /auditLogs/{logId} {
-      allow get, list: if isActive() && isDirector();
+      allow get, list: if isActive() && isPrincipal();
       allow write: if false;
     }
 

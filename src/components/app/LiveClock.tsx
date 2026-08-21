@@ -1,18 +1,20 @@
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { useEffect, useState } from 'react'
 import { useI18n } from '@/i18n'
 import { cn } from '@/lib/utils'
 
 /**
- * Live date and time in the portal header.
+ * Live date and time for the portal header.
  *
- * Plain text, no chrome. The weekday and date sit quietly above a larger
- * time, so the eye reads the hour first and the context second. Digits roll
- * only when their own value changes, so the seconds tick without the hours
- * twitching alongside them.
+ * Built as a grid rather than inline text, because the two lines must stay
+ * right aligned to the same edge while the digits underneath keep changing
+ * width class. Each digit is animated on its own, so the seconds roll without
+ * disturbing the hours beside them, and every glyph box is a fixed width so
+ * the header never shifts as the numbers change.
  */
 export function LiveClock({ className }: { className?: string }) {
   const { intlLocale, t } = useI18n()
+  const reduced = useReducedMotion()
   const [now, setNow] = useState(() => new Date())
 
   useEffect(() => {
@@ -33,68 +35,103 @@ export function LiveClock({ className }: { className?: string }) {
   const isSaturday = now.getDay() === 6
 
   const weekday = new Intl.DateTimeFormat(intlLocale, { weekday: 'long' }).format(now)
-  const date = new Intl.DateTimeFormat(intlLocale, { day: 'numeric', month: 'short' }).format(now)
+  const date = new Intl.DateTimeFormat(intlLocale, { day: 'numeric', month: 'long' }).format(now)
   const hours = String(now.getHours()).padStart(2, '0')
   const minutes = String(now.getMinutes()).padStart(2, '0')
   const seconds = String(now.getSeconds()).padStart(2, '0')
 
   return (
-    <div className={cn('select-none text-right leading-none', className)}>
-      <p className="flex items-center justify-end gap-1.5">
-        {isSaturday && (
-          <motion.span
-            // A slow breath rather than a badge, since there is no chrome now.
-            animate={{ opacity: [1, 0.3, 1], scale: [1, 0.82, 1] }}
-            transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
-            className="h-1.5 w-1.5 rounded-full bg-amber-500"
-            aria-hidden
-          />
-        )}
-        <span
-          className={cn(
-            'text-[10px] font-extrabold uppercase tracking-[0.14em]',
-            isSaturday ? 'text-amber-600' : 'text-ink-400',
+    <div className={cn('select-none', className)}>
+      <div className="flex flex-col items-end gap-1">
+        {/* Context line: which day it is, and whether school is on. */}
+        <div className="flex items-center gap-1.5">
+          {isSaturday && (
+            <motion.span
+              className="relative flex h-1.5 w-1.5"
+              aria-hidden
+              initial={false}
+            >
+              <motion.span
+                animate={reduced ? undefined : { scale: [1, 2.4], opacity: [0.7, 0] }}
+                transition={{ duration: 2, repeat: Infinity, ease: 'easeOut' }}
+                className="absolute inset-0 rounded-full bg-amber-400"
+              />
+              <span className="relative h-1.5 w-1.5 rounded-full bg-amber-500" />
+            </motion.span>
           )}
-        >
-          {isSaturday ? t('dash.schoolDay') : weekday}
-        </span>
-      </p>
+          <span
+            className={cn(
+              'text-[10px] font-extrabold uppercase leading-none tracking-[0.16em]',
+              isSaturday ? 'text-amber-600' : 'text-ink-400',
+            )}
+          >
+            {isSaturday ? t('dash.schoolDay') : weekday}
+          </span>
+        </div>
 
-      <p className="mt-1.5 flex items-baseline justify-end gap-2">
-        <span className="font-display text-[13px] font-bold text-ink-500">{date}</span>
-        <span className="flex items-baseline font-display text-xl font-extrabold tabular-nums text-ink">
-          <Digits value={hours} />
-          <Colon />
-          <Digits value={minutes} />
-          {/* Seconds sit smaller and lighter, so the glance lands on the hour. */}
-          <Digits value={seconds} className="ml-1 text-[13px] text-ink-400" />
-        </span>
-      </p>
+        {/* Time line: date, then the clock itself. */}
+        <div className="flex items-center gap-2">
+          <span className="text-xs font-bold leading-none text-ink-500">{date}</span>
+          <span className="h-3 w-px bg-ink-200" aria-hidden />
+          <span
+            className="flex items-center font-display text-lg font-extrabold leading-none text-ink"
+            // One accessible label, so a screen reader reads a time rather
+            // than a stream of separately animated digits.
+            role="timer"
+            aria-label={`${hours}:${minutes}`}
+          >
+            <Group value={hours} reduced={reduced} />
+            <Separator reduced={reduced} />
+            <Group value={minutes} reduced={reduced} />
+            <Group value={seconds} reduced={reduced} className="ml-1.5 text-xs text-ink-400" />
+          </span>
+        </div>
+      </div>
     </div>
   )
 }
 
-/**
- * Rolls a two digit group when it changes.
- *
- * Fixed at two characters wide so the header never shifts as digits swap,
- * which would otherwise make the whole bar jitter once a second.
- */
-function Digits({ value, className }: { value: string; className?: string }) {
+/** A two digit group, animated one digit at a time. */
+function Group({
+  value,
+  reduced,
+  className,
+}: {
+  value: string
+  reduced: boolean | null
+  className?: string
+}) {
   return (
-    <span
-      className={cn(
-        'relative inline-flex h-[1.1em] w-[2ch] items-baseline justify-center overflow-hidden',
-        className,
-      )}
-    >
-      <AnimatePresence mode="popLayout" initial={false}>
+    <span className={cn('flex', className)} aria-hidden>
+      {value.split('').map((digit, index) => (
+        // Index is a stable position here, not a list identity, so keying on
+        // it is correct: slot 0 is always the tens digit.
+        <Digit key={index} value={digit} reduced={reduced} />
+      ))}
+    </span>
+  )
+}
+
+/**
+ * One digit in a fixed width box.
+ *
+ * The box is sized in `ch` so it never resizes as the glyph changes, which is
+ * what stops the header jittering once a second.
+ */
+function Digit({ value, reduced }: { value: string; reduced: boolean | null }) {
+  return (
+    <span className="relative inline-block h-[1em] w-[0.62ch] overflow-hidden tabular-nums">
+      <AnimatePresence initial={false} mode="popLayout">
         <motion.span
           key={value}
-          initial={{ y: '-100%', opacity: 0 }}
-          animate={{ y: '0%', opacity: 1 }}
-          exit={{ y: '100%', opacity: 0 }}
-          transition={{ type: 'spring', stiffness: 450, damping: 36, mass: 0.5 }}
+          initial={reduced ? { opacity: 0 } : { y: '-100%', opacity: 0 }}
+          animate={reduced ? { opacity: 1 } : { y: '0%', opacity: 1 }}
+          exit={reduced ? { opacity: 0 } : { y: '100%', opacity: 0 }}
+          transition={
+            reduced
+              ? { duration: 0.15 }
+              : { type: 'spring', stiffness: 500, damping: 38, mass: 0.45 }
+          }
           className="absolute inset-0 flex items-center justify-center"
         >
           {value}
@@ -104,14 +141,14 @@ function Digits({ value, className }: { value: string; className?: string }) {
   )
 }
 
-/** The separator pulses once a second, which is what makes a clock read live. */
-function Colon() {
+/** The colon pulses once a second, which is what makes a clock read live. */
+function Separator({ reduced }: { reduced: boolean | null }) {
   return (
     <motion.span
       aria-hidden
-      animate={{ opacity: [1, 0.15, 1] }}
+      animate={reduced ? undefined : { opacity: [1, 0.2, 1] }}
       transition={{ duration: 1, repeat: Infinity, ease: 'easeInOut' }}
-      className="mx-[0.5px] text-ink-300"
+      className="px-[1px] text-ink-300"
     >
       :
     </motion.span>
