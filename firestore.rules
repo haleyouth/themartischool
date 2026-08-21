@@ -210,15 +210,14 @@ service cloud.firestore {
                    || (isTeacher() && existing().classId in myClassIds())
                  );
 
-      // A student may only ever list their OWN enrollments; the equality filter
-      // is required in the query itself, not merely applied by the client.
+      // For `list`, Firestore evaluates this rule against every document the
+      // query could return, so a student query that is not narrowed to their
+      // own studentId fails on the first foreign document. That makes the
+      // filter effectively mandatory without trusting the client to send it.
       allow list: if isActive() && (
                     isAdmin()
-                    || (isTeacher() && request.query.limit <= 300)
-                    || (isStudent()
-                        && request.query.limit <= 100
-                        && 'studentId' in request.query.where
-                        && request.query.where.studentId == myStudentId())
+                    || (isTeacher() && existing().classId in myClassIds())
+                    || (isStudent() && existing().studentId == myStudentId())
                   );
 
       allow create, update, delete: if isActive() && isAdmin();
@@ -263,14 +262,12 @@ service cloud.firestore {
                    || (isTeacher() && existing().classId in myClassIds())
                  );
 
-      // A student's history query must pin studentId to their own ID.
+      // Same per-document evaluation as enrollments: an unscoped student query
+      // hits a foreign row and is rejected outright.
       allow list: if isActive() && (
                     isAdmin()
-                    || (isTeacher() && request.query.limit <= 500)
-                    || (isStudent()
-                        && request.query.limit <= 200
-                        && 'studentId' in request.query.where
-                        && request.query.where.studentId == myStudentId())
+                    || (isTeacher() && existing().classId in myClassIds())
+                    || (isStudent() && existing().studentId == myStudentId())
                   );
 
       allow write: if false; // Admin SDK only
@@ -289,15 +286,14 @@ service cloud.firestore {
                        && existing().status == 'published')
                  );
 
+      // A student listing only succeeds when every matched report is their own
+      // AND published, so a query without both filters is rejected.
       allow list: if isActive() && (
                     isAdmin()
-                    || (isTeacher() && request.query.limit <= 200)
+                    || (isTeacher() && existing().classId in myClassIds())
                     || (isStudent()
-                        && request.query.limit <= 100
-                        && 'uid' in request.query.where
-                        && request.query.where.uid == uid()
-                        && 'status' in request.query.where
-                        && request.query.where.status == 'published')
+                        && existing().uid == uid()
+                        && existing().status == 'published')
                   );
 
       allow create: if isActive()
@@ -343,12 +339,10 @@ service cloud.firestore {
 
       allow get: if isActive() && (amParticipant() || isDirector());
 
-      // The arrayContains filter is mandated by the rule, so a client cannot
-      // drop it and enumerate other people's threads.
-      allow list: if isActive()
-                  && request.query.limit <= 100
-                  && 'participantIds' in request.query.where
-                  && request.query.where.participantIds == uid();
+      // Evaluated per candidate document: a thread the user is not part of
+      // fails the rule, so an unscoped listing cannot enumerate other people's
+      // conversations.
+      allow list: if isActive() && (uid() in existing().participantIds || isDirector());
 
       // Created via the createConversation callable, which enforces the
       // role-pairing policy (students cannot DM other students).
@@ -395,11 +389,9 @@ service cloud.firestore {
     match /notifications/{notificationId} {
       allow get: if isActive() && existing().userId == uid();
 
-      // Same pattern: the userId filter is enforced by the rule itself.
-      allow list: if isActive()
-                  && request.query.limit <= 100
-                  && 'userId' in request.query.where
-                  && request.query.where.userId == uid();
+      // Same pattern: every matched notification must belong to the caller,
+      // so an unfiltered listing is rejected rather than leaking other users'.
+      allow list: if isActive() && existing().userId == uid();
 
       allow create: if false; // Cloud Function only
 

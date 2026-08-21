@@ -1,122 +1,108 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { Suspense, lazy } from 'react'
+import { Route, Routes } from 'react-router-dom'
+import { PublicLayout } from '@/components/public/PublicLayout'
+import { RequireRole } from '@/components/RequireRole'
+import { PageLoader } from '@/components/ui/Feedback'
 
-function App() {
-  const [count, setCount] = useState(0)
+// The public landing page is the entry point, so it loads eagerly.
+import LandingPage from '@/pages/public/LandingPage'
+import Login from '@/pages/auth/Login'
+import NotFound from '@/pages/NotFound'
 
+// The dashboard is a distinct bundle — a visiting parent never downloads it.
+const AppLayout = lazy(() => import('@/components/app/AppLayout'))
+const Dashboard = lazy(() => import('@/pages/app/Dashboard'))
+const Registrations = lazy(() => import('@/pages/app/Registrations'))
+const Students = lazy(() => import('@/pages/app/Students'))
+const StudentDetail = lazy(() => import('@/pages/app/StudentDetail'))
+const Classes = lazy(() => import('@/pages/app/Classes'))
+const Attendance = lazy(() => import('@/pages/app/Attendance'))
+const Reports = lazy(() => import('@/pages/app/Reports'))
+const Messages = lazy(() => import('@/pages/app/Messages'))
+const Notifications = lazy(() => import('@/pages/app/Notifications'))
+const Staff = lazy(() => import('@/pages/app/Staff'))
+const AuditLog = lazy(() => import('@/pages/app/AuditLog'))
+const Settings = lazy(() => import('@/pages/app/Settings'))
+const ForgotPassword = lazy(() => import('@/pages/auth/ForgotPassword'))
+
+export default function App() {
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
+    <Suspense fallback={<PageLoader />}>
+      <Routes>
+        <Route element={<PublicLayout />}>
+          <Route path="/" element={<LandingPage />} />
+        </Route>
+
+        <Route path="/login" element={<Login />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+
+        <Route
+          path="/app"
+          element={
+            <RequireRole>
+              <AppLayout />
+            </RequireRole>
+          }
         >
-          Count is {count}
-        </button>
-      </section>
+          <Route index element={<Dashboard />} />
+          <Route path="notifications" element={<Notifications />} />
+          <Route path="messages" element={<Messages />} />
+          <Route path="settings" element={<Settings />} />
 
-      <div className="ticks"></div>
+          <Route
+            path="registrations"
+            element={
+              <RequireRole roles={['director', 'principal']}>
+                <Registrations />
+              </RequireRole>
+            }
+          />
+          <Route
+            path="students"
+            element={
+              <RequireRole roles={['director', 'principal', 'teacher']}>
+                <Students />
+              </RequireRole>
+            }
+          />
+          <Route
+            path="students/:studentId"
+            element={
+              <RequireRole roles={['director', 'principal', 'teacher']}>
+                <StudentDetail />
+              </RequireRole>
+            }
+          />
+          <Route
+            path="classes"
+            element={
+              <RequireRole roles={['director', 'principal', 'teacher']}>
+                <Classes />
+              </RequireRole>
+            }
+          />
+          <Route path="attendance" element={<Attendance />} />
+          <Route path="reports" element={<Reports />} />
+          <Route
+            path="staff"
+            element={
+              <RequireRole roles={['director', 'principal']}>
+                <Staff />
+              </RequireRole>
+            }
+          />
+          <Route
+            path="audit"
+            element={
+              <RequireRole roles={['director']}>
+                <AuditLog />
+              </RequireRole>
+            }
+          />
+        </Route>
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </Suspense>
   )
 }
-
-export default App

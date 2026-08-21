@@ -14,11 +14,16 @@ export default defineConfig({
     sourcemap: false,
     rollupOptions: {
       output: {
-        manualChunks: {
-          'firebase-core': ['firebase/app', 'firebase/auth'],
-          'firebase-data': ['firebase/firestore', 'firebase/functions', 'firebase/storage'],
-          motion: ['framer-motion'],
-          charts: ['recharts'],
+        // Split the heavy vendor libraries so a visiting parent downloads the
+        // marketing page without the whole Firestore/animation payload.
+        manualChunks(id) {
+          if (!id.includes('node_modules')) return
+          if (id.includes('firebase/firestore') || id.includes('@firebase/firestore'))
+            return 'firebase-data'
+          if (id.includes('firebase/') || id.includes('@firebase/')) return 'firebase-core'
+          if (id.includes('framer-motion') || id.includes('motion-dom')) return 'motion'
+          if (id.includes('recharts') || id.includes('d3-')) return 'charts'
+          if (id.includes('react-router')) return 'router'
         },
       },
     },

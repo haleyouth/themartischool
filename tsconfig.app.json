@@ -17,7 +17,6 @@
     "jsx": "react-jsx",
 
     /* Path alias */
-    "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
     },
@@ -29,5 +28,7 @@
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"]
+  "include": ["src"],
+  // Tests are typechecked by vitest, not by the production build.
+  "exclude": ["src/test"]
 }
