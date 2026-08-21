@@ -12,7 +12,8 @@
     />
 
     <!-- The hero art is the largest paint, so start it before the CSS parses. -->
-    <link rel="preload" as="image" href="/hero.webp" imagesrcset="/hero-600.webp 600w, /hero.webp 1200w" imagesizes="(max-width: 1024px) 90vw, 560px" />
+    <link rel="preload" as="image" href="/hero.webp" media="(min-width: 1024px)" />
+    <link rel="preload" as="image" href="/hero-900.webp" media="(max-width: 1023px)" />
 
     <!-- Official MARTI mark, square-cropped for tabs, from themarti.org. -->
     <link rel="icon" type="image/png" sizes="192x192" href="/favicon.png" />

@@ -46,21 +46,28 @@ export function HeroSection() {
       {/* ── Hero ──────────────────────────────────────────────── */}
       <section
         id={SECTION_IDS.home}
-        className="relative overflow-hidden bg-cream-200 pb-16 pt-28 sm:pt-36"
+        className="relative overflow-hidden bg-cream-200 pb-16 pt-28 sm:pt-36 lg:min-h-[42rem]"
       >
+        {/*
+          The artwork is the section background, anchored right, with a cream
+          gradient laid over it. The image therefore dissolves into the page
+          behind the headline instead of sitting in a box beside it.
+        */}
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-[url('/hero-900.webp')] bg-cover bg-right bg-no-repeat lg:bg-[url('/hero.webp')]"
+        />
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-gradient-to-b from-cream-200/70 via-cream-200/85 to-cream-200 lg:bg-gradient-to-r lg:from-cream-200 lg:from-20% lg:via-cream-200/80 lg:via-50% lg:to-transparent lg:to-72%"
+        />
 
         {/* Drifting blobs give the page a soft, hand-made feel. */}
         <motion.div
           aria-hidden
-          animate={reduced ? undefined : { y: [0, -22, 0], scale: [1, 1.05, 1] }}
-          transition={{ duration: 13, repeat: Infinity, ease: 'easeInOut' }}
-          className="pointer-events-none absolute -right-24 top-4 h-80 w-80 rounded-full bg-amber-200/50 blur-3xl"
-        />
-        <motion.div
-          aria-hidden
           animate={reduced ? undefined : { y: [0, 20, 0], scale: [1, 1.07, 1] }}
           transition={{ duration: 17, repeat: Infinity, ease: 'easeInOut', delay: 1.4 }}
-          className="pointer-events-none absolute -left-32 top-48 h-96 w-96 rounded-full bg-teal-200/45 blur-3xl"
+          className="pointer-events-none absolute -left-32 top-48 h-96 w-96 rounded-full bg-teal-200/40 blur-3xl"
         />
 
         <div className="container-marti relative">
@@ -150,41 +157,17 @@ export function HeroSection() {
               </motion.div>
             </div>
 
-            {/* Children arriving at the school, the promise the page is making. */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.94, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              transition={{ duration: 0.75, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
-              className="relative mx-auto w-full max-w-md lg:max-w-none"
-            >
-              <div className="relative overflow-hidden rounded-5xl border-2 border-ink shadow-pop-lg">
-                <img
-                  src="/hero.webp"
-                  // The 600px copy spares phones the full size download.
-                  srcSet="/hero-600.webp 600w, /hero.webp 1200w"
-                  sizes="(max-width: 1024px) 90vw, 560px"
-                  alt={t('home.heroImageAlt')}
-                  width={1200}
-                  height={904}
-                  // The hero is the largest paint on the page, so load it eagerly
-                  // and let the browser prioritise it.
-                  loading="eager"
-                  fetchPriority="high"
-                  decoding="async"
-                  className="block h-full w-full object-cover"
-                />
-                {/* Ties the artwork into the cream page instead of ending flat. */}
-                <div
-                  className="pointer-events-none absolute inset-0 bg-gradient-to-t from-marti-950/25 via-transparent to-transparent"
-                  aria-hidden
-                />
-              </div>
-
+            {/*
+              The artwork lives in the section background now. This column
+              simply reserves the space it occupies and carries the chips
+              that sit over it.
+            */}
+            <div className="relative hidden min-h-[26rem] lg:block">
               <motion.div
                 aria-hidden
                 animate={reduced ? undefined : { y: [0, -10, 0], rotate: [-3, 3, -3] }}
                 transition={{ duration: 5.5, repeat: Infinity, ease: 'easeInOut' }}
-                className="absolute -bottom-6 -left-5 hidden items-center gap-2.5 rounded-3xl border-2 border-ink bg-amber-400 px-4 py-3 shadow-pop sm:flex"
+                className="absolute bottom-4 left-0 flex items-center gap-2.5 rounded-3xl border-2 border-ink bg-amber-400 px-4 py-3 shadow-pop"
               >
                 <span className="text-2xl">🎉</span>
                 <div>
@@ -195,11 +178,10 @@ export function HeroSection() {
                 </div>
               </motion.div>
 
-              {/* Saturday timings still get said, just without the big card. */}
               <motion.div
                 animate={reduced ? undefined : { y: [0, -8, 0] }}
                 transition={{ duration: 6.5, repeat: Infinity, ease: 'easeInOut', delay: 0.8 }}
-                className="absolute -right-4 -top-5 hidden items-center gap-2.5 rounded-3xl border-2 border-ink bg-white px-4 py-3 shadow-pop sm:flex"
+                className="absolute right-0 top-2 flex items-center gap-2.5 rounded-3xl border-2 border-ink bg-white px-4 py-3 shadow-pop"
               >
                 <span className="text-2xl" aria-hidden>
                   🗓️
@@ -211,7 +193,7 @@ export function HeroSection() {
                   <p className="mt-1 text-[11px] font-bold text-ink-500">09:30 to 13:00</p>
                 </div>
               </motion.div>
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>
