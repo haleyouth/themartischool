@@ -36,13 +36,9 @@ export function Footer() {
   return (
     <footer className="relative overflow-hidden bg-marti-800 text-marti-100">
       {/* Screened so the grey linework reads as light tracery on the blue. */}
-      <div className="bg-pattern absolute inset-0 opacity-10 mix-blend-screen" aria-hidden />
+      <div className="bg-pattern absolute inset-0 opacity-25 mix-blend-screen" aria-hidden />
       <div
         className="pointer-events-none absolute -left-32 -top-32 h-72 w-72 rounded-full bg-marti-600/40 blur-3xl"
-        aria-hidden
-      />
-      <div
-        className="pointer-events-none absolute -bottom-32 -right-20 h-72 w-72 rounded-full bg-teal-500/20 blur-3xl"
         aria-hidden
       />
 

@@ -592,10 +592,10 @@
     "cancelled": "Sınıf iptal edildi",
     "deleteBlocked": "Silmeden önce bu sınıftaki öğrencileri çıkarın.",
     "sessionsCreated": "{count} cumartesi dersi oluşturuldu",
-    "subjectIslamicStudies": "İslami Bilgiler",
+    "subjectIslamicStudies": "İslami Öğrenim",
     "subjectQuran": "Kur’an",
     "subjectActivities": "Etkinlikler",
-    "subjectPhysicalEducation": "Beden Eğitimi",
+    "subjectPhysicalEducation": "Beden Sağlığı",
     "subjectArt": "Sanat",
     "subjectDance": "Dans",
     "subjectReading": "Okuma",
@@ -825,7 +825,6 @@
     "g3": "3. sınıf",
     "g4": "4. sınıf",
     "g5": "5. sınıf",
-    "earlyYears": "Okul öncesi",
     "gradedYears": "1 ile 5. sınıflar"
   }
 }

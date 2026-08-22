@@ -23,7 +23,7 @@ export const DEMO_ACCOUNTS = {
     role: 'director',
     identifier: 'director@themartischool.org',
     password: DEMO_PASSWORD,
-    displayName: 'Dr. Emre Yıldız',
+    displayName: 'Fevzi Sarac',
   },
   principal: {
     role: 'principal',

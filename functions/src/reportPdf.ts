@@ -7,10 +7,15 @@ import { requireAuth, writeAudit } from './shared'
 
 /** MARTI blue, and the deep purple ink the rest of the school uses. */
 const BLUE = '#1b79c0'
+const BLUE_DARK = '#1a629b'
+const BLUE_PALE = '#dbeefe'
 const INK = '#2d1b4d'
 const MUTED = '#6d5493'
-const RULE = '#d5cbe3'
+const FAINT = '#b3a3cb'
+const RULE = '#e3ddec'
 const CREAM = '#fef8ea'
+const TRACK = '#ece7f2'
+const BAND = '#faf8fc'
 
 const SCORE_ROWS = [
   ['participation', 'Taking part'],
@@ -22,7 +27,13 @@ const SCORE_ROWS = [
   ['homework', 'Homework'],
 ] as const
 
-const PAGE_MARGIN = 54
+/**
+ * US Letter, 612 x 792 points, because the school is in Maryland and these
+ * are printed on domestic paper. Letter is 50pt shorter than A4, so the
+ * vertical rhythm below is tuned to keep a normal report on one page.
+ */
+const PAGE_SIZE = 'LETTER'
+const PAGE_MARGIN = 52
 
 /*
  * PDFKit's built in Helvetica is WinAnsi encoded and cannot represent Turkish
@@ -133,10 +144,9 @@ export function renderPdf(input: RenderInput): Promise<Buffer> {
 
   return new Promise((resolve, reject) => {
     const doc = new PDFDocument({
-      size: 'A4',
+      size: PAGE_SIZE,
       margin: PAGE_MARGIN,
-      // Required for bufferedPageRange, which the footer pass relies on to
-      // number pages. Without it the footer creates a spurious blank page.
+      // Required for bufferedPageRange, which the footer pass relies on.
       bufferPages: true,
       info: {
         Title: `Progress report, ${studentName}`,
@@ -147,8 +157,7 @@ export function renderPdf(input: RenderInput): Promise<Buffer> {
 
     // Falls back to the built in faces if the bundle is missing, so a
     // packaging slip degrades the type rather than breaking the render.
-    const hasFonts = registerFonts(doc)
-    if (!hasFonts) {
+    if (!registerFonts(doc)) {
       doc.registerFont(REGULAR, 'Helvetica')
       doc.registerFont(BOLD, 'Helvetica-Bold')
     }
@@ -159,57 +168,68 @@ export function renderPdf(input: RenderInput): Promise<Buffer> {
     doc.on('error', reject)
 
     const width = doc.page.width - PAGE_MARGIN * 2
+    const right = PAGE_MARGIN + width
 
-    /* Masthead */
-    const logo = join(__dirname, '..', 'assets', 'marti-logo.png')
+    /* ── Masthead ──────────────────────────────────────────── */
+
+    // A slim blue band across the head reads as letterhead rather than as a
+    // printed web page.
+    doc.rect(0, 0, doc.page.width, 5).fillColor(BLUE).fill()
+
+    const logo = join(FONT_DIR, 'marti-logo.png')
+    const headTop = PAGE_MARGIN - 4
     if (existsSync(logo)) {
-      // Height constrained so a wide wordmark keeps its proportions.
-      doc.image(logo, PAGE_MARGIN, PAGE_MARGIN, { height: 34 })
+      // Height constrained so the wide wordmark keeps its proportions.
+      doc.image(logo, PAGE_MARGIN, headTop, { height: 30 })
     } else {
-      doc.font(BOLD).fontSize(20).fillColor(BLUE).text('MARTI', PAGE_MARGIN, PAGE_MARGIN)
+      doc.font(BOLD).fontSize(19).fillColor(BLUE).text('MARTI', PAGE_MARGIN, headTop)
     }
 
     doc
+      .font(BOLD)
+      .fontSize(9)
+      .fillColor(INK)
+      .text('The Marti School', PAGE_MARGIN, headTop, { width, align: 'right' })
+    doc
       .font(REGULAR)
-      .fontSize(8.5)
+      .fontSize(7.5)
       .fillColor(MUTED)
-      .text('The Marti School', PAGE_MARGIN, PAGE_MARGIN + 2, { width, align: 'right' })
       .text('Maryland Turkish-American Inhabitants', { width, align: 'right' })
       .text('9115 Guilford Rd, Suite 200, Columbia, MD 21046', { width, align: 'right' })
 
-    doc
-      .moveTo(PAGE_MARGIN, PAGE_MARGIN + 48)
-      .lineTo(PAGE_MARGIN + width, PAGE_MARGIN + 48)
-      .lineWidth(2)
-      .strokeColor(BLUE)
-      .stroke()
+    const ruleY = headTop + 42
+    doc.moveTo(PAGE_MARGIN, ruleY).lineTo(right, ruleY).lineWidth(1.5).strokeColor(BLUE).stroke()
 
-    doc.y = PAGE_MARGIN + 66
+    /* ── Title ─────────────────────────────────────────────── */
 
-    /* Title */
     doc
       .font(BOLD)
-      .fontSize(19)
+      .fontSize(20)
       .fillColor(INK)
-      .text('Progress report', PAGE_MARGIN, doc.y)
+      .text('Progress report', PAGE_MARGIN, ruleY + 16, { lineBreak: false })
 
     doc
       .font(REGULAR)
-      .fontSize(10)
+      .fontSize(9.5)
       .fillColor(MUTED)
       .text(
-        `${titleCase(String(report.periodType))} report, ${report.term} term ${report.schoolYear}`,
-        { width },
+        `${titleCase(String(report.periodType))} report  ·  ${titleCase(
+          String(report.term),
+        )} term ${report.schoolYear}`,
+        PAGE_MARGIN,
+        ruleY + 40,
+        { lineBreak: false },
       )
 
-    doc.moveDown(1.2)
+    /* ── Who this is about ─────────────────────────────────── */
 
-    /* Who this is about */
-    const detailsTop = doc.y
-    const boxHeight = 76
-    doc.roundedRect(PAGE_MARGIN, detailsTop, width, boxHeight, 8).fillColor(CREAM).fill()
+    const detailsTop = ruleY + 62
+    const boxHeight = 70
+    doc.roundedRect(PAGE_MARGIN, detailsTop, width, boxHeight, 6).fillColor(CREAM).fill()
+    // A blue spine on the left edge ties the panel back to the letterhead.
+    doc.rect(PAGE_MARGIN, detailsTop, 3, boxHeight).fillColor(BLUE).fill()
 
-    const col = width / 3
+    const col = (width - 26) / 3
     const details: [string, string][] = [
       ['Student', studentName],
       ['Student ID', String(report.studentId)],
@@ -220,77 +240,96 @@ export function renderPdf(input: RenderInput): Promise<Buffer> {
     ]
 
     details.forEach(([label, value], index) => {
-      const x = PAGE_MARGIN + 14 + (index % 3) * col
-      const y = detailsTop + 14 + Math.floor(index / 3) * 30
-      doc.font(REGULAR).fontSize(7.5).fillColor(MUTED).text(label.toUpperCase(), x, y, {
-        width: col - 14,
-        characterSpacing: 0.6,
-      })
+      const x = PAGE_MARGIN + 18 + (index % 3) * col
+      const y = detailsTop + 12 + Math.floor(index / 3) * 32
+      doc
+        .font(REGULAR)
+        .fontSize(7)
+        .fillColor(FAINT)
+        .text(label.toUpperCase(), x, y, {
+          width: col - 12,
+          characterSpacing: 0.7,
+          lineBreak: false,
+        })
       doc
         .font(BOLD)
         .fontSize(10)
         .fillColor(INK)
-        .text(value, x, y + 11, {
-          width: col - 14,
-          // One line per field: the panel has fixed row heights, so a wrapped
-          // value would overlap the row beneath it.
-          ellipsis: true,
-          lineBreak: false,
-          height: 12,
-        })
+        // One line per field: the panel has fixed row heights, so a wrapped
+        // value would overlap the row beneath it.
+        // ellipsis only clips when a height bounds the box, otherwise the
+        // value wraps and overflows the fixed row beneath it.
+        .text(value, x, y + 11, { width: col - 12, height: 12, ellipsis: true, lineBreak: false })
     })
 
     doc.y = detailsTop + boxHeight + 22
 
-    /* Scores */
+    /* ── Scores ────────────────────────────────────────────── */
+
     sectionHeading(doc, 'How the term went', width)
 
     const scores = (report.scores ?? {}) as Record<string, number>
-    const barX = PAGE_MARGIN + 170
-    const barWidth = width - 170 - 42
+    const labelWidth = 148
+    const barX = PAGE_MARGIN + labelWidth
+    const barWidth = width - labelWidth - 44
+    const rowHeight = 18
 
-    for (const [key, label] of SCORE_ROWS) {
-      const value = Number(scores[key] ?? 0)
+    SCORE_ROWS.forEach(([key, label], index) => {
+      const value = Math.max(0, Math.min(5, Number(scores[key] ?? 0)))
       const y = doc.y
 
-      doc.font(REGULAR).fontSize(10).fillColor(INK).text(label, PAGE_MARGIN, y, { width: 160 })
+      // Zebra banding makes a seven row table readable at a glance.
+      if (index % 2 === 0) {
+        doc.rect(PAGE_MARGIN - 6, y - 4, width + 12, rowHeight).fillColor(BAND).fill()
+      }
 
-      // Track, then the filled portion. Five is full marks.
-      doc.roundedRect(barX, y + 1, barWidth, 9, 4.5).fillColor('#ece7f2').fill()
+      doc
+        .font(REGULAR)
+        .fontSize(9.5)
+        .fillColor(INK)
+        .text(label, PAGE_MARGIN, y, { width: labelWidth, lineBreak: false })
+
+      doc.roundedRect(barX, y + 1, barWidth, 8, 4).fillColor(TRACK).fill()
       if (value > 0) {
         doc
-          .roundedRect(barX, y + 1, Math.max(9, (barWidth * value) / 5), 9, 4.5)
+          .roundedRect(barX, y + 1, Math.max(8, (barWidth * value) / 5), 8, 4)
           .fillColor(BLUE)
           .fill()
       }
 
       doc
         .font(BOLD)
-        .fontSize(9.5)
-        .fillColor(MUTED)
-        .text(`${value} / 5`, barX + barWidth + 8, y, { width: 34, align: 'right' })
+        .fontSize(9)
+        .fillColor(value >= 4 ? BLUE_DARK : MUTED)
+        .text(`${value}/5`, barX + barWidth + 10, y, { width: 30, lineBreak: false })
 
-      doc.y = y + 20
-    }
+      doc.y = y + rowHeight
+    })
 
+    /* Overall grade, set as a badge rather than as another row. */
     if (report.overallGrade) {
-      doc.moveDown(0.4)
-      const y = doc.y
-      doc.roundedRect(PAGE_MARGIN, y, 150, 34, 8).fillColor(BLUE).fill()
+      const y = doc.y + 8
+      doc.roundedRect(PAGE_MARGIN, y, 124, 36, 6).fillColor(BLUE).fill()
       doc
         .font(REGULAR)
-        .fontSize(8)
-        .fillColor('#dbeefe')
-        .text('OVERALL', PAGE_MARGIN + 14, y + 7, { characterSpacing: 0.6 })
+        .fontSize(6.5)
+        .fillColor(BLUE_PALE)
+        .text('OVERALL GRADE', PAGE_MARGIN + 13, y + 8, {
+          characterSpacing: 0.7,
+          lineBreak: false,
+        })
       doc
         .font(BOLD)
         .fontSize(15)
         .fillColor('#ffffff')
-        .text(String(report.overallGrade), PAGE_MARGIN + 14, y + 16)
-      doc.y = y + 46
+        .text(String(report.overallGrade), PAGE_MARGIN + 13, y + 17, { lineBreak: false })
+      doc.y = y + 50
+    } else {
+      doc.y += 10
     }
 
-    /* Written sections */
+    /* ── Written sections ──────────────────────────────────── */
+
     const written: [string, string | null][] = [
       ['What went well', report.strengths],
       ['What to work on', report.areasForImprovement],
@@ -301,91 +340,95 @@ export function renderPdf(input: RenderInput): Promise<Buffer> {
     for (const [heading, text] of written) {
       if (!text || !String(text).trim()) continue
 
-      // Keep a heading with at least a little of its text.
-      if (doc.y > doc.page.height - 150) doc.addPage()
+      // Keep a heading with at least some of its text.
+      if (doc.y > doc.page.height - 180) doc.addPage()
 
       sectionHeading(doc, heading, width)
       doc
         .font(REGULAR)
-        .fontSize(10)
+        .fontSize(9.5)
         .fillColor(INK)
-        .text(String(text).trim(), PAGE_MARGIN, doc.y, { width, lineGap: 3 })
-      doc.moveDown(1)
+        .text(String(text).trim(), PAGE_MARGIN, doc.y, { width, lineGap: 2.5 })
+      doc.moveDown(0.85)
     }
+
+    /* ── Signatures ────────────────────────────────────────── */
 
     /*
-     * Signature strip, pinned above the footer.
-     *
-     * Writing it at the flowing cursor left the text engine near the page
-     * bottom, and the footer pass then spilled onto a fresh blank page. A
-     * fixed position keeps it inside the page it belongs to.
+     * Pinned above the footer rather than flowed at the cursor. Flowing it
+     * left the text engine near the page bottom, and the footer pass then
+     * spilled onto a blank page.
      */
-    const SIGN_BLOCK = 60
-    const FOOTER_ZONE = 60
+    const SIGN_BLOCK = 54
+    const FOOTER_ZONE = 48
     const signTopFor = () => doc.page.height - FOOTER_ZONE - SIGN_BLOCK
 
-    // Only start a new page if the content genuinely reaches the strip.
-    if (doc.y > signTopFor() - 10) {
-      doc.addPage()
-    }
+    if (doc.y > signTopFor() - 10) doc.addPage()
     const signTop = signTopFor()
 
-    const half = (width - 24) / 2
-    for (const [index, label] of ['Teacher', 'Parent or guardian'].entries()) {
-      const x = PAGE_MARGIN + index * (half + 24)
+    const half = (width - 30) / 2
+    const signatories: [string, string][] = [
+      ['Teacher', String(report.teacherName ?? '')],
+      ['Parent or guardian', guardianName ?? ''],
+    ]
+
+    signatories.forEach(([label, name], index) => {
+      const x = PAGE_MARGIN + index * (half + 30)
       doc
-        .moveTo(x, signTop + 26)
-        .lineTo(x + half, signTop + 26)
-        .lineWidth(0.8)
+        .moveTo(x, signTop + 22)
+        .lineTo(x + half, signTop + 22)
+        .lineWidth(0.75)
         .strokeColor(RULE)
         .stroke()
       doc
         .font(REGULAR)
-        .fontSize(8)
-        .fillColor(MUTED)
-        .text(label, x, signTop + 31, { lineBreak: false })
-    }
-    if (guardianName) {
-      doc
-        .font(REGULAR)
-        .fontSize(8)
-        .fillColor(MUTED)
-        .text(guardianName, PAGE_MARGIN + half + 24, signTop + 43, { lineBreak: false })
-    }
+        .fontSize(7)
+        .fillColor(FAINT)
+        .text(label.toUpperCase(), x, signTop + 27, {
+          characterSpacing: 0.6,
+          lineBreak: false,
+        })
+      if (name) {
+        doc
+          .font(REGULAR)
+          .fontSize(8.5)
+          .fillColor(MUTED)
+          .text(name, x, signTop + 38, { width: half, ellipsis: true, lineBreak: false })
+      }
+    })
 
-    /* Footer on every page */
+    /* ── Footer on every page ──────────────────────────────── */
+
     const range = doc.bufferedPageRange()
     for (let i = range.start; i < range.start + range.count; i++) {
       doc.switchToPage(i)
-      const footerY = doc.page.height - 46
+      const footerY = doc.page.height - 36
+
       doc
-        .moveTo(PAGE_MARGIN, footerY - 10)
-        .lineTo(PAGE_MARGIN + width, footerY - 10)
-        .lineWidth(0.8)
+        .moveTo(PAGE_MARGIN, footerY - 11)
+        .lineTo(right, footerY - 11)
+        .lineWidth(0.75)
         .strokeColor(RULE)
         .stroke()
-      const footerText =
-        'The Marti School  \u00b7  Published ' +
-        formatStamp(report.publishedAt) +
-        '  \u00b7  Page ' +
-        (i - range.start + 1) +
-        ' of ' +
-        range.count
 
-      doc.font(REGULAR).fontSize(7.5).fillColor(MUTED)
+      doc.font(REGULAR).fontSize(7).fillColor(FAINT)
 
       /*
-       * Centred by measurement rather than by align.
+       * Both halves are positioned by measurement rather than by align.
        *
-       * The footer sits below the bottom margin. align:"center" routes the
-       * call through LineWrapper even when lineBreak is false, and the
-       * wrapper treats it as overrun content and appends a blank page. So
-       * measure the string and place it by hand, keeping the wrapper out.
+       * The footer sits below the bottom margin, and align routes the call
+       * through LineWrapper even when lineBreak is false. The wrapper treats
+       * it as overrun content and appends a blank page.
        */
-      const footerWidth = doc.widthOfString(footerText)
-      doc.text(footerText, PAGE_MARGIN + (width - footerWidth) / 2, footerY, {
-        lineBreak: false,
-      })
+      doc.text(
+        'The Marti School  ·  Published ' + formatStamp(report.publishedAt),
+        PAGE_MARGIN,
+        footerY,
+        { lineBreak: false },
+      )
+
+      const pageLabel = 'Page ' + (i - range.start + 1) + ' of ' + range.count
+      doc.text(pageLabel, right - doc.widthOfString(pageLabel), footerY, { lineBreak: false })
     }
 
     doc.flushPages()
@@ -393,13 +436,20 @@ export function renderPdf(input: RenderInput): Promise<Buffer> {
   })
 }
 
+/** A short blue tick and a spaced capital label, used above each block. */
 function sectionHeading(doc: PDFKit.PDFDocument, text: string, width: number) {
+  const y = doc.y
+  doc.rect(PAGE_MARGIN, y + 1, 2, 8).fillColor(BLUE).fill()
   doc
     .font(BOLD)
-    .fontSize(8.5)
+    .fontSize(8)
     .fillColor(BLUE)
-    .text(text.toUpperCase(), PAGE_MARGIN, doc.y, { width, characterSpacing: 0.8 })
-  doc.moveDown(0.45)
+    .text(text.toUpperCase(), PAGE_MARGIN + 8, y, {
+      width: width - 8,
+      characterSpacing: 0.9,
+      lineBreak: false,
+    })
+  doc.y = y + 15
 }
 
 function titleCase(value: string) {

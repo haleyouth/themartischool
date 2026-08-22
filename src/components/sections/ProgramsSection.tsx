@@ -28,7 +28,7 @@ const ACCENTS = {
   grape: { chip: 'bg-grape-100 text-grape-700', ring: 'hover:border-grape-300', bar: 'bg-grape-400' },
 }
 
-type Filter = 'all' | 'early' | 'graded'
+type Filter = 'all' | 'PK' | 'K' | 'graded'
 
 /**
  * The public prospectus, built from the classes the school is actually
@@ -46,14 +46,18 @@ export function ProgramsSection() {
   const visible = useMemo(() => {
     if (filter === 'all') return classes
     return classes.filter((cls) => {
-      const early = (cls.gradeLevels ?? []).some(isEarlyYear)
-      return filter === 'early' ? early : !early
+      const grades = cls.gradeLevels ?? []
+      // Pre-K and K are distinct years with their own classes, so each gets
+      // its own filter rather than being grouped as "early years".
+      if (filter === 'graded') return grades.some((g) => !isEarlyYear(g))
+      return grades.includes(filter)
     })
   }, [classes, filter])
 
   const filters: { value: Filter; label: string }[] = [
     { value: 'all', label: t('common.all') },
-    { value: 'early', label: t('grades.earlyYears') },
+    { value: 'PK', label: t('grades.gPK') },
+    { value: 'K', label: t('grades.gK') },
     { value: 'graded', label: t('grades.gradedYears') },
   ]
 

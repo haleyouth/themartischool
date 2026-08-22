@@ -592,10 +592,10 @@
     "cancelled": "Class cancelled",
     "deleteBlocked": "Remove the students from this class before deleting it.",
     "sessionsCreated": "{count} Saturday sessions created",
-    "subjectIslamicStudies": "Islamic Studies",
+    "subjectIslamicStudies": "Islamic Learning",
     "subjectQuran": "Quran",
     "subjectActivities": "Activities",
-    "subjectPhysicalEducation": "Physical Education",
+    "subjectPhysicalEducation": "Physical Health",
     "subjectArt": "Art",
     "subjectDance": "Dance",
     "subjectReading": "Reading",
@@ -825,7 +825,6 @@
     "g3": "Grade 3",
     "g4": "Grade 4",
     "g5": "Grade 5",
-    "earlyYears": "Early years",
     "gradedYears": "Grades 1 to 5"
   }
 }
