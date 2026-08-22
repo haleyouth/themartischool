@@ -688,7 +688,10 @@
     "publishedSuccess": "Karne yayımlandı",
     "scoreHint": "1 çok desteğe ihtiyacı var, 5 çok iyi demek",
     "bulkPublish": "Gönderilenlerin hepsini yayımla",
-    "writtenBy": "Yazan"
+    "writtenBy": "Yazan",
+    "downloadPdf": "PDF indir",
+    "printReport": "Yazdır",
+    "pdfFallback": "Yazdırma penceresi açılıyor. Kopya saklamak için PDF olarak kaydedin."
   },
   "messages": {
     "title": "Mesajlar",

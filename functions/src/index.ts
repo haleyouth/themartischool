@@ -26,6 +26,8 @@ export {
 
 export { syncPublicClass } from './publicClasses'
 
+export { generateReportPdf } from './reportPdf'
+
 export { onAttendanceWrite } from './attendance'
 
 export {

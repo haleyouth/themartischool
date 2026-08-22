@@ -140,3 +140,60 @@
     scrollbar-width: none;
   }
 }
+
+/*
+ * Print styles.
+ *
+ * Printing a report should produce the report, not a screenshot of the app.
+ * The sidebar, header and any dialog chrome are dropped, and the open report
+ * is promoted to fill the page.
+ */
+@media print {
+  @page {
+    size: A4;
+    margin: 16mm;
+  }
+
+  body {
+    background: #fff;
+  }
+
+  /* Application furniture has no place on paper. */
+  aside,
+  header,
+  .no-print {
+    display: none !important;
+  }
+
+  /* Lift the open dialog out of its overlay and onto the page. */
+  [role='dialog'] {
+    position: static !important;
+    inset: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+    border: 0 !important;
+    box-shadow: none !important;
+  }
+
+  [data-print-title]::before {
+    content: attr(data-print-title);
+    display: block;
+    margin-bottom: 12pt;
+    font-size: 16pt;
+    font-weight: 800;
+  }
+
+  /* Hard shadows and rounded cards cost ink and add nothing on paper. */
+  * {
+    box-shadow: none !important;
+  }
+
+  main {
+    padding: 0 !important;
+  }
+
+  /* Keep a heading with the text it introduces. */
+  h1, h2, h3, h4 {
+    break-after: avoid;
+  }
+}

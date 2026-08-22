@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 import { addDoc, collection, doc, serverTimestamp, updateDoc } from 'firebase/firestore'
 import { httpsCallable } from 'firebase/functions'
-import { Eye, FileBarChart, Lock, Plus, Send, Star } from 'lucide-react'
+import { Eye, FileBarChart, FileDown, Lock, Plus, Send, Star } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { Badge, statusTone } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
@@ -487,9 +487,51 @@ function StudentReports() {
 
 function ReportView({ report }: { report: PerformanceReportDoc }) {
   const { t, intlLocale } = useI18n()
+  const toast = useToast()
+  const [downloading, setDownloading] = useState(false)
+
+  /**
+   * Renders the report server-side and opens the result.
+   *
+   * The PDF is built by a Cloud Function rather than in the browser, so it
+   * carries the school letterhead and cannot be assembled from data the
+   * caller was never allowed to read.
+   */
+  async function downloadPdf() {
+    setDownloading(true)
+    try {
+      const result = await httpsCallable<{ reportId: string }, { url: string }>(
+        functions,
+        'generateReportPdf',
+      )({ reportId: report.id })
+      window.open(result.data.url, '_blank', 'noopener,noreferrer')
+    } catch (error) {
+      // The server renderer needs Cloud Storage, which is not provisioned on
+      // every project. Printing the page produces the same document through
+      // the browser, so the feature still works rather than dead ending.
+      console.error('generateReportPdf failed, falling back to print', error)
+      toast.info(t('reports.pdfFallback'))
+      window.print()
+    } finally {
+      setDownloading(false)
+    }
+  }
 
   return (
     <div className="space-y-6">
+      {report.status === 'published' && (
+        <div className="no-print flex justify-end">
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={downloadPdf}
+            loading={downloading}
+            leftIcon={<FileDown className="h-4 w-4" />}
+          >
+            {t('reports.downloadPdf')}
+          </Button>
+        </div>
+      )}
       {report.status === 'draft' && (
         <p className="flex gap-2.5 rounded-xl bg-amber-50 p-4 text-xs leading-relaxed text-amber-800">
           <Lock className="mt-px h-4 w-4 shrink-0" aria-hidden />

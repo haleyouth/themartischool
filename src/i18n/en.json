@@ -688,7 +688,10 @@
     "publishedSuccess": "Report published",
     "scoreHint": "1 means needs a lot of help, 5 means excellent",
     "bulkPublish": "Publish all submitted",
-    "writtenBy": "Written by"
+    "writtenBy": "Written by",
+    "downloadPdf": "Download PDF",
+    "printReport": "Print",
+    "pdfFallback": "Opening your print dialog. Choose Save as PDF to keep a copy."
   },
   "messages": {
     "title": "Messages",
