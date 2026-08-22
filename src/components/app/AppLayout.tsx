@@ -173,12 +173,21 @@ export default function AppLayout() {
             mini ? 'h-[76px] px-2' : 'h-[104px] px-5',
           )}
         >
-          {!mini && <Logo size="lg" linkTo="/app" />}
+          {mini ? (
+            <img
+              src="/favicon.png"
+              alt=""
+              className="h-8 w-8 brightness-0 invert"
+              aria-hidden
+            />
+          ) : (
+            <Logo size="lg" tone="white" linkTo="/app" />
+          )}
 
           <button
             type="button"
             onClick={() => setSidebarOpen(false)}
-            className="absolute right-4 top-1/2 -translate-y-1/2 rounded-xl p-2 text-ink-400 hover:bg-cream-200 lg:hidden"
+            className="absolute right-4 top-1/2 -translate-y-1/2 rounded-xl p-2 text-marti-200 hover:bg-white/10 hover:text-white lg:hidden"
             aria-label={t('nav.close')}
           >
             <X className="h-5 w-5" />
@@ -188,7 +197,7 @@ export default function AppLayout() {
             <button
               type="button"
               onClick={() => setCollapsed(false)}
-              className="hidden rounded-xl p-2 text-ink-500 transition-colors hover:bg-cream-200 hover:text-ink lg:block"
+              className="absolute right-1 top-1/2 hidden -translate-y-1/2 rounded-xl p-1.5 text-marti-200 transition-colors hover:bg-white/10 hover:text-white lg:block"
               aria-label={t('dash.expandSidebar')}
               title={t('dash.expandSidebar')}
             >
@@ -205,11 +214,11 @@ export default function AppLayout() {
             return (
               <div key={group} className="mb-5">
                 {group !== 'main' && !mini && (
-                  <p className="px-3 pb-2 text-[10px] font-extrabold uppercase tracking-widest text-ink-400">
+                  <p className="px-3 pb-2 text-[10px] font-extrabold uppercase tracking-widest text-marti-300">
                     {group === 'school' ? t('brand.short') : t('settings.title')}
                   </p>
                 )}
-                {group !== 'main' && mini && <div className="mx-2 mb-3 h-0.5 bg-ink-200" />}
+                {group !== 'main' && mini && <div className="mx-2 mb-3 h-0.5 bg-white/15" />}
                 <ul className="space-y-1">
                   {groupItems.map((item) => {
                     const Icon = item.icon
@@ -224,8 +233,8 @@ export default function AppLayout() {
                               'group relative flex items-center rounded-2xl text-sm font-bold transition-all duration-200',
                               mini ? 'justify-center px-2 py-2.5' : 'gap-3 px-3.5 py-2.5',
                               isActive
-                                ? 'text-white'
-                                : 'text-ink-600 hover:bg-cream-200 hover:text-ink',
+                                ? 'text-marti-700'
+                                : 'text-marti-100 hover:bg-white/10 hover:text-white',
                             )
                           }
                         >
@@ -234,14 +243,14 @@ export default function AppLayout() {
                               {isActive && (
                                 <motion.span
                                   layoutId={mini ? 'sidebar-active-mini' : 'sidebar-active'}
-                                  className="absolute inset-0 rounded-2xl bg-marti-600"
+                                  className="absolute inset-0 rounded-2xl bg-white"
                                   transition={{ type: 'spring', stiffness: 380, damping: 32 }}
                                 />
                               )}
                               <Icon
                                 className={cn(
                                   'relative h-[18px] w-[18px] shrink-0 transition-transform duration-200 group-hover:scale-110',
-                                  isActive ? 'text-white' : 'text-ink-400',
+                                  isActive ? 'text-marti-700' : 'text-marti-200',
                                 )}
                               />
                               {!mini && <span className="relative">{t(item.labelKey)}</span>}
@@ -258,13 +267,13 @@ export default function AppLayout() {
         </nav>
 
         {/* Who is signed in, and a sign out that is always reachable. */}
-        <div className={cn('shrink-0 border-t-2 border-ink-200', mini ? 'p-2' : 'p-3')}>
+        <div className={cn('shrink-0 border-t border-white/15', mini ? 'p-2' : 'p-3')}>
           {!mini && (
             <div className="mb-2 flex items-center gap-3 rounded-2xl px-2 py-2">
               <Avatar name={displayName} src={auth.profile?.photoURL} size="sm" />
               <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-bold text-ink">{displayName}</p>
-                <p className="truncate text-xs text-ink-500">
+                <p className="truncate text-sm font-bold text-white">{displayName}</p>
+                <p className="truncate text-xs text-marti-200">
                   {t(`staff.role${role.charAt(0).toUpperCase()}${role.slice(1)}`)}
                 </p>
               </div>
@@ -276,7 +285,7 @@ export default function AppLayout() {
             onClick={handleSignOut}
             title={mini ? t('auth.signOut') : undefined}
             className={cn(
-              'flex w-full items-center rounded-2xl text-sm font-bold text-magenta-600 transition-colors hover:bg-magenta-50',
+              'flex w-full items-center rounded-2xl text-sm font-bold text-magenta-200 transition-colors hover:bg-white/10 hover:text-white',
               mini ? 'justify-center px-2 py-2.5' : 'gap-3 px-3.5 py-2.5',
             )}
           >
@@ -288,7 +297,7 @@ export default function AppLayout() {
             <button
               type="button"
               onClick={() => setCollapsed(true)}
-              className="mt-1 hidden w-full items-center gap-3 rounded-2xl px-3.5 py-2.5 text-sm font-bold text-ink-500 transition-colors hover:bg-cream-200 hover:text-ink lg:flex"
+              className="mt-1 hidden w-full items-center gap-3 rounded-2xl px-3.5 py-2.5 text-sm font-bold text-marti-200 transition-colors hover:bg-white/10 hover:text-white lg:flex"
             >
               <PanelLeftClose className="h-[18px] w-[18px] shrink-0" />
               {t('dash.collapseSidebar')}
@@ -304,7 +313,7 @@ export default function AppLayout() {
       <motion.aside
         animate={{ width: collapsed ? 76 : 256 }}
         transition={{ type: 'spring', stiffness: 320, damping: 34 }}
-        className="fixed inset-y-0 z-40 hidden shrink-0 flex-col border-r-2 border-ink-200 bg-cream lg:flex"
+        className="fixed inset-y-0 z-40 hidden shrink-0 flex-col bg-marti-700 lg:flex"
       >
         {renderSidebar(collapsed)}
       </motion.aside>
@@ -326,7 +335,7 @@ export default function AppLayout() {
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}
               transition={{ type: 'spring', stiffness: 320, damping: 34 }}
-              className="absolute inset-y-0 left-0 flex w-[min(17rem,85vw)] flex-col bg-cream shadow-2xl"
+              className="absolute inset-y-0 left-0 flex w-[min(17rem,85vw)] flex-col bg-marti-700 shadow-2xl"
             >
               {renderSidebar(false)}
             </motion.aside>

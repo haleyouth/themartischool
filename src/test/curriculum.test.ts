@@ -47,7 +47,7 @@ describe('subjects by grade', () => {
   })
 
   it('teaches a play based list in the early years', () => {
-    expect([...EARLY_YEAR_SUBJECTS]).toEqual(['art', 'turkish', 'dance'])
+    expect([...EARLY_YEAR_SUBJECTS]).toEqual(['art', 'turkish', 'dance', 'activities'])
     expect(subjectsForGrade('PK')).toEqual(EARLY_YEAR_SUBJECTS)
     expect(subjectsForGrade('K')).toEqual(EARLY_YEAR_SUBJECTS)
   })
@@ -62,6 +62,13 @@ describe('subjects by grade', () => {
   it('keeps early year subjects out of the graded years', () => {
     expect(subjectsForGrade('3')).not.toContain('art')
     expect(subjectsForGrade('3')).not.toContain('dance')
+  })
+
+  it('shares Activities across both stages', () => {
+    // The only subject taught to every year group.
+    expect(subjectsForGrade('PK')).toContain('activities')
+    expect(subjectsForGrade('K')).toContain('activities')
+    expect(subjectsForGrade('4')).toContain('activities')
   })
 
   it('unions the lists when a class spans several grades', () => {

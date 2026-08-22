@@ -39,7 +39,7 @@ export const GRADED_SUBJECTS: readonly Subject[] = [
  * Both years share the same list. They are separate year groups with their
  * own classes, but the curriculum they follow is identical.
  */
-export const EARLY_YEAR_SUBJECTS: readonly Subject[] = ['art', 'turkish', 'dance']
+export const EARLY_YEAR_SUBJECTS: readonly Subject[] = ['art', 'turkish', 'dance', 'activities']
 
 export function isEarlyYear(grade: string): boolean {
   return (EARLY_YEARS as readonly string[]).includes(grade)
