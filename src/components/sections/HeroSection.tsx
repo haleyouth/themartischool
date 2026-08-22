@@ -68,10 +68,10 @@ export function HeroSection() {
             className="absolute inset-0 bg-[url('/hero.webp')] bg-cover bg-center bg-no-repeat"
             style={{
               maskImage:
-                'linear-gradient(to right, transparent 0%, black 12%), linear-gradient(to bottom, black 0%, black 91%, transparent 100%)',
+                'linear-gradient(to right, transparent 0%, rgba(0,0,0,0.06) 6%, rgba(0,0,0,0.22) 12%, rgba(0,0,0,0.5) 18%, rgba(0,0,0,0.78) 24%, rgba(0,0,0,0.94) 30%, black 36%), linear-gradient(to bottom, black 0%, black 74%, rgba(0,0,0,0.94) 80%, rgba(0,0,0,0.78) 86%, rgba(0,0,0,0.5) 91%, rgba(0,0,0,0.22) 96%, transparent 100%)',
               maskComposite: 'intersect',
               WebkitMaskImage:
-                'linear-gradient(to right, transparent 0%, black 12%), linear-gradient(to bottom, black 0%, black 91%, transparent 100%)',
+                'linear-gradient(to right, transparent 0%, rgba(0,0,0,0.06) 6%, rgba(0,0,0,0.22) 12%, rgba(0,0,0,0.5) 18%, rgba(0,0,0,0.78) 24%, rgba(0,0,0,0.94) 30%, black 36%), linear-gradient(to bottom, black 0%, black 74%, rgba(0,0,0,0.94) 80%, rgba(0,0,0,0.78) 86%, rgba(0,0,0,0.5) 91%, rgba(0,0,0,0.22) 96%, transparent 100%)',
               WebkitMaskComposite: 'source-in',
             }}
           />
@@ -89,9 +89,9 @@ export function HeroSection() {
               // Only the bottom softens. The top meets the header, where a
               // fade would read as the image being cut short.
               maskImage:
-                'linear-gradient(to bottom, black 0%, black 90%, transparent 100%)',
+                'linear-gradient(to bottom, black 0%, black 70%, rgba(0,0,0,0.92) 78%, rgba(0,0,0,0.72) 85%, rgba(0,0,0,0.42) 91%, rgba(0,0,0,0.16) 96%, transparent 100%)',
               WebkitMaskImage:
-                'linear-gradient(to bottom, black 0%, black 90%, transparent 100%)',
+                'linear-gradient(to bottom, black 0%, black 70%, rgba(0,0,0,0.92) 78%, rgba(0,0,0,0.72) 85%, rgba(0,0,0,0.42) 91%, rgba(0,0,0,0.16) 96%, transparent 100%)',
             }}
           />
           <div className="absolute inset-0 bg-gradient-to-b from-cream/85 via-cream/80 to-cream" />

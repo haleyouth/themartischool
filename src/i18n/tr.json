@@ -134,7 +134,7 @@
   },
   "programs": {
     "title": "Sınıflarımız",
-    "subtitle": "Seviyeye göre ayrılmış, her cumartesi sabahı.",
+    "subtitle": "Bu yıl cumartesi sabahları okuttuğumuz dersler.",
     "ageGroup": "Yaş",
     "level": "Seviye",
     "duration": "Süre",
@@ -171,7 +171,12 @@
     "p5Desc": "Evde Türkçe konuşan, ama okuma, yazma ve dil bilgisi desteğine ihtiyaç duyan çocuklar için.",
     "p6Name": "Kültür ve Halk Sanatları",
     "p6Age": "Tüm yaşlar",
-    "p6Desc": "Halk oyunları, müzik, el sanatları ve bayram kutlamaları. Kayıtlı her öğrenciye açık."
+    "p6Desc": "Halk oyunları, müzik, el sanatları ve bayram kutlamaları. Kayıtlı her öğrenciye açık.",
+    "agesRange": "{from} ile {to} yaş",
+    "forGrades": "{grades} için.",
+    "spacesLeft": "{count} yer kaldı",
+    "noneTitle": "Ders programı hazırlanıyor",
+    "noneBody": "Önümüzdeki yılın sınıfları kısa süre içinde burada görünecek. Kayıtlar bu sırada açık."
   },
   "tuition": {
     "title": "Ücretler",

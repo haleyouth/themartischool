@@ -134,7 +134,7 @@
   },
   "programs": {
     "title": "Our classes",
-    "subtitle": "Grouped by ability, taught every Saturday morning.",
+    "subtitle": "What we are running this year, Saturday mornings.",
     "ageGroup": "Ages",
     "level": "Level",
     "duration": "Length",
@@ -171,7 +171,12 @@
     "p5Desc": "For children who already speak Turkish at home but need reading, writing and formal grammar.",
     "p6Name": "Culture & Folk Arts",
     "p6Age": "All ages",
-    "p6Desc": "Folk dance, music, crafts and holiday celebrations. Open to every enrolled student."
+    "p6Desc": "Folk dance, music, crafts and holiday celebrations. Open to every enrolled student.",
+    "agesRange": "Ages {from} to {to}",
+    "forGrades": "For {grades}.",
+    "spacesLeft": "{count} places left",
+    "noneTitle": "The timetable is being prepared",
+    "noneBody": "Classes for the coming year will appear here shortly. Registration is open in the meantime."
   },
   "tuition": {
     "title": "Tuition",

@@ -24,6 +24,8 @@ export {
   restoreStudent,
 } from './students'
 
+export { syncPublicClass } from './publicClasses'
+
 export { onAttendanceWrite } from './attendance'
 
 export {

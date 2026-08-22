@@ -78,3 +78,52 @@ export function subjectKey(subject: string): string {
 export function gradeLabelKey(grade: string): string {
   return `grades.g${grade}`
 }
+
+/**
+ * Parent facing colour and emoji per subject.
+ *
+ * The internal class name is written for staff ("Turkish Level 2, Saturday
+ * AM"), so the public prospectus dresses each class by its subject instead.
+ */
+export const SUBJECT_PRESENTATION: Record<
+  Subject,
+  { emoji: string; accent: 'marti' | 'amber' | 'teal' | 'magenta' | 'grape' }
+> = {
+  turkish: { emoji: '📚', accent: 'marti' },
+  islamic_studies: { emoji: '🕌', accent: 'teal' },
+  quran: { emoji: '📖', accent: 'grape' },
+  activities: { emoji: '🎲', accent: 'amber' },
+  physical_education: { emoji: '⚽', accent: 'magenta' },
+  art: { emoji: '🎨', accent: 'magenta' },
+  dance: { emoji: '💃', accent: 'grape' },
+  reading: { emoji: '🔤', accent: 'teal' },
+}
+
+/** Falls back gracefully if a class carries a subject we no longer teach. */
+export function presentationFor(subject: string) {
+  return (
+    SUBJECT_PRESENTATION[subject as Subject] ?? { emoji: '📘', accent: 'marti' as const }
+  )
+}
+
+/**
+ * A readable age range for a set of grades, e.g. "Ages 6 to 10".
+ *
+ * Approximate on purpose: families think in ages, the school records grades,
+ * and the mapping is close enough to help a parent place their child.
+ */
+const TYPICAL_AGE: Record<string, number> = {
+  PK: 4,
+  K: 5,
+  '1': 6,
+  '2': 7,
+  '3': 8,
+  '4': 9,
+  '5': 10,
+}
+
+export function ageRangeForGrades(grades: string[]): { from: number; to: number } | null {
+  const ages = grades.map((g) => TYPICAL_AGE[g]).filter((a): a is number => typeof a === 'number')
+  if (!ages.length) return null
+  return { from: Math.min(...ages), to: Math.max(...ages) }
+}

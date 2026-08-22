@@ -414,6 +414,14 @@ service cloud.firestore {
 
     // ───────────────── public site content ──────────────────
 
+    // Curated public view of the timetable. A trigger keeps this in step with
+    // the classes collection, copying only the prospectus fields, so opening
+    // it to visitors cannot leak a roster.
+    match /publicClasses/{classId} {
+      allow get, list: if true;
+      allow write: if false;
+    }
+
     match /siteContent/{docId} {
       allow get, list: if true;
       allow write: if isActive() && isAdmin();
