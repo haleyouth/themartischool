@@ -59,20 +59,17 @@ export function HeroSection() {
           className="absolute inset-y-0 right-0 hidden w-[52%] lg:block"
         >
           {/*
-            This artwork carries wide empty margins of sky and steps, so the
-            short fades land on background rather than clipping a child. Cover
-            fills the box, which is what puts the image edges where the mask
-            expects them.
+            Only the left edge fades, where the picture meets the text column.
+            The bottom meets the next section, and softening it there read as
+            the image being cut off rather than blending into anything.
           */}
           <div
             className="absolute inset-0 bg-[url('/hero.webp')] bg-cover bg-center bg-no-repeat"
             style={{
               maskImage:
-                'linear-gradient(to right, transparent 0%, rgba(0,0,0,0.06) 6%, rgba(0,0,0,0.22) 12%, rgba(0,0,0,0.5) 18%, rgba(0,0,0,0.78) 24%, rgba(0,0,0,0.94) 30%, black 36%), linear-gradient(to bottom, black 0%, black 74%, rgba(0,0,0,0.94) 80%, rgba(0,0,0,0.78) 86%, rgba(0,0,0,0.5) 91%, rgba(0,0,0,0.22) 96%, transparent 100%)',
-              maskComposite: 'intersect',
+                'linear-gradient(to right, transparent 0%, rgba(0,0,0,0.06) 6%, rgba(0,0,0,0.22) 12%, rgba(0,0,0,0.5) 18%, rgba(0,0,0,0.78) 24%, rgba(0,0,0,0.94) 30%, black 36%)',
               WebkitMaskImage:
-                'linear-gradient(to right, transparent 0%, rgba(0,0,0,0.06) 6%, rgba(0,0,0,0.22) 12%, rgba(0,0,0,0.5) 18%, rgba(0,0,0,0.78) 24%, rgba(0,0,0,0.94) 30%, black 36%), linear-gradient(to bottom, black 0%, black 74%, rgba(0,0,0,0.94) 80%, rgba(0,0,0,0.78) 86%, rgba(0,0,0,0.5) 91%, rgba(0,0,0,0.22) 96%, transparent 100%)',
-              WebkitMaskComposite: 'source-in',
+                'linear-gradient(to right, transparent 0%, rgba(0,0,0,0.06) 6%, rgba(0,0,0,0.22) 12%, rgba(0,0,0,0.5) 18%, rgba(0,0,0,0.78) 24%, rgba(0,0,0,0.94) 30%, black 36%)',
             }}
           />
         </div>

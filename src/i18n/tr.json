@@ -172,11 +172,11 @@
     "p6Name": "Kültür ve Halk Sanatları",
     "p6Age": "Tüm yaşlar",
     "p6Desc": "Halk oyunları, müzik, el sanatları ve bayram kutlamaları. Kayıtlı her öğrenciye açık.",
-    "agesRange": "{from} ile {to} yaş",
     "forGrades": "{grades} için.",
     "spacesLeft": "{count} yer kaldı",
     "noneTitle": "Ders programı hazırlanıyor",
-    "noneBody": "Önümüzdeki yılın sınıfları kısa süre içinde burada görünecek. Kayıtlar bu sırada açık."
+    "noneBody": "Önümüzdeki yılın sınıfları kısa süre içinde burada görünecek. Kayıtlar bu sırada açık.",
+    "agesFrom": "{from}+ yaş"
   },
   "tuition": {
     "title": "Ücretler",
@@ -592,13 +592,12 @@
     "cancelled": "Sınıf iptal edildi",
     "deleteBlocked": "Silmeden önce bu sınıftaki öğrencileri çıkarın.",
     "sessionsCreated": "{count} cumartesi dersi oluşturuldu",
-    "subjectIslamicStudies": "İslami Öğrenim",
+    "subjectIslamicStudies": "İslami Bilgiler",
     "subjectQuran": "Kur’an",
     "subjectActivities": "Etkinlikler",
     "subjectPhysicalEducation": "Beden Sağlığı",
-    "subjectArt": "Sanat",
+    "subjectArt": "Sanat ve Resim",
     "subjectDance": "Dans",
-    "subjectReading": "Okuma",
     "subjectForGrade": "Seçtiğiniz sınıflara göre dersler değişir.",
     "mixedStages": "Bu sınıf okul öncesi ile 1 ile 5. sınıfları birlikte içeriyor, bu yüzden iki ders listesi de sunuluyor."
   },

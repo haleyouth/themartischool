@@ -123,7 +123,7 @@ export default function Login() {
     <div className="flex min-h-screen">
       {/* Brand panel, hidden on small screens where it would only cost scroll. */}
       <div className="relative hidden w-1/2 overflow-hidden bg-marti-600 lg:flex lg:flex-col lg:items-center lg:justify-center lg:p-12">
-        <div className="bg-pattern absolute inset-0 opacity-30 mix-blend-screen" aria-hidden />
+        <div className="bg-pattern absolute inset-0 opacity-20 mix-blend-screen" aria-hidden />
         <motion.div
           aria-hidden
           animate={{ scale: [1, 1.12, 1], opacity: [0.25, 0.4, 0.25] }}

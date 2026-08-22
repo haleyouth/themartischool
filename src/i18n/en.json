@@ -172,11 +172,11 @@
     "p6Name": "Culture & Folk Arts",
     "p6Age": "All ages",
     "p6Desc": "Folk dance, music, crafts and holiday celebrations. Open to every enrolled student.",
-    "agesRange": "Ages {from} to {to}",
     "forGrades": "For {grades}.",
     "spacesLeft": "{count} places left",
     "noneTitle": "The timetable is being prepared",
-    "noneBody": "Classes for the coming year will appear here shortly. Registration is open in the meantime."
+    "noneBody": "Classes for the coming year will appear here shortly. Registration is open in the meantime.",
+    "agesFrom": "Ages {from}+"
   },
   "tuition": {
     "title": "Tuition",
@@ -561,7 +561,7 @@
     "sessions": "Sessions",
     "noClasses": "No classes yet",
     "noClassesBody": "Create your first Saturday class to get started.",
-    "subjectTurkish": "Turkish",
+    "subjectTurkish": "Turkish Language",
     "subjectCulture": "Culture",
     "subjectHistory": "History",
     "subjectMusic": "Music",
@@ -592,13 +592,12 @@
     "cancelled": "Class cancelled",
     "deleteBlocked": "Remove the students from this class before deleting it.",
     "sessionsCreated": "{count} Saturday sessions created",
-    "subjectIslamicStudies": "Islamic Learning",
+    "subjectIslamicStudies": "Islamic Studies",
     "subjectQuran": "Quran",
     "subjectActivities": "Activities",
     "subjectPhysicalEducation": "Physical Health",
-    "subjectArt": "Art",
+    "subjectArt": "Art and Drawing",
     "subjectDance": "Dance",
-    "subjectReading": "Reading",
     "subjectForGrade": "Subjects available depend on the grades you pick.",
     "mixedStages": "This class mixes early years with graded years, so it offers both subject lists."
   },

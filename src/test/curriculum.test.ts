@@ -47,7 +47,7 @@ describe('subjects by grade', () => {
   })
 
   it('teaches a play based list in the early years', () => {
-    expect([...EARLY_YEAR_SUBJECTS]).toEqual(['turkish', 'art', 'dance', 'reading'])
+    expect([...EARLY_YEAR_SUBJECTS]).toEqual(['art', 'turkish', 'dance'])
     expect(subjectsForGrade('PK')).toEqual(EARLY_YEAR_SUBJECTS)
     expect(subjectsForGrade('K')).toEqual(EARLY_YEAR_SUBJECTS)
   })

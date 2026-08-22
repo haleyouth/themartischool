@@ -21,7 +21,6 @@ export const SUBJECTS = [
   'physical_education',
   'art',
   'dance',
-  'reading',
 ] as const
 export type Subject = (typeof SUBJECTS)[number]
 
@@ -34,8 +33,13 @@ export const GRADED_SUBJECTS: readonly Subject[] = [
   'physical_education',
 ]
 
-/** Subjects taught in Pre-K and Kindergarten. */
-export const EARLY_YEAR_SUBJECTS: readonly Subject[] = ['turkish', 'art', 'dance', 'reading']
+/**
+ * Subjects taught in Pre-K and Kindergarten.
+ *
+ * Both years share the same list. They are separate year groups with their
+ * own classes, but the curriculum they follow is identical.
+ */
+export const EARLY_YEAR_SUBJECTS: readonly Subject[] = ['art', 'turkish', 'dance']
 
 export function isEarlyYear(grade: string): boolean {
   return (EARLY_YEARS as readonly string[]).includes(grade)
@@ -96,7 +100,6 @@ export const SUBJECT_PRESENTATION: Record<
   physical_education: { emoji: '⚽', accent: 'magenta' },
   art: { emoji: '🎨', accent: 'magenta' },
   dance: { emoji: '💃', accent: 'grape' },
-  reading: { emoji: '🔤', accent: 'teal' },
 }
 
 /** Falls back gracefully if a class carries a subject we no longer teach. */
@@ -107,10 +110,11 @@ export function presentationFor(subject: string) {
 }
 
 /**
- * A readable age range for a set of grades, e.g. "Ages 6 to 10".
+ * The youngest age a set of grades admits, e.g. 6 for grades 1 to 5.
  *
- * Approximate on purpose: families think in ages, the school records grades,
- * and the mapping is close enough to help a parent place their child.
+ * Deliberately open ended. Families think in ages and the school records
+ * grades, so the card says "Ages 6+" rather than inventing an upper bound
+ * that would wrongly exclude an older child placed by ability.
  */
 const TYPICAL_AGE: Record<string, number> = {
   PK: 4,
@@ -122,8 +126,8 @@ const TYPICAL_AGE: Record<string, number> = {
   '5': 10,
 }
 
-export function ageRangeForGrades(grades: string[]): { from: number; to: number } | null {
+export function minimumAgeForGrades(grades: string[]): number | null {
   const ages = grades.map((g) => TYPICAL_AGE[g]).filter((a): a is number => typeof a === 'number')
   if (!ages.length) return null
-  return { from: Math.min(...ages), to: Math.max(...ages) }
+  return Math.min(...ages)
 }

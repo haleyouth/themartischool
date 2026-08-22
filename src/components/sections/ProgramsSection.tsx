@@ -6,7 +6,7 @@ import { Section, SectionHeading, WaveDivider } from '@/components/public/Sectio
 import { CardSkeleton, EmptyState } from '@/components/ui/Feedback'
 import { useI18n } from '@/i18n'
 import {
-  ageRangeForGrades,
+  minimumAgeForGrades,
   gradeLabelKey,
   isEarlyYear,
   presentationFor,
@@ -118,7 +118,7 @@ export function ProgramsSection() {
               {visible.map((cls) => {
                 const look = presentationFor(cls.subject)
                 const accent = ACCENTS[look.accent]
-                const ages = ageRangeForGrades(cls.gradeLevels ?? [])
+                const minimumAge = minimumAgeForGrades(cls.gradeLevels ?? [])
                 const grades = (cls.gradeLevels ?? []).map((g) => t(gradeLabelKey(g)))
                 const full = cls.spacesLeft <= 0
 
@@ -161,12 +161,9 @@ export function ProgramsSection() {
                         {cls.name}
                       </h3>
 
-                      {ages && (
+                      {minimumAge !== null && (
                         <p className="mt-1 text-sm font-bold text-marti-600">
-                          {t('programs.agesRange', {
-                            from: String(ages.from),
-                            to: String(ages.to),
-                          })}
+                          {t('programs.agesFrom', { from: String(minimumAge) })}
                         </p>
                       )}
 
