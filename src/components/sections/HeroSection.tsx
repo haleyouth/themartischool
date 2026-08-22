@@ -68,10 +68,10 @@ export function HeroSection() {
             className="absolute inset-0 bg-[url('/hero.webp')] bg-cover bg-center bg-no-repeat"
             style={{
               maskImage:
-                'linear-gradient(to right, transparent 0%, black 12%), linear-gradient(to bottom, transparent 0%, black 9%, black 91%, transparent 100%)',
+                'linear-gradient(to right, transparent 0%, black 12%), linear-gradient(to bottom, black 0%, black 91%, transparent 100%)',
               maskComposite: 'intersect',
               WebkitMaskImage:
-                'linear-gradient(to right, transparent 0%, black 12%), linear-gradient(to bottom, transparent 0%, black 9%, black 91%, transparent 100%)',
+                'linear-gradient(to right, transparent 0%, black 12%), linear-gradient(to bottom, black 0%, black 91%, transparent 100%)',
               WebkitMaskComposite: 'source-in',
             }}
           />
@@ -86,12 +86,12 @@ export function HeroSection() {
           <div
             className="absolute inset-0 bg-[url('/hero-900.webp')] bg-cover bg-center bg-no-repeat"
             style={{
-              // Short fades here too, so only the last sliver of each edge
-              // softens rather than washing out most of the picture.
+              // Only the bottom softens. The top meets the header, where a
+              // fade would read as the image being cut short.
               maskImage:
-                'linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)',
+                'linear-gradient(to bottom, black 0%, black 90%, transparent 100%)',
               WebkitMaskImage:
-                'linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)',
+                'linear-gradient(to bottom, black 0%, black 90%, transparent 100%)',
             }}
           />
           <div className="absolute inset-0 bg-gradient-to-b from-cream/85 via-cream/80 to-cream" />
