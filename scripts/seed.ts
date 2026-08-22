@@ -145,7 +145,7 @@ async function main() {
   const classes = [
     {
       id: 'class-foundations',
-      name: 'Foundations — Saturday AM',
+      name: 'Foundations, Saturday AM',
       subject: 'turkish_language',
       gradeLevels: ['2', '3', '4'],
       startTime: '10:00',
@@ -156,7 +156,7 @@ async function main() {
     },
     {
       id: 'class-builders',
-      name: 'Builders — Saturday AM',
+      name: 'Builders, Saturday AM',
       subject: 'turkish_language',
       gradeLevels: ['5', '6', '7'],
       startTime: '10:00',
@@ -201,7 +201,7 @@ async function main() {
         sessionDates,
         status: 'active',
         syllabusUrl: null,
-        description: `Weekly Saturday ${cls.subject.replace('_', ' ')} class for the ${SCHOOL_YEAR}–${SCHOOL_YEAR + 1} year.`,
+        description: `Weekly Saturday ${cls.subject.replace('_', ' ')} class for the ${SCHOOL_YEAR} to ${SCHOOL_YEAR + 1} year.`,
         createdAt: FieldValue.serverTimestamp(),
         updatedAt: FieldValue.serverTimestamp(),
         createdBy: uids.principal,
@@ -286,7 +286,7 @@ async function main() {
           phone: `301555${String(2000 + index).slice(-4)}`,
           relationship: 'Parent',
         },
-        medicalNotes: index === 2 ? 'Mild peanut allergy — carries an EpiPen.' : null,
+        medicalNotes: index === 2 ? 'Mild peanut allergy, carries an EpiPen.' : null,
         photoConsent: index % 3 !== 0,
         guardianUids: [],
         enrollmentStatus: 'active',
@@ -607,7 +607,7 @@ async function main() {
       createdBy: uids.principal,
       createdAt: FieldValue.serverTimestamp(),
       lastMessage: {
-        text: 'Thank you — I will have the reports in by Friday.',
+        text: 'Thank you, I will have the reports in by Friday.',
         senderId: uids.teacher,
         senderName: 'Ahmet Demir',
         sentAt: FieldValue.serverTimestamp(),
@@ -634,7 +634,7 @@ async function main() {
       from: uids.teacher,
       name: 'Ahmet Demir',
       role: 'teacher',
-      text: 'Thank you — I will have the reports in by Friday.',
+      text: 'Thank you, I will have the reports in by Friday.',
     },
   ]
 

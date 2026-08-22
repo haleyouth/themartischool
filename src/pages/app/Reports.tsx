@@ -56,6 +56,7 @@ function StaffReports() {
   const [composing, setComposing] = useState(false)
   const [viewing, setViewing] = useState<PerformanceReportDoc | null>(null)
   const [publishing, setPublishing] = useState<PerformanceReportDoc | null>(null)
+  const { downloadPdf, pending: pdfPending } = useReportPdf()
   const [busy, setBusy] = useState(false)
 
   const [classId, setClassId] = useState('')
@@ -231,6 +232,18 @@ function StaffReports() {
                           <Button size="sm" variant="ghost" onClick={() => setViewing(report)}>
                             <Eye className="h-4 w-4" />
                           </Button>
+                          {/* Staff may render a draft as well, so this is not
+                              gated on publication the way the family view is. */}
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => downloadPdf(report)}
+                            loading={pdfPending === report.id}
+                            title={t('reports.pdf')}
+                            aria-label={t('reports.pdf')}
+                          >
+                            <FileDown className="h-4 w-4" />
+                          </Button>
                           {admin && report.status === 'submitted' && (
                             <Button size="sm" onClick={() => setPublishing(report)}>
                               {t('reports.publish')}
@@ -405,6 +418,7 @@ function StudentReports() {
   const toast = useToast()
   const { data: reports, loading } = usePublishedReports(auth.user?.uid)
   const [viewing, setViewing] = useState<PerformanceReportDoc | null>(null)
+  const { downloadPdf, pending: pdfPending } = useReportPdf()
 
   async function acknowledge(report: PerformanceReportDoc) {
     try {
@@ -465,8 +479,18 @@ function StudentReports() {
                         {t('reports.acknowledge')}
                       </Button>
                     )}
-                    <Button size="sm" onClick={() => setViewing(report)}>
+                    <Button size="sm" variant="outline" onClick={() => setViewing(report)}>
                       {t('common.view')}
+                    </Button>
+                    {/* The PDF is what a family keeps, so offer it straight
+                        from the list instead of one modal deep. */}
+                    <Button
+                      size="sm"
+                      onClick={() => downloadPdf(report)}
+                      loading={pdfPending === report.id}
+                      leftIcon={<FileDown className="h-4 w-4" />}
+                    >
+                      {t('reports.pdf')}
                     </Button>
                   </div>
                 </div>
@@ -485,20 +509,21 @@ function StudentReports() {
 
 /* ── Shared ───────────────────────────────────────────────── */
 
-function ReportView({ report }: { report: PerformanceReportDoc }) {
-  const { t, intlLocale } = useI18n()
+/**
+ * Server-rendered PDF download, shared by every place a report is listed.
+ *
+ * The PDF is built by a Cloud Function rather than in the browser, so it
+ * carries the school letterhead and cannot be assembled from data the caller
+ * was never allowed to read. `pending` names the report currently rendering,
+ * so a list can show a spinner on the one row that is working.
+ */
+function useReportPdf() {
+  const { t } = useI18n()
   const toast = useToast()
-  const [downloading, setDownloading] = useState(false)
+  const [pending, setPending] = useState<string | null>(null)
 
-  /**
-   * Renders the report server-side and opens the result.
-   *
-   * The PDF is built by a Cloud Function rather than in the browser, so it
-   * carries the school letterhead and cannot be assembled from data the
-   * caller was never allowed to read.
-   */
-  async function downloadPdf() {
-    setDownloading(true)
+  async function downloadPdf(report: PerformanceReportDoc) {
+    setPending(report.id)
     try {
       const result = await httpsCallable<
         { reportId: string },
@@ -525,9 +550,17 @@ function ReportView({ report }: { report: PerformanceReportDoc }) {
       toast.info(t('reports.pdfFallback'))
       window.print()
     } finally {
-      setDownloading(false)
+      setPending(null)
     }
   }
+
+  return { downloadPdf, pending }
+}
+
+function ReportView({ report }: { report: PerformanceReportDoc }) {
+  const { t, intlLocale } = useI18n()
+  const { downloadPdf, pending } = useReportPdf()
+  const downloading = pending === report.id
 
   return (
     <div className="space-y-6">
@@ -536,7 +569,7 @@ function ReportView({ report }: { report: PerformanceReportDoc }) {
           <Button
             size="sm"
             variant="outline"
-            onClick={downloadPdf}
+            onClick={() => downloadPdf(report)}
             loading={downloading}
             leftIcon={<FileDown className="h-4 w-4" />}
           >

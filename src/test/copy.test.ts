@@ -1,4 +1,5 @@
-import { readFileSync } from 'node:fs'
+import { existsSync, readFileSync, readdirSync } from 'node:fs'
+import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import en from '@/i18n/en.json'
 import tr from '@/i18n/tr.json'
@@ -16,14 +17,52 @@ function flatten(obj: Dict, prefix = ''): [string, string][] {
 
 const ALL_COPY = [...flatten(en as Dict), ...flatten(tr as Dict)]
 
+// Built from codepoints so this file never contains the glyphs it screens for.
+const DASH = new RegExp('[' + ['2012', '2013', '2014', '2015'].map((c) => String.fromCharCode(parseInt(c, 16))).join('') + ']')
+
+/** Every source file that ships or describes the product. */
+function sourceFiles(): string[] {
+  const out: string[] = ['firestore.rules', 'storage.rules']
+  const walk = (dir: string) => {
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+      const full = join(dir, entry.name)
+      if (entry.isDirectory()) {
+        if (entry.name === 'node_modules' || entry.name === 'lib') continue
+        walk(full)
+      } else if (/[.](ts|tsx|css|mjs|html)$/.test(entry.name)) {
+        out.push(full)
+      }
+    }
+  }
+  for (const root of ['src', 'functions/src', 'scripts']) {
+    if (existsSync(root)) walk(root)
+  }
+  return out
+}
+
+describe('source text', () => {
+  it('contains no em dashes or en dashes anywhere', () => {
+    const offenders: string[] = []
+    for (const file of sourceFiles()) {
+      readFileSync(file, 'utf8')
+        .split('\n')
+        .forEach((line, index) => {
+          if (DASH.test(line)) offenders.push(file + ':' + (index + 1))
+        })
+    }
+    expect(offenders).toEqual([])
+  })
+})
+
 describe('user-facing copy', () => {
   it('contains no em dashes or en dashes', () => {
-    const offenders = ALL_COPY.filter(([, value]) => /[—–]/.test(value)).map(([key]) => key)
+    const offenders = ALL_COPY.filter(([, value]) => DASH.test(value)).map(([key]) => key)
     expect(offenders).toEqual([])
   })
 
   it('does not use the placeholder dash glyph', () => {
-    const offenders = ALL_COPY.filter(([, value]) => value.includes('—')).map(([key]) => key)
+    const emDash = String.fromCharCode(0x2014)
+    const offenders = ALL_COPY.filter(([, value]) => value.includes(emDash)).map(([key]) => key)
     expect(offenders).toEqual([])
   })
 

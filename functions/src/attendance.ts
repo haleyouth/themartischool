@@ -125,7 +125,7 @@ export const onAttendanceWrite = onDocumentWritten(
       }),
     )
 
-    // Tell families about a new absence, but only once the sheet is submitted —
+    // Tell families about a new absence, but only once the sheet is submitted,
     // a teacher mid-edit should not trigger alarms.
     const justSubmitted = before?.status !== 'submitted' && after.status === 'submitted'
     if (!justSubmitted) return

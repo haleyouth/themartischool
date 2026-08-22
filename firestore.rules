@@ -1,6 +1,6 @@
 rules_version = '2';
 
-// The Marti School — Firestore security rules.
+// The Marti School Firestore security rules.
 //
 // Authorization is driven by custom claims (role, active, studentId, classIds)
 // minted by Cloud Functions. Claims are a fast cache; every decision that
@@ -141,7 +141,7 @@ service cloud.firestore {
              'createdUid','adminNotes','rejectionReason','provisioningError'
            ]);
 
-      // Applications hold minors' PII — admins only, never the applicant.
+      // Applications hold minors' PII: admins only, never the applicant.
       allow get, list: if isActive() && isAdmin();
 
       // Admins triage; approval itself runs in a Cloud Function.
@@ -280,7 +280,7 @@ service cloud.firestore {
       allow get: if isActive() && (
                    isAdmin()
                    || (isTeacher() && existing().classId in myClassIds())
-                   // A draft is a teacher's private working note — never leak it.
+                   // A draft is a teacher's private working note, so never leak it.
                    || (isStudent()
                        && existing().uid == uid()
                        && existing().status == 'published')
@@ -315,7 +315,7 @@ service cloud.firestore {
           && incoming().status in ['draft','submitted']
           && untouched(['studentId','uid','classId','teacherId','createdAt',
                         'publishedAt','publishedBy']))
-        // Publishing — the act that makes a report visible — is admin-only.
+        // Publishing, the act that makes a report visible, is admin-only.
         || (isAdmin()
           && untouched(['studentId','uid','classId','teacherId','createdAt'])
           && (incoming().status != 'published' || incoming().publishedBy == uid()))

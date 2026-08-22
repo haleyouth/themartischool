@@ -17,7 +17,7 @@ service firebase.storage {
     }
     function underSize(mb) { return request.resource.size < mb * 1024 * 1024; }
 
-    // Profile photos — a user manages their own; admins may fix any.
+    // Profile photos: a user manages their own, and admins may fix any.
     match /avatars/{userId}/{fileName} {
       allow read: if isActive();
       allow write: if isActive() && (request.auth.uid == userId || isAdmin())
@@ -25,7 +25,7 @@ service firebase.storage {
       allow delete: if isActive() && (request.auth.uid == userId || isAdmin());
     }
 
-    // Attachments on performance reports — staff write, and reads are gated to
+    // Attachments on performance reports: staff write, and reads are gated to
     // staff. Students reach their own report attachments through a signed URL
     // issued by a Cloud Function, so no student read rule is needed here.
     match /reports/{reportId}/{fileName} {

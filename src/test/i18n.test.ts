@@ -24,6 +24,7 @@ const ALLOWED_IDENTICAL = new Set([
   'brand.full', // the organisation's official English name, kept as-is
   'settings.languageEn', // language names are shown in their own language
   'settings.languageTr',
+  'reports.pdf', // the file format is written the same way in Turkish
 ])
 
 describe('i18n dictionaries', () => {

@@ -671,6 +671,7 @@
     "bulkPublish": "Publish all submitted",
     "writtenBy": "Written by",
     "downloadPdf": "Download PDF",
+    "pdf": "PDF",
     "printReport": "Print",
     "pdfFallback": "Opening your print dialog. Choose Save as PDF to keep a copy."
   },
