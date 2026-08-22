@@ -9,11 +9,12 @@
   "scripts": {
     "build": "npm run clean && tsc",
     "build:watch": "tsc --watch",
-    "deploy": "npm run build && firebase deploy --only functions",
+    "deploy": "npm run build && node -e \"process.env.FUNCTIONS_DISCOVERY_TIMEOUT='60';require('child_process').execSync('firebase deploy --only functions',{stdio:'inherit'})\"",
     "logs": "firebase functions:log",
     "clean": "node -e \"require('fs').rmSync('lib',{recursive:true,force:true})\""
   },
   "dependencies": {
+    "dejavu-fonts-ttf": "^2.37.3",
     "firebase-admin": "^13.0.2",
     "firebase-functions": "^7.3.2",
     "pdfkit": "^0.19.1"

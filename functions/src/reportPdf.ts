@@ -1,6 +1,5 @@
 import { onCall, HttpsError } from 'firebase-functions/v2/https'
 import { getFirestore } from 'firebase-admin/firestore'
-import { getStorage } from 'firebase-admin/storage'
 import PDFDocument from 'pdfkit'
 import { join } from 'node:path'
 import { existsSync } from 'node:fs'
@@ -25,8 +24,29 @@ const SCORE_ROWS = [
 
 const PAGE_MARGIN = 54
 
+/*
+ * PDFKit's built in Helvetica is WinAnsi encoded and cannot represent Turkish
+ * characters: it rendered 'Ayşe Kaya' as 'AyöR¶lya'. DejaVu Sans covers the
+ * full Latin Extended range and is freely redistributable, so it is bundled
+ * and embedded instead.
+ */
+const FONT_DIR = join(__dirname, '..', 'assets')
+const REGULAR = 'body'
+const BOLD = 'bodyBold'
+
+function registerFonts(doc: PDFKit.PDFDocument) {
+  const regular = join(FONT_DIR, 'DejaVuSans.ttf')
+  const bold = join(FONT_DIR, 'DejaVuSans-Bold.ttf')
+  if (existsSync(regular) && existsSync(bold)) {
+    doc.registerFont(REGULAR, regular)
+    doc.registerFont(BOLD, bold)
+    return true
+  }
+  return false
+}
+
 /**
- * Renders a published progress report as a PDF and returns a signed link.
+ * Renders a published progress report as a PDF and returns the bytes.
  *
  * Only published reports are rendered. A draft is a teacher's working note and
  * must never leave the building as a document, so the guard here matches the
@@ -73,21 +93,16 @@ export const generateReportPdf = onCall<{ reportId: string }>(
       guardianName: student.exists ? (student.data()!.guardianName as string) : '',
     })
 
-    const path = `reports/${report.studentId}/${reportId}.pdf`
-    const file = getStorage().bucket().file(path)
-    await file.save(pdf, {
-      contentType: 'application/pdf',
-      metadata: {
-        cacheControl: 'private, max-age=0',
-        metadata: { reportId, studentId: report.studentId },
-      },
-    })
-
-    // A short lived link: long enough to open or save, not to pass around.
-    const [url] = await file.getSignedUrl({
-      action: 'read',
-      expires: Date.now() + 15 * 60 * 1000,
-    })
+    /*
+     * The PDF comes back in the response rather than via Cloud Storage.
+     *
+     * A report is around 52KB, which is roughly 70KB once base64 encoded,
+     * against a 10MB callable limit. Storing it would add a bucket, egress
+     * and a second set of permissions to reason about, and would leave stale
+     * copies behind: amend a grade and republish, and any previously issued
+     * link still serves the old document. Generating on demand means the PDF
+     * always matches the record, and access is re-checked every time.
+     */
 
     await writeAudit({
       actorUid: caller.uid,
@@ -97,7 +112,11 @@ export const generateReportPdf = onCall<{ reportId: string }>(
       targetId: reportId,
     })
 
-    return { url, path, filename: `${report.studentId}-${report.periodEnd}.pdf` }
+    return {
+      // base64 so the bytes survive the JSON transport.
+      pdf: pdf.toString('base64'),
+      filename: `${report.studentId}-${report.periodEnd}.pdf`,
+    }
   },
 )
 
@@ -109,19 +128,30 @@ interface RenderInput {
 }
 
 /** Draws the report and resolves once the document is fully written. */
-function renderPdf(input: RenderInput): Promise<Buffer> {
+export function renderPdf(input: RenderInput): Promise<Buffer> {
   const { report, studentName, gradeLevel, guardianName } = input
 
   return new Promise((resolve, reject) => {
     const doc = new PDFDocument({
       size: 'A4',
       margin: PAGE_MARGIN,
+      // Required for bufferedPageRange, which the footer pass relies on to
+      // number pages. Without it the footer creates a spurious blank page.
+      bufferPages: true,
       info: {
         Title: `Progress report, ${studentName}`,
         Author: 'The Marti School',
         Subject: `${report.className}, ${report.periodEnd}`,
       },
     })
+
+    // Falls back to the built in faces if the bundle is missing, so a
+    // packaging slip degrades the type rather than breaking the render.
+    const hasFonts = registerFonts(doc)
+    if (!hasFonts) {
+      doc.registerFont(REGULAR, 'Helvetica')
+      doc.registerFont(BOLD, 'Helvetica-Bold')
+    }
 
     const chunks: Buffer[] = []
     doc.on('data', (chunk: Buffer) => chunks.push(chunk))
@@ -136,11 +166,11 @@ function renderPdf(input: RenderInput): Promise<Buffer> {
       // Height constrained so a wide wordmark keeps its proportions.
       doc.image(logo, PAGE_MARGIN, PAGE_MARGIN, { height: 34 })
     } else {
-      doc.font('Helvetica-Bold').fontSize(20).fillColor(BLUE).text('MARTI', PAGE_MARGIN, PAGE_MARGIN)
+      doc.font(BOLD).fontSize(20).fillColor(BLUE).text('MARTI', PAGE_MARGIN, PAGE_MARGIN)
     }
 
     doc
-      .font('Helvetica')
+      .font(REGULAR)
       .fontSize(8.5)
       .fillColor(MUTED)
       .text('The Marti School', PAGE_MARGIN, PAGE_MARGIN + 2, { width, align: 'right' })
@@ -158,13 +188,13 @@ function renderPdf(input: RenderInput): Promise<Buffer> {
 
     /* Title */
     doc
-      .font('Helvetica-Bold')
+      .font(BOLD)
       .fontSize(19)
       .fillColor(INK)
       .text('Progress report', PAGE_MARGIN, doc.y)
 
     doc
-      .font('Helvetica')
+      .font(REGULAR)
       .fontSize(10)
       .fillColor(MUTED)
       .text(
@@ -192,15 +222,22 @@ function renderPdf(input: RenderInput): Promise<Buffer> {
     details.forEach(([label, value], index) => {
       const x = PAGE_MARGIN + 14 + (index % 3) * col
       const y = detailsTop + 14 + Math.floor(index / 3) * 30
-      doc.font('Helvetica').fontSize(7.5).fillColor(MUTED).text(label.toUpperCase(), x, y, {
+      doc.font(REGULAR).fontSize(7.5).fillColor(MUTED).text(label.toUpperCase(), x, y, {
         width: col - 14,
         characterSpacing: 0.6,
       })
       doc
-        .font('Helvetica-Bold')
+        .font(BOLD)
         .fontSize(10)
         .fillColor(INK)
-        .text(value, x, y + 11, { width: col - 14, ellipsis: true, lineBreak: false })
+        .text(value, x, y + 11, {
+          width: col - 14,
+          // One line per field: the panel has fixed row heights, so a wrapped
+          // value would overlap the row beneath it.
+          ellipsis: true,
+          lineBreak: false,
+          height: 12,
+        })
     })
 
     doc.y = detailsTop + boxHeight + 22
@@ -216,7 +253,7 @@ function renderPdf(input: RenderInput): Promise<Buffer> {
       const value = Number(scores[key] ?? 0)
       const y = doc.y
 
-      doc.font('Helvetica').fontSize(10).fillColor(INK).text(label, PAGE_MARGIN, y, { width: 160 })
+      doc.font(REGULAR).fontSize(10).fillColor(INK).text(label, PAGE_MARGIN, y, { width: 160 })
 
       // Track, then the filled portion. Five is full marks.
       doc.roundedRect(barX, y + 1, barWidth, 9, 4.5).fillColor('#ece7f2').fill()
@@ -228,7 +265,7 @@ function renderPdf(input: RenderInput): Promise<Buffer> {
       }
 
       doc
-        .font('Helvetica-Bold')
+        .font(BOLD)
         .fontSize(9.5)
         .fillColor(MUTED)
         .text(`${value} / 5`, barX + barWidth + 8, y, { width: 34, align: 'right' })
@@ -241,12 +278,12 @@ function renderPdf(input: RenderInput): Promise<Buffer> {
       const y = doc.y
       doc.roundedRect(PAGE_MARGIN, y, 150, 34, 8).fillColor(BLUE).fill()
       doc
-        .font('Helvetica')
+        .font(REGULAR)
         .fontSize(8)
         .fillColor('#dbeefe')
         .text('OVERALL', PAGE_MARGIN + 14, y + 7, { characterSpacing: 0.6 })
       doc
-        .font('Helvetica-Bold')
+        .font(BOLD)
         .fontSize(15)
         .fillColor('#ffffff')
         .text(String(report.overallGrade), PAGE_MARGIN + 14, y + 16)
@@ -269,18 +306,30 @@ function renderPdf(input: RenderInput): Promise<Buffer> {
 
       sectionHeading(doc, heading, width)
       doc
-        .font('Helvetica')
+        .font(REGULAR)
         .fontSize(10)
         .fillColor(INK)
         .text(String(text).trim(), PAGE_MARGIN, doc.y, { width, lineGap: 3 })
       doc.moveDown(1)
     }
 
-    /* Signature strip */
-    if (doc.y > doc.page.height - 130) doc.addPage()
-    doc.moveDown(1)
+    /*
+     * Signature strip, pinned above the footer.
+     *
+     * Writing it at the flowing cursor left the text engine near the page
+     * bottom, and the footer pass then spilled onto a fresh blank page. A
+     * fixed position keeps it inside the page it belongs to.
+     */
+    const SIGN_BLOCK = 60
+    const FOOTER_ZONE = 60
+    const signTopFor = () => doc.page.height - FOOTER_ZONE - SIGN_BLOCK
 
-    const signTop = doc.y
+    // Only start a new page if the content genuinely reaches the strip.
+    if (doc.y > signTopFor() - 10) {
+      doc.addPage()
+    }
+    const signTop = signTopFor()
+
     const half = (width - 24) / 2
     for (const [index, label] of ['Teacher', 'Parent or guardian'].entries()) {
       const x = PAGE_MARGIN + index * (half + 24)
@@ -290,14 +339,18 @@ function renderPdf(input: RenderInput): Promise<Buffer> {
         .lineWidth(0.8)
         .strokeColor(RULE)
         .stroke()
-      doc.font('Helvetica').fontSize(8).fillColor(MUTED).text(label, x, signTop + 31)
+      doc
+        .font(REGULAR)
+        .fontSize(8)
+        .fillColor(MUTED)
+        .text(label, x, signTop + 31, { lineBreak: false })
     }
     if (guardianName) {
       doc
-        .font('Helvetica')
+        .font(REGULAR)
         .fontSize(8)
         .fillColor(MUTED)
-        .text(guardianName, PAGE_MARGIN + half + 24, signTop + 43)
+        .text(guardianName, PAGE_MARGIN + half + 24, signTop + 43, { lineBreak: false })
     }
 
     /* Footer on every page */
@@ -311,27 +364,38 @@ function renderPdf(input: RenderInput): Promise<Buffer> {
         .lineWidth(0.8)
         .strokeColor(RULE)
         .stroke()
-      doc
-        .font('Helvetica')
-        .fontSize(7.5)
-        .fillColor(MUTED)
-        .text(
-          `The Marti School  ·  Published ${formatStamp(report.publishedAt)}  ·  Page ${
-            i - range.start + 1
-          } of ${range.count}`,
-          PAGE_MARGIN,
-          footerY,
-          { width, align: 'center' },
-        )
+      const footerText =
+        'The Marti School  \u00b7  Published ' +
+        formatStamp(report.publishedAt) +
+        '  \u00b7  Page ' +
+        (i - range.start + 1) +
+        ' of ' +
+        range.count
+
+      doc.font(REGULAR).fontSize(7.5).fillColor(MUTED)
+
+      /*
+       * Centred by measurement rather than by align.
+       *
+       * The footer sits below the bottom margin. align:"center" routes the
+       * call through LineWrapper even when lineBreak is false, and the
+       * wrapper treats it as overrun content and appends a blank page. So
+       * measure the string and place it by hand, keeping the wrapper out.
+       */
+      const footerWidth = doc.widthOfString(footerText)
+      doc.text(footerText, PAGE_MARGIN + (width - footerWidth) / 2, footerY, {
+        lineBreak: false,
+      })
     }
 
+    doc.flushPages()
     doc.end()
   })
 }
 
 function sectionHeading(doc: PDFKit.PDFDocument, text: string, width: number) {
   doc
-    .font('Helvetica-Bold')
+    .font(BOLD)
     .fontSize(8.5)
     .fillColor(BLUE)
     .text(text.toUpperCase(), PAGE_MARGIN, doc.y, { width, characterSpacing: 0.8 })

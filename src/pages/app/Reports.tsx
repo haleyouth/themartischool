@@ -500,15 +500,27 @@ function ReportView({ report }: { report: PerformanceReportDoc }) {
   async function downloadPdf() {
     setDownloading(true)
     try {
-      const result = await httpsCallable<{ reportId: string }, { url: string }>(
-        functions,
-        'generateReportPdf',
-      )({ reportId: report.id })
-      window.open(result.data.url, '_blank', 'noopener,noreferrer')
+      const result = await httpsCallable<
+        { reportId: string },
+        { pdf: string; filename: string }
+      >(functions, 'generateReportPdf')({ reportId: report.id })
+
+      // The function returns the bytes base64 encoded rather than a storage
+      // link, so decode and hand the browser a blob to save.
+      const binary = atob(result.data.pdf)
+      const bytes = new Uint8Array(binary.length)
+      for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i)
+
+      const url = URL.createObjectURL(new Blob([bytes], { type: 'application/pdf' }))
+      const link = document.createElement('a')
+      link.href = url
+      link.download = result.data.filename
+      link.click()
+      // Revoking immediately can cancel the download in some browsers.
+      setTimeout(() => URL.revokeObjectURL(url), 10_000)
     } catch (error) {
-      // The server renderer needs Cloud Storage, which is not provisioned on
-      // every project. Printing the page produces the same document through
-      // the browser, so the feature still works rather than dead ending.
+      // Printing produces the same document through the browser, so a failed
+      // render still leaves the family with a way to keep a copy.
       console.error('generateReportPdf failed, falling back to print', error)
       toast.info(t('reports.pdfFallback'))
       window.print()
