@@ -2,9 +2,10 @@
  * What the school teaches, and to whom.
  *
  * The weekend school runs Pre-K, Kindergarten and grades 1 to 5 only. The two
- * early years follow a play based curriculum, so they carry a different
- * subject list from the graded years. Everything that offers a grade or a
- * subject reads from here, so the two can never drift apart.
+ * early years follow a play based curriculum, so they carry different subject
+ * lists from the graded years, and Kindergarten adds dance on top of Pre-K.
+ * Everything that offers a grade or a subject reads from here, so the lists
+ * can never drift apart.
  */
 
 export const GRADE_LEVELS = ['PK', 'K', '1', '2', '3', '4', '5'] as const
@@ -34,12 +35,23 @@ export const GRADED_SUBJECTS: readonly Subject[] = [
 ]
 
 /**
- * Subjects taught in Pre-K and Kindergarten.
+ * Subjects taught in Pre-K.
  *
- * Both years share the same list. They are separate year groups with their
- * own classes, but the curriculum they follow is identical.
+ * Dance is deliberately absent. It starts in Kindergarten, so the two early
+ * years no longer share one list.
  */
-export const EARLY_YEAR_SUBJECTS: readonly Subject[] = ['art', 'turkish', 'dance', 'activities']
+export const PRE_K_SUBJECTS: readonly Subject[] = ['art', 'turkish', 'activities']
+
+/** Subjects taught in Kindergarten: Pre-K plus dance. */
+export const KINDERGARTEN_SUBJECTS: readonly Subject[] = ['art', 'turkish', 'activities', 'dance']
+
+/**
+ * Every subject taught in the early years, across both year groups.
+ *
+ * Use this to describe the stage as a whole. To decide what a single class
+ * may be taught, use `subjectsForGrade`, which distinguishes PK from K.
+ */
+export const EARLY_YEAR_SUBJECTS: readonly Subject[] = KINDERGARTEN_SUBJECTS
 
 export function isEarlyYear(grade: string): boolean {
   return (EARLY_YEARS as readonly string[]).includes(grade)
@@ -47,7 +59,9 @@ export function isEarlyYear(grade: string): boolean {
 
 /** The subjects a given grade is allowed to be taught. */
 export function subjectsForGrade(grade: string): readonly Subject[] {
-  return isEarlyYear(grade) ? EARLY_YEAR_SUBJECTS : GRADED_SUBJECTS
+  if (grade === 'PK') return PRE_K_SUBJECTS
+  if (grade === 'K') return KINDERGARTEN_SUBJECTS
+  return GRADED_SUBJECTS
 }
 
 /**

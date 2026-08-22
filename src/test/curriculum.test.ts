@@ -2,6 +2,8 @@ import { describe, expect, it } from 'vitest'
 import {
   EARLY_YEARS,
   EARLY_YEAR_SUBJECTS,
+  KINDERGARTEN_SUBJECTS,
+  PRE_K_SUBJECTS,
   GRADED_SUBJECTS,
   GRADE_LEVELS,
   isEarlyYear,
@@ -47,9 +49,20 @@ describe('subjects by grade', () => {
   })
 
   it('teaches a play based list in the early years', () => {
-    expect([...EARLY_YEAR_SUBJECTS]).toEqual(['art', 'turkish', 'dance', 'activities'])
-    expect(subjectsForGrade('PK')).toEqual(EARLY_YEAR_SUBJECTS)
-    expect(subjectsForGrade('K')).toEqual(EARLY_YEAR_SUBJECTS)
+    expect([...PRE_K_SUBJECTS]).toEqual(['art', 'turkish', 'activities'])
+    expect([...KINDERGARTEN_SUBJECTS]).toEqual(['art', 'turkish', 'activities', 'dance'])
+    expect(subjectsForGrade('PK')).toEqual(PRE_K_SUBJECTS)
+    expect(subjectsForGrade('K')).toEqual(KINDERGARTEN_SUBJECTS)
+  })
+
+  it('starts dance in Kindergarten, not Pre-K', () => {
+    // The one subject that separates the two early years.
+    expect(subjectsForGrade('PK')).not.toContain('dance')
+    expect(subjectsForGrade('K')).toContain('dance')
+  })
+
+  it('describes the stage as a whole with the wider list', () => {
+    expect(EARLY_YEAR_SUBJECTS).toEqual(KINDERGARTEN_SUBJECTS)
   })
 
   it('keeps Islamic Studies out of the early years', () => {
